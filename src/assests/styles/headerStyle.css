@@ -1,0 +1,33 @@
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+    padding-top: 15px;
+    background-color: #fff;
+}
+
+.cartOpacity {
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+}
+
+.cartOpacity:hover {
+    opacity: 0.6;
+}
+
+.header_link {
+    display: block;
+    margin: 0 4px;
+    padding: 15px 15px 25px;
+    color: #000;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 15px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color 0.35s ease-in-out;
+}
+
+.header_link:hover {
+    color: rgba(0,0,0,.5) !important;
+}

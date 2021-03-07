@@ -1,0 +1,32 @@
+.search_popup {
+    position: absolute;
+    top: calc(100% + 13px);
+    left: 0;
+    z-index: 1;
+    display: flex;
+    padding: 29px 30px 40px;
+    background: #fff;
+    box-shadow: 0 8px 30px rgb(0 0 0 / 8%);
+}
+
+.search_popup_left {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    width: 70px;
+    height: 105px;
+    margin-right: 25px;
+    background: white;
+}
+
+.search_popup_product {
+    display: flex;
+    align-items: center;
+    padding: 19px 0;
+    color: #000;
+    text-decoration: none;
+    border-bottom: 1px solid #ebeaea;
+    margin-left: 20px;
+    cursor: pointer;
+}

@@ -12,8 +12,8 @@ import Client from "shopify-buy"
 // Example Storefront
 //
 const client = Client.buildClient({
-	storefrontAccessToken: "dd4d4dc146542ba7763305d71d1b3d38",
-	domain: "graphql.myshopify.com",
+	storefrontAccessToken: "eb770ad9b1374c78593e9a07b4555a45",
+	domain: "my-healthy-playground.myshopify.com",
 })
 
 const PRODUCTS_FOUND = "shopify/PRODUCTS_FOUND"
@@ -92,19 +92,18 @@ function getProduct(id) {
 }
 
 //
-// Gets a  collection based on that collection's id
+// Gets a collection based on that collection's id
 //
-// function getCollection() {
-// 	const collectionId = "Z2lkOi8vc2hvcGlmeS9Db2xsZWN0aW9uLzIwODAyMDYwMzAzMw=="
-// 	return (dispatch) => {
-// 		client.collection.fetchWithProducts(collectionId).then((resp) => {
-// 			dispatch({
-// 				type: COLLECTION_FOUND,
-// 				payload: resp.products,
-// 			})
-// 		})
-// 	}
-// }
+function getCollection() {
+	return (dispatch) => {
+		client.collection.fetchAllWithProducts().then((resp) => {
+			dispatch({
+				type: COLLECTION_FOUND,
+				payload: resp,
+			})
+		})
+	}
+}
 
 // Creates initial checkout state from Shopify
 function checkout() {
@@ -211,7 +210,7 @@ export function useShopify() {
 	const shopDetails = useSelector((appState) => appState.shopifyState.shop)
 	const fetchProducts = () => dispatch(getProducts())
 	const fetchProduct = (id) => dispatch(getProduct(id))
-	// const fetchCollection = () => dispatch(getCollection())
+	const fetchCollection = () => dispatch(getCollection())
 	const createCheckout = () => dispatch(checkout())
 	const createShop = () => dispatch(shopInfo())
 	const closeCart = () => dispatch(handleCartClose())
@@ -236,7 +235,7 @@ export function useShopify() {
 		addVariant,
 		fetchProducts,
 		fetchProduct,
-		// fetchCollection,
+		fetchCollection,
 		createCheckout,
 		createShop,
 		closeCart,

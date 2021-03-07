@@ -8,6 +8,11 @@
 	box-sizing: border-box;
 }
 
+@font-face {
+	font-family: "SofiaM";
+	src: local("Sofia Pro Medium Az"), url(./assests/fonts/Sofia Pro Medium Az.otf);
+}
+
 html {
 	font-size: 65%;
 }
