@@ -5,6 +5,11 @@ import Skeleton from './Skeleton';
 import ProductView from "./ProductView"
 import { useShopify } from "../hooks"
 
+import Alert from './Alert';
+import Header from './Header';
+
+import { Scrollbars } from 'react-custom-scrollbars';
+
 export default (props) => {
 	const {
 		createShop,
@@ -20,14 +25,34 @@ export default (props) => {
 		fetchCollection()
 	}, [])
 
+	function useWindowSize() {
+		const [size, setSize] = React.useState([0, 0]);
+		React.useLayoutEffect(() => {
+			function updateSize() {
+				setSize([window.innerWidth, window.innerHeight]);
+			}
+			window.addEventListener('resize', updateSize);
+			updateSize();
+			return () => window.removeEventListener('resize', updateSize);
+		}, []);
+		return size;
+	}
+
+	const [width, height] = useWindowSize();
+	
 	return (
 		<Router>
-			<div id="App">
+			<Scrollbars
+				style={{ width: width, height: height }}
+				autoHide
+			>
+				<Alert />
+				<Header history={props.history} />
 				<Route exact path="/" render={() => <Redirect to="/Home" />} />
 				<Route path="/Home" component={Skeleton} />
 				<Route path="/Product/:productId" component={ProductView} />
 				<Route path="/" component={Cart} />
-			</div>
+			</Scrollbars>
 		</Router>
 	)
 }

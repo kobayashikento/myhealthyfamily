@@ -15,16 +15,16 @@ function isEmpty(obj) {
 }
 
 const Alert = () => {
-    const { shopDetails } = useShopify();
+    const { shopDetails, setCurrency } = useShopify();
 
-    const [currency, setCurrency] = React.useState([null, null]);
+    const [curr, setCurr] = React.useState([null, null]);
     const [hover, setHover] = React.useState(0);
 
     const [openPreference, setOpenPreference] = React.useState(false);
 
     React.useEffect(() => {
         if (!isEmpty(shopDetails)) {
-            setCurrency([currencyDic[shopDetails.currencyCode], currencyDic[shopDetails.currencyCode]])
+            setCurr([currencyDic[shopDetails.currencyCode], currencyDic[shopDetails.currencyCode]])
         }
     }, [shopDetails])
 
@@ -39,7 +39,8 @@ const Alert = () => {
     });
 
     const handleCurrChange = (arr) => {
-        setCurrency([currencyDic[arr[0]], currencyDic[arr[1]]]);
+        setCurr([currencyDic[arr[0]], currencyDic[arr[1]]]);
+        setCurrency(arr[1]);
     }
 
     return (
@@ -53,7 +54,7 @@ const Alert = () => {
                 <div style={{ display: "flex", alignItems: "center" }}>
                     <div style={{ cursor: "pointer" }} onMouseEnter={() => setHover(1)} onMouseLeave={() => setHover(0)} onClick={() => setOpenPreference(true)}>
                         <Typography style={{ fontSize: "13px" }}>
-                            {currency[0] !== null ? currency[0].country : "Canada"}, {currency[1] !== null ? Object.keys[currency[1]] : "CAD"} {currency[1] !== null ? currency[1].format : "$"}
+                            {curr[0] !== null ? curr[0].country : "Canada"}, {curr[1] !== null ? Object.keys[curr[1]] : "CAD"} {curr[1] !== null ? curr[1].format : "$"}
                         </Typography>
                         <animated.div style={{ ...lineSpring }} />
                     </div>
@@ -69,13 +70,13 @@ const Alert = () => {
                 </div>
                 <div>
                     <Typography style={{ fontSize: "14px" }}>
-                        Let's talk!  +833 432 6432
+                        Let's talk!  +123 456 7890
                     </Typography>
                 </div>
             </Container>
             <Preference open={openPreference} setOpenPreference={(state) => setOpenPreference(state)}
                 handleCurrChange={(arr) => handleCurrChange(arr)}
-                currency={currency} paymentSettings={shopDetails.paymentSettings} />
+                currency={curr} paymentSettings={shopDetails.paymentSettings} />
         </header>
     )
 }

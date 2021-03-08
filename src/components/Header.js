@@ -16,6 +16,8 @@ import { animated, useSpring } from 'react-spring';
 import { useShopify } from "../hooks";
 import HeaderDropDown from './HeaderDropDown';
 
+import { Spring } from 'react-spring/renderprops';
+
 const CssTextField = withStyles({
     root: {
         '& label.Mui-focused': {
@@ -33,9 +35,8 @@ const CssTextField = withStyles({
 const Header = (props) => {
 
     const { shopDetails, featured } = useShopify();
-    const [featuredState, setFeatured] = React.useState([]);
     const [searchHover, setSearchHover] = React.useState(false);
-    const [dropbarHover, setDropbarHover] = React.useState(false);
+    const [dropbarHover, setDropbarHover] = React.useState(0);
     const [input, setInput] = React.useState('');
 
     const searchSpring = useSpring({
@@ -46,10 +47,6 @@ const Header = (props) => {
     const handleChange = (event) => {
         setInput(event.target.value);
     };
-
-    const handleDropDownChange = () => {
-        if (dropbarHover) {}
-    }
 
     return (
         <div className="header">
@@ -79,15 +76,35 @@ const Header = (props) => {
                     featured === undefined ?
                         <div></div>
                         :
-                        featured.map((ele, index) => {
-                            return (
-                                <Link className="header_link" key={`header-link-${index}`} onMouseEnter={() => setFeatured([ele])} onMouseLeave={() => setFeatured([])}>{ele.title}</Link>
-                            )
-                        })
+                        <div style={{ display: "flex" }}>
+                            <Link className="header_link">Best sellers</Link>
+                            {featured.map((ele, index) => {
+                                if (ele.title.toLowerCase() === "best sellers") {
+                                    return null
+                                }
+                                return (
+                                    <div onMouseEnter={() => setDropbarHover(index + 1)} onMouseLeave={() => setDropbarHover(0)}>
+                                        <Link className="header_link" key={`header-link-${index}`}>
+                                            {ele.title}
+                                        </Link>
+                                        <Spring
+                                            to={{ opacity: dropbarHover === index + 1 ? 1 : 0, display: dropbarHover === index + 1 ? "block" : "none" }}
+                                            from={{ opacity: 0, display: "none" }}
+                                            key={`dropdown-${index}`}
+                                        >
+                                            {prop =>
+                                                <div style={prop}>
+                                                    <HeaderDropDown content={[ele]} />
+                                                </div>
+                                            }
+                                        </Spring>
+                                    </div>
+                                )
+                            })}
+                            <Link className="header_link" style={{ color: "#e13367" }}>SALE</Link>
+                        </div>
                 }
-                <Link className="header_link" style={{ color: "#e13367" }}>SALE</Link>
             </div>
-            <HeaderDropDown content={featuredState} onMouseEnter={() => setDropbarHover(true)} onMouseLeave={() => setDropbarHover(false)} />
         </div>
     )
 }

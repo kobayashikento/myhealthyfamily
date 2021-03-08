@@ -27,6 +27,7 @@ const REMOVE_LINE_ITEM_IN_CART = "shopify/REMOVE_LINE_ITEM_IN_CART"
 const OPEN_CART = "shopify/OPEN_CART"
 const CLOSE_CART = "shopify/CLOSE_CART"
 const CART_COUNT = "shopify/CART_COUNT"
+const SET_CURRENCY = "shopify/SET_CURRENCY"
 
 const initialState = {
 	isCartOpen: false,
@@ -36,6 +37,7 @@ const initialState = {
 	featured: [],
 	product: {},
 	shop: {},
+	currency: "CAD"
 }
 
 export default (state = initialState, action) => {
@@ -62,6 +64,8 @@ export default (state = initialState, action) => {
 			return { ...state, isCartOpen: false }
 		case CART_COUNT:
 			return { ...state, cartCount: action.payload }
+		case SET_CURRENCY:
+			return { ...state, currency: action.payload }
 		default:
 			return state
 	}
@@ -197,6 +201,14 @@ function handleSetCount(count) {
 	}
 }
 
+function handleSetCurrency(curr) {
+	return {
+		type: SET_CURRENCY,
+		payload: curr,
+	}
+}
+
+
 export function useShopify() {
 	const dispatch = useDispatch()
 	const cartStatus = useSelector((appState) => appState.shopifyState.isCartOpen)
@@ -208,6 +220,7 @@ export function useShopify() {
 		(appState) => appState.shopifyState.checkout
 	)
 	const shopDetails = useSelector((appState) => appState.shopifyState.shop)
+	const currency = useSelector((appState) => appState.shopifyState.currency)
 	const fetchProducts = () => dispatch(getProducts())
 	const fetchProduct = (id) => dispatch(getProduct(id))
 	const fetchCollection = () => dispatch(getCollection())
@@ -216,6 +229,7 @@ export function useShopify() {
 	const closeCart = () => dispatch(handleCartClose())
 	const openCart = () => dispatch(handleCartOpen())
 	const setCount = (count) => dispatch(handleSetCount(count))
+	const setCurrency = (curr) => dispatch(handleSetCurrency(curr))
 
 	const addVariant = (checkoutId, lineItemsToAdd) =>
 		dispatch(addVariantToCart(checkoutId, lineItemsToAdd))
@@ -232,6 +246,7 @@ export function useShopify() {
 		checkoutState,
 		cartCount,
 		shopDetails,
+		currency,
 		addVariant,
 		fetchProducts,
 		fetchProduct,
@@ -243,5 +258,6 @@ export function useShopify() {
 		updateQuantity,
 		removeLineItem,
 		setCount,
+		setCurrency,
 	}
 }

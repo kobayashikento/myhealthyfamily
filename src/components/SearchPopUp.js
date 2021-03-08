@@ -10,13 +10,16 @@ import { useShopify } from "../hooks";
 import { animated, useSpring } from 'react-spring';
 import { Spring } from 'react-spring/renderprops';
 
+import { currencyDic } from '../assests/constants';
+
 const SearchPopUp = (props) => {
     let popupRef = React.useRef();
 
-    const { products, fetchProduct } = useShopify();
+    const { products, fetchProduct, currency } = useShopify();
     const [categories, setCategories] = React.useState([]);
     const [display, setDisplay] = React.useState({});
     const [hover, setHover] = React.useState(0);
+    const [allHover, setAllHover] = React.useState(false);
 
     const categoryTitle = { fontSize: "14px", fontWeight: "bold", paddingBottom: "18px" }
 
@@ -57,7 +60,7 @@ const SearchPopUp = (props) => {
                         >
                             {prop =>
                                 <div style={{ width: "fit-content", cursor: "pointer" }} onMouseEnter={() => setHover(index + 1)} onMouseLeave={() => setHover(0)}>
-                                    <Typography style={{ fontSize: "14px", fontWeight: "bold" }}>
+                                    <Typography style={{ fontSize: "15px", fontWeight: "500" }}>
                                         {category}
                                     </Typography>
                                     <animated.div style={prop} />
@@ -69,6 +72,28 @@ const SearchPopUp = (props) => {
                 return false;
             })
         )
+    }
+
+    // 0: no compare price, 1: compare price
+    const getCurrPrice = (item, type) => {
+        //[0] = price, [1] = compareAtPrice
+        let price = [0, 0];
+        if (type === 0) {
+            item.presentmentPrices.map(ele => {
+                if (ele.price.currencyCode === currency) {
+                    price[0] = parseFloat(ele.price.amount).toFixed(2)
+                    return;
+                }
+            });
+        } else if (type === 1) {
+            item.presentmentPrices.forEach(ele => {
+                if (ele.price.currencyCode === currency) {
+                    price = [parseFloat(ele.price.amount).toFixed(2), parseFloat(ele.compareAtPrice.amount).toFixed(2)];
+                    return;
+                }
+            });
+        }
+        return price;
     }
 
     const makeDisplay = () => {
@@ -84,7 +109,7 @@ const SearchPopUp = (props) => {
                         <img src={`${display[item].images[0].src}`} />
                     </div>
                     <div>
-                        <Typography style={{ fontSize: "16px", fontWeight: "500", marginBottom: "10px" }}>
+                        <Typography style={{ fontSize: "16px", fontWeight: "500", marginBottom: "15px" }}>
                             {display[item].title}
                         </Typography>
                         <Typography style={{ fontSize: "14px", marginBottom: "15px", color: "#555454" }}>
@@ -92,13 +117,21 @@ const SearchPopUp = (props) => {
                         </Typography>
                         <div>
                             {display[item].presentmentPriceRanges !== undefined ?
-                                <Typography style={{ fontSize: "14px", marginBottom: "20px", color: "#555454" }}>
-                                    {display[item].productType}
-                                </Typography>
+                                null
                                 :
-                                <Typography style={{ fontSize: "14px", color: "#959494" }}>
-                                    {display[item].variants[0].price}
-                                </Typography>
+                                display[item].variants[0].compareAtPrice !== null ?
+                                    <div style={{ display: "flex", alignItems: "flex-end" }}>
+                                        <Typography style={{ fontSize: "14px", color: "#959494", marginRight: "15px", textDecoration: "line-through" }}>
+                                            {currencyDic[currency].symbol} {getCurrPrice(display[item].variants[0], 1)[0]}
+                                        </Typography>
+                                        <Typography style={{ fontSize: "18px", color: "#e13367" }}>
+                                            {currencyDic[currency].symbol} {getCurrPrice(display[item].variants[0], 1)[1]}
+                                        </Typography>
+                                    </div>
+                                    :
+                                    <Typography style={{ fontSize: "14px", color: "black" }}>
+                                        {currencyDic[currency].symbol} {getCurrPrice(display[item].variants[0], 0)[0]}
+                                    </Typography>
                             }
                         </div>
                     </div>
@@ -150,7 +183,7 @@ const SearchPopUp = (props) => {
                             Unfortunately we could not find any results for your search
                 </Typography>
                         :
-                        <div style={{ marginTop: "20px" }}>
+                        <div style={{ marginTop: "20px", marginLeft: "10px" }}>
                             {makeCategory()}
                         </div>
                 }
@@ -172,6 +205,20 @@ const SearchPopUp = (props) => {
                         </div>
                 }
             </div>
+            <Spring
+                to={{ width: allHover ? "100%" : "0%" }}
+                from={{ width: "0%", opacity: 1, background: "black", height: "1px", marginBottom: "18px" }}
+                key={`category-view-all`}
+            >
+                {prop =>
+                    <div style={{ width: "fit-content", cursor: "pointer", position: "absolute", bottom: "0px" }} onMouseEnter={() => setAllHover(true)} onMouseLeave={() => setAllHover(false)}>
+                        <Typography className="headerDrop_item" style={{ fontSize: "15px", fontWeight: "500" }}>
+                            View All →
+                                </Typography>
+                        <animated.div style={prop} />
+                    </div>
+                }
+            </Spring>
         </animated.div>
     )
 }

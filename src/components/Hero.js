@@ -16,8 +16,8 @@ const Hero = (props) => {
     })
 
     return (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <div style={{ position: "absolute", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", top: "46%" }}>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "85vh", transform: "translateY(-15%)" }}>
+            <div style={{ position: "absolute", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", marginTop: "10%" }}>
                 <Typography style={{ fontSize: `${30 / 1920 * props.width}px`, color: "white", fontWeight: "500" }}>
                     STAY POSITIVE THIS WINTER
                     </Typography>
@@ -34,8 +34,8 @@ const Hero = (props) => {
                     </Button>
                 </div>
             </div>
-            <div style={{ height: "100vh", overflow: "hidden" }}>
-                <img src={heroPic} style={{ width: "96vw", maxHeight: "inherit", transform: "translateY(-15%)", filter: "contrast(0.8)" }} />
+            <div style={{ overflow: "hidden" }}>
+                <img src={heroPic} style={{ width: "96vw", maxHeight: "inherit", transform: "translateY(-10%)", filter: "contrast(0.8)" }} />
             </div>
         </div>
     )

@@ -1,0 +1,12 @@
+.homedeals_title {
+    position: relative;
+    padding: 0 100px;
+    font: 400 36px/1 FirusasHeader, Times New Roman, Times, Georgia, serif !important;
+    text-align: center;
+    background: #fff;
+    white-space: pre;
+}
+
+.homedeals_container {
+    width: calc((100% - 60px) / 4);
+}

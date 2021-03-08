@@ -55,13 +55,13 @@ const HeaderDropDown = (props) => {
     }
 
     return (
-        props.content.length === 0 ? null : 
+        props.content.length === 0 ? null :
             props.content[0].image !== null ?
                 <Container maxWidth="lg" className="headerDrop_container" style={{ display: "flex" }}>
                     <div style={{ maxHeight: "330px", overflow: "hidden" }}>
                         <div style={{ marginRight: "75px", width: "fit-content", position: "relative" }}>
-                            <div style={{ position: "absolute", top: "60%", left: "50%", transform: "translate(-50%, -60%)", zIndex: 1 }}>
-                                <Typography style={{ color: "white", fontSize: "3rem", fontFamily: "'Playfair Display', serif" }}>
+                            <div style={{ position: "absolute", marginTop: "40%", left: "50%", transform: "translateX(-50%)", zIndex: 1 }}>
+                                <Typography style={{ color: "white", fontSize: "3rem", fontFamily: "'Playfair Display', serif", textTransform: "uppercase" }}>
                                     {props.content[0].title}
                                 </Typography>
                                 <div style={{ width: "100%", overflow: "hidden", position: "relative", marginTop: "1.1vmax" }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
@@ -74,7 +74,7 @@ const HeaderDropDown = (props) => {
                                     </Button>
                                 </div>
                             </div>
-                            <img src={props.content[0].image.src} style={{ width: "480px", height: "auto", filter: "contrast(0.8)" }} />
+                            <img src={props.content[0].image.src} style={{ width: "480px", height: "auto", filter: "contrast(0.7)" }} />
                         </div>
                     </div>
                     <Divider orientation="vertical" style={{ height: "auto", margin: "15px 0" }} />
