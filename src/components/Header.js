@@ -63,7 +63,7 @@ const Header = (props) => {
                         SEARCH
                     </Typography>
                     <animated.div style={searchSpring} onClick={() => setSearchHover(true)} >
-                        <CssTextField style={{ width: "210px" }} value={input} onChange={handleChange} />
+                        <CssTextField type="search" style={{ width: "210px" }} value={input} onChange={handleChange} />
                     </animated.div>
                     <SearchPopUp history={props.history} input={input} searchHover={searchHover} setSearchHover={(bool) => setSearchHover(bool)} />
                 </div>

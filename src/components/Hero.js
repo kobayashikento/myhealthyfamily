@@ -1,4 +1,5 @@
 import { Typography, Button } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 
 import { animated, useSpring } from 'react-spring';
@@ -7,6 +8,7 @@ import heroPic from '../assests/pictures/MHF_coverphoto.png';
 
 const Hero = (props) => {
     const [hover, setHover] = React.useState(false);
+    const [loaded, setLoaded] = React.useState(false);
 
     const fillBoxSpring = useSpring({
         to: { transform: !hover ? "translateY(100%)" : "translateY(0%)" },
@@ -35,7 +37,8 @@ const Hero = (props) => {
                 </div>
             </div>
             <div style={{ overflow: "hidden" }}>
-                <img src={heroPic} style={{ width: "96vw", maxHeight: "inherit", transform: "translateY(-10%)", filter: "contrast(0.8)" }} />
+                <img src={heroPic} style={{ width: "96vw", maxHeight: "inherit", transform: "translateY(-10%)", filter: "contrast(0.8)", display: loaded ? "" : "none" }} onLoad={() => setLoaded(true)} />
+                <Skeleton animation="wave" variant="rect" width={window.innerWidth * 0.96} height={window.innerHeight} style={{ display: loaded ? "none" : "" }} />
             </div>
         </div>
     )

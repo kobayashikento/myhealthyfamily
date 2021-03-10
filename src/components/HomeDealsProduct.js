@@ -6,10 +6,12 @@ import '../assests/styles/homedetailproductStyle.css';
 import { currencyDic } from '../assests/constants';
 
 import { useShopify } from "../hooks";
+import { useSpring, animated, config } from 'react-spring';
 
 const HomeDealsProduct = (props) => {
 
     const { currency } = useShopify();
+    const [hover, setHover] = React.useState(false);
 
     // 0: no compare price, 1: compare price
     const getCurrPrice = (item, type) => {
@@ -33,13 +35,24 @@ const HomeDealsProduct = (props) => {
         return price;
     }
 
-    console.log(props.content)
+    const hoverSpring = useSpring({
+        to: {
+            boxShadow: hover ? "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px" : "rgba(99, 99, 99, 0.0) 0px 2px 8px 0px", transform: hover ? "scale(1.1)" : "scale(1)"
+        },
+        from: {
+           boxShadow: "rgba(99, 99, 99, 0.0) 0px 2px 8px 0px", transform: "scale(1)", margin: "55px 15px 50px 15px"
+        },
+        config: { config: config.stiff }
+    })
 
     return (
-        <div className="homedetailproduct_container">
-            <img src={props.content.images[0].src} />
-            <div style={{ paddingTop: "29px", maxWidth: "70%", marginRight: "auto", marginLeft: "auto", display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <Typography align="center" style={{ fontSize: "14px", fontWeight: "bold", marginBottom: "13px" }}>
+        <animated.div style={{ ...hoverSpring }} className="homedetailproduct_container" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+            {hover ?
+                <img src={props.content.images[1].src} style={{ cursor: "pointer", padding: "4px" }} />
+                : <img src={props.content.images[0].src} style={{ cursor: "pointer" }} />
+            }
+            <div style={{ padding: "29px 0 10px 0", maxWidth: "70%", marginRight: "auto", marginLeft: "auto", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <Typography className="homedetailproduct_text" align="center" style={{ fontSize: "14px", fontWeight: "bold", marginBottom: "13px" }}>
                     {props.content.title}
                 </Typography>
                 <Typography align="center" style={{ fontSize: "14px", marginBottom: "13px" }}>
@@ -61,7 +74,7 @@ const HomeDealsProduct = (props) => {
                         </Typography>
                 }
             </div>
-        </div>
+        </animated.div>
     )
 }
 

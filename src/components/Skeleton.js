@@ -8,6 +8,7 @@ import HomeDeals from './HomeDeals';
 import HomeContent from './HomeContent';
 
 import Product from "./Product";
+import Contact from "./Contact";
 
 export default (props) => {
 	const { shopDetails } = useShopify();
@@ -30,14 +31,9 @@ export default (props) => {
 	return (
 		<div>
 			<Hero width={width} />
-			<HomeDeals />
-			<HomeContent />
-			{/* <header className="App__header">
-				<div className="App__title">
-					<h1>{shopDetails.name}: React / Redux Example</h1>
-					<h2>{shopDetails.description}</h2>
-				</div>
-			</header> */}
+			<HomeDeals width={width} />
+			<HomeContent shopDetails={shopDetails} width={width} />
+			<Contact width={width} />
 		</div>
 	)
 }

@@ -1,6 +1,10 @@
 .homedetailproduct_container {
-    width: calc((100vw - 100px) / 4);
-    margin-right: 10px;
-    margin-left: 10px;
-    min-height: 60vh;
+}
+
+.homedetailproduct_text {
+    cursor: pointer;
+}
+
+.homedetailproduct_text:hover { 
+    text-decoration: underline;
 }
