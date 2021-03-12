@@ -51,9 +51,9 @@ const Header = (props) => {
 
     const makeSkeleton = () => {
         let temp = [];
-        for (let i = 0; i < 4; i ++){
+        for (let i = 0; i < 4; i++) {
             temp.push(
-                <Skeleton animation="wave" width={70} style={{margin: "20px"}}/>
+                <Skeleton animation="wave" width={70} style={{ margin: "20px" }} />
             )
         }
         return temp;
@@ -62,11 +62,15 @@ const Header = (props) => {
     return (
         <div className="header">
             <div className="content-container" style={{ width: "auto", left: "50%", transform: "translateX(-50%)", zIndex: 5 }}>
-                <Typography style={{ fontSize: "3.2rem", fontWeight: "bold" }}>
-                    <a href="/" style={{ textDecoration: "none", color: "black" }}>
-                        {shopDetails.name}
-                    </a>
-                </Typography>
+                {shopDetails !== undefined ?
+                    <Typography style={{ fontSize: "3.2rem", fontWeight: "bold" }}>
+                        <a href="/" style={{ textDecoration: "none", color: "black" }}>
+                            {shopDetails.name}
+                        </a>
+                    </Typography>
+                    :
+                    <Skeleton animation="wave" width={250} height={20} />
+                }
             </div>
             <Container maxWidth="lg" className="content-wrapper" style={{ height: "40px" }}>
                 <div style={{ display: "flex", alignItems: "center" }}>
@@ -84,7 +88,7 @@ const Header = (props) => {
             </Container>
             <div style={{ display: "flex", justifyContent: "center", paddingTop: "8px" }}>
                 {
-                   featured.length === 0 ?
+                    featured.length === 0 ?
                         makeSkeleton()
                         :
                         <div style={{ display: "flex" }}>

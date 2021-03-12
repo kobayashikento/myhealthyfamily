@@ -6,6 +6,8 @@ const client = Client.buildClient({
 	domain: process.env.shop_domain,
 })
 
+console.log(process.env.api_key, process.env.shop_domain)
+
 const PRODUCTS_FOUND = "shopify/PRODUCTS_FOUND"
 const PRODUCT_FOUND = "shopify/PRODUCT_FOUND"
 const COLLECTION_FOUND = "shopify/COLLECTION_FOUND"
