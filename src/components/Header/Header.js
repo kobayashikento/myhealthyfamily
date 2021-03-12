@@ -33,6 +33,14 @@ const CssTextField = withStyles({
     },
 })(TextField);
 
+const isEmpty = (obj) => {
+    for(let key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
 const Header = (props) => {
 
     const { shopDetails, featured } = useShopify();
@@ -62,7 +70,7 @@ const Header = (props) => {
     return (
         <div className="header">
             <div className="content-container" style={{ width: "auto", left: "50%", transform: "translateX(-50%)", zIndex: 5 }}>
-                {shopDetails !== undefined ?
+                {!(isEmpty(shopDetails)) ?
                     <Typography style={{ fontSize: "3.2rem", fontWeight: "bold" }}>
                         <a href="/" style={{ textDecoration: "none", color: "black" }}>
                             {shopDetails.name}

@@ -1,12 +1,13 @@
 import { useSelector, useDispatch } from "react-redux"
 import Client from "shopify-buy"
 
-const client = Client.buildClient({
-	storefrontAccessToken: process.env.api_key,
-	domain: process.env.shop_domain,
-})
+const API_KEY = process.env.api_key;
+const DOMAIN = process.env.shop_domain;
 
-console.log(process.env.api_key, process.env.shop_domain)
+const client = Client.buildClient({
+	storefrontAccessToken: API_KEY,
+	domain: DOMAIN,
+})
 
 const PRODUCTS_FOUND = "shopify/PRODUCTS_FOUND"
 const PRODUCT_FOUND = "shopify/PRODUCT_FOUND"
