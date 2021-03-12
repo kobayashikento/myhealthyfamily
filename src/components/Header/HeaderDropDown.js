@@ -1,6 +1,6 @@
 import React from 'react';
 
-import '../assests/styles/headerDropStyle.css';
+import '../../assests/styles/headerDropStyle.css';
 
 import { Spring } from 'react-spring/renderprops';
 

@@ -3,14 +3,14 @@ import React from 'react';
 
 import CloseIcon from '@material-ui/icons/Close';
 
-import '../assests/styles/searchPopupStyle.css';
+import '../../assests/styles/searchPopupStyle.css';
 
-import { useShopify } from "../hooks";
+import { useShopify } from "../../hooks";
 
 import { animated, useSpring } from 'react-spring';
 import { Spring } from 'react-spring/renderprops';
 
-import { currencyDic } from '../assests/constants';
+import { currencyDic } from '../../assests/constants';
 
 const SearchPopUp = (props) => {
     let popupRef = React.useRef();

@@ -5,8 +5,8 @@ import Skeleton from './Skeleton';
 import ProductView from "./ProductView"
 import { useShopify } from "../hooks"
 
-import Alert from './Alert';
-import Header from './Header';
+import Alert from './Header/Alert';
+import Header from './Header/Header';
 
 import { Scrollbars } from 'react-custom-scrollbars';
 

@@ -6,9 +6,9 @@ import { animated, useSpring } from 'react-spring';
 
 import CloseIcon from '@material-ui/icons/Close';
 
-import '../assests/styles/preferenceStyle.css';
+import '../../assests/styles/preferenceStyle.css';
 
-import { currencyDic } from '../assests/constants';
+import { currencyDic } from '../../assests/constants';
 
 const Fade = React.forwardRef(function Fade(props, ref) {
     const { in: open, children, onEnter, onExited, ...other } = props;

@@ -3,7 +3,7 @@ import React from 'react';
 import { Container, Grid, Typography, Button, Divider } from '@material-ui/core';
 import HomeContentDetails from './HomeContentDetails';
 
-import { useShopify } from "../hooks";
+import { useShopify } from "../../../hooks";
 import { Skeleton } from '@material-ui/lab';
 
 import { animated, useSpring } from 'react-spring';
@@ -14,9 +14,9 @@ const HomeContent = (props) => {
     const [hover, setHover] = React.useState(false);
 
     const fillBoxSpring = useSpring({
-        to: { transform: !hover ? "translateY(100%)" : "translateY(0%)" },
+        to: { transform: !hover ? "translateY(101%)" : "translateY(0%)" },
         from: {
-            position: "absolute", backgroundColor: "black", transform: "translateY(100%)", zIndex: 1, width: "100%", height: "100%"
+            position: "absolute", backgroundColor: "black", transform: "translateY(101%)", zIndex: 1, width: "100%", height: "100%"
         }
     });
 
@@ -56,7 +56,7 @@ const HomeContent = (props) => {
                 </Button>
             </div>
         </Container>
-    )
+    );
 }
 
 export default HomeContent;

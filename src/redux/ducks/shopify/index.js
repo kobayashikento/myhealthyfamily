@@ -12,8 +12,8 @@ import Client from "shopify-buy"
 // Example Storefront
 //
 const client = Client.buildClient({
-	storefrontAccessToken: "eb770ad9b1374c78593e9a07b4555a45",
-	domain: "my-healthy-playground.myshopify.com",
+	storefrontAccessToken: api_key,
+	domain: shop_domain,
 })
 
 const PRODUCTS_FOUND = "shopify/PRODUCTS_FOUND"

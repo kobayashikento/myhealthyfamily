@@ -3,12 +3,12 @@ import React from 'react';
 import { Typography, Container } from '@material-ui/core';
 import { animated, useSpring } from 'react-spring';
 
-import '../assests/styles/alertStyle.css';
+import '../../assests/styles/alertStyle.css';
 
-import { useShopify } from "../hooks";
+import { useShopify } from "../../hooks";
 import Preference from './Preference';
 
-import { currencyDic } from '../assests/constants';
+import { currencyDic } from '../../assests/constants';
 
 function isEmpty(obj) {
     return Object.keys(obj).length === 0;
@@ -68,9 +68,12 @@ const Alert = () => {
                         <animated.div style={{ ...lineLanSpring }} />
                     </div>
                 </div>
-                <div>
+                <div style={{ display: "flex" }}>
                     <Typography style={{ fontSize: "14px" }}>
-                        Let's talk!  +123 456 7890
+                        Let's talk!
+                    </Typography>
+                    <Typography style={{ fontSize: "14px", fontWeight: "bold", textIndent: "4px" }}>
+                        +833-432-6432
                     </Typography>
                 </div>
             </Container>

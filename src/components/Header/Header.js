@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Typography, Container, TextField } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
-import '../assests/styles/headerStyle.css';
+import '../../assests/styles/headerStyle.css';
 
 import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
 
@@ -13,10 +13,11 @@ import SearchPopUp from './SearchPopUp';
 
 import { animated, useSpring } from 'react-spring';
 
-import { useShopify } from "../hooks";
+import { useShopify } from "../../hooks";
 import HeaderDropDown from './HeaderDropDown';
 
 import { Spring } from 'react-spring/renderprops';
+import { Skeleton } from '@material-ui/lab';
 
 const CssTextField = withStyles({
     root: {
@@ -48,6 +49,16 @@ const Header = (props) => {
         setInput(event.target.value);
     };
 
+    const makeSkeleton = () => {
+        let temp = [];
+        for (let i = 0; i < 4; i ++){
+            temp.push(
+                <Skeleton animation="wave" width={70} style={{margin: "20px"}}/>
+            )
+        }
+        return temp;
+    }
+
     return (
         <div className="header">
             <div className="content-container" style={{ width: "auto", left: "50%", transform: "translateX(-50%)", zIndex: 5 }}>
@@ -73,8 +84,8 @@ const Header = (props) => {
             </Container>
             <div style={{ display: "flex", justifyContent: "center", paddingTop: "8px" }}>
                 {
-                    featured === undefined ?
-                        <div></div>
+                   featured.length === 0 ?
+                        makeSkeleton()
                         :
                         <div style={{ display: "flex" }}>
                             <Link className="header_link">Best sellers</Link>

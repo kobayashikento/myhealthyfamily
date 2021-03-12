@@ -1,11 +1,11 @@
 import { Typography } from '@material-ui/core';
 import React from 'react';
 
-import '../assests/styles/homedetailproductStyle.css';
+import '../../../assests/styles/homedetailproductStyle.css';
 
-import { currencyDic } from '../assests/constants';
+import { currencyDic } from '../../../assests/constants';
 
-import { useShopify } from "../hooks";
+import { useShopify } from "../../../hooks";
 import { useSpring, animated, config } from 'react-spring';
 
 const HomeDealsProduct = (props) => {
