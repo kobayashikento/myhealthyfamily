@@ -1,8 +1,8 @@
 import { useSelector, useDispatch } from "react-redux"
 import Client from "shopify-buy"
 
-const API_KEY = process.env.api_key;
-const DOMAIN = process.env.shop_domain;
+const API_KEY = process.env.REACT_APP_API_KEY;
+const DOMAIN = process.env.REACT_APP_SHOP_DOMAIN;
 
 const client = Client.buildClient({
 	storefrontAccessToken: API_KEY,
