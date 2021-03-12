@@ -1,16 +1,6 @@
 import { useSelector, useDispatch } from "react-redux"
 import Client from "shopify-buy"
 
-// // Creates the client with Shopify-Buy and store info
-// //
-// const client = Client.buildClient({
-// 	storefrontAccessToken: "your-storefront-access-token",
-// 	domain: "your-shop-name.myshopify.com",
-// })
-
-//
-// Example Storefront
-//
 const client = Client.buildClient({
 	storefrontAccessToken: api_key,
 	domain: shop_domain,
