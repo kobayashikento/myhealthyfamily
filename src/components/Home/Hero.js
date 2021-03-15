@@ -1,4 +1,4 @@
-import { Typography, Button } from '@material-ui/core';
+import { Typography, Button, Link } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 
@@ -19,27 +19,32 @@ const Hero = (props) => {
 
     return (
         <div style={{
-            display: "flex", justifyContent: "center", alignItems: "center", 
-            height: "75vh", overflow: "hidden", marginBottom: "5.5vmax"
+            display: "flex", justifyContent: "center", alignItems: "center",
+            height: "80vh", overflow: "hidden", marginBottom: "5.5vmax"
         }}>
             <div style={{
                 position: "absolute", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center",
                 marginTop: "6%"
             }}>
-                <Typography style={{ fontSize: `${30 / 1920 * props.width}px`, color: "white", fontWeight: "500" }}>
+                <Typography style={{ fontSize: `${30 / 1920 * props.width}px`, color: "white", fontFamily: "SofiaM" }}>
                     STAY POSITIVE THIS WINTER
                     </Typography>
-                <Typography style={{ fontSize: `${95 / 1920 * props.width}px`, color: "white", fontWeight: "bold", margin: "36px 0", fontFamily: "SofiaM" }}>
+                <Typography style={{
+                    fontSize: `${95 / 1920 * props.width}px`, color: "white",
+                    fontWeight: "bold", margin: "36px 0", fontFamily: `FirusasHeader, "Times New Roman", Times, Georgia, serif`
+                }}>
                     Try MyHealthyFamily
                     </Typography>
                 <div style={{ width: "fit-content", overflow: "hidden", position: "relative" }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
                     <animated.div style={fillBoxSpring} />
-                    <Button style={{ border: "2px solid white", borderRadius: "2px", background: "white" }} >
-                        <Typography style={{
-                            textAlign: "left", fontSize: `${20 / 1920 * props.width}px`, fontWeight: "600",
-                            color: hover ? "white" : "black", padding: "15px 55px", zIndex: 2
-                        }} >SHOP NOW</Typography>
-                    </Button>
+                    <Link style={{ textDecoration: "none" }} href={`/best-sellers`}>
+                        <Button style={{ border: "2px solid white", borderRadius: "2px", background: "white" }} >
+                            <Typography style={{
+                                textAlign: "left", fontSize: `${20 / 1920 * props.width}px`, fontWeight: "600",
+                                color: hover ? "white" : "black", padding: "10px 45px", zIndex: 2
+                            }} >SHOP NOW</Typography>
+                        </Button>
+                    </Link>
                 </div>
             </div>
             <div style={{ overflow: "hidden" }}>

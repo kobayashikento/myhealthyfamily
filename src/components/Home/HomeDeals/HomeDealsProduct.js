@@ -40,7 +40,7 @@ const HomeDealsProduct = (props) => {
             boxShadow: hover ? "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px" : "rgba(99, 99, 99, 0.0) 0px 2px 8px 0px", transform: hover ? "scale(1.1)" : "scale(1)"
         },
         from: {
-           boxShadow: "rgba(99, 99, 99, 0.0) 0px 2px 8px 0px", transform: "scale(1)", margin: "55px 15px 50px 15px"
+            boxShadow: "rgba(99, 99, 99, 0.0) 0px 2px 8px 0px", transform: "scale(1)", margin: "25px 15px 20px 15px"
         },
         config: { config: config.stiff }
     })
@@ -48,8 +48,16 @@ const HomeDealsProduct = (props) => {
     return (
         <animated.div style={{ ...hoverSpring }} className="homedetailproduct_container" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
             {hover ?
-                <img src={props.content.images[1].src} style={{ cursor: "pointer", padding: "4px" }} />
-                : <img src={props.content.images[0].src} style={{ cursor: "pointer" }} />
+                <div style={{
+                    backgroundImage: `url(${props.content.images[1].src})`,
+                    cursor: "pointer", padding: "4px", height: "300px",
+                    backgroundSize: "contain", backgroundRepeat: "no-repeat", backgroundPosition: "center"
+                }} />
+                : <div style={{
+                    backgroundImage: `url(${props.content.images[0].src})`,
+                    cursor: "pointer", height: "300px",
+                    backgroundSize: "contain", backgroundRepeat: "no-repeat", backgroundPosition: "center"
+                }} />
             }
             <div style={{ padding: "29px 0 10px 0", maxWidth: "70%", marginRight: "auto", marginLeft: "auto", display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <Typography className="homedetailproduct_text" align="center" style={{ fontSize: "14px", fontWeight: "bold", marginBottom: "13px" }}>

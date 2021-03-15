@@ -73,7 +73,7 @@ const HomeDeals = (props) => {
         let content = [];
         for (let i = 0; i < 4; i++) {
             content.push(
-                <div style={{ width: "25%", height: "50vh", margin: "55px 15px 50px" }}>
+                <div key={`home-deals-skeleton-${i}`} style={{ width: "25%", height: "50vh", margin: "55px 15px 50px" }}>
                     <Skeleton animation="wave" variant="rect" style={{ width: "100%", height: "60%" }} />
                     <div style={{ padding: "40px 0px 10px", display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <Skeleton animation="wave" style={{ width: "70%", marginBottom: "20px" }} />
@@ -94,15 +94,20 @@ const HomeDeals = (props) => {
                 </Typography>
                 <div style={{ display: "flex", justifyContent: 'center', alignItems: "center", overflow: "hidden" }}>
                     <Divider style={{ width: "100%" }} />
-                    <Typography style={{ fontSize: `${(45 / 1920 * props.width)}px` }} className="homedeals_title">
+                    <Typography style={{
+                        fontSize: `${(55 / 1920 * props.width)}px`,
+                        fontFamily: `FirusasHeader, "Times New Roman", Times, Georgia, serif`,
+                        fontWeight: "bold"
+                    }}
+                        className="homedeals_title">
                         Best Sellers
                 </Typography>
                     <Divider style={{ width: "100%" }} />
                 </div>
                 <Slider ref={slider} {...settings}>
-                    {getBestSeller().products.map(ele => {
+                    {getBestSeller().products.map((ele, index) => {
                         return (
-                            <HomeDealsProduct content={ele} />
+                            <HomeDealsProduct key={`home-deals-${index}`} content={ele} />
                         )
                     })}
                 </Slider>

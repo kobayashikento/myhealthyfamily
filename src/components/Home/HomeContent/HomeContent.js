@@ -38,7 +38,7 @@ const HomeContent = (props) => {
                     featured.map(ele => {
                         if (ele.title.toLowerCase() !== "best sellers") {
                             return (
-                                <Grid item xs={5}>
+                                <Grid key={`content-${ele.title}`} item xs={5}>
                                     <HomeContentDetails content={ele} width={props.width}/>
                                 </Grid>
                             )

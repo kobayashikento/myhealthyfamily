@@ -9,6 +9,14 @@ const client = Client.buildClient({
 	domain: DOMAIN,
 })
 
+// fetch the large, unoptimized version of the SDK
+import largeClient from 'shopify-buy/index.unoptimized.umd';
+
+const largeclient = largeClient.buildClient({
+	domain: DOMAIN,
+	storefrontAccessToken: API_KEY
+});
+
 const PRODUCTS_FOUND = "shopify/PRODUCTS_FOUND"
 const PRODUCT_FOUND = "shopify/PRODUCT_FOUND"
 const COLLECTION_FOUND = "shopify/COLLECTION_FOUND"
@@ -78,8 +86,22 @@ function getProducts() {
 
 // Gets individual item based on id
 function getProduct(id) {
+
+	const productsQuery = largeclient.graphQLClient.query((root) => {
+		root.addConnection('products', { args: { first: 10 } }, (product) => {
+			product.add('title');
+			product.add('tags');// Add fields to be returned
+		});
+	});
+
+	largeclient.graphQLClient.send(productsQuery).then(({ model, data }) => {
+		// Do something with the products
+		console.log(model);
+	});
+
 	return async (dispatch) => {
 		const resp = await client.product.fetch(id)
+		console.log(resp, id)
 		dispatch({
 			type: PRODUCT_FOUND,
 			payload: resp,

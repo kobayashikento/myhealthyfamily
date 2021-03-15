@@ -85,7 +85,6 @@ const Contact = (props) => {
                 <div style={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
                     <Checkbox
                         checked={checked}
-                        color="black"
                         onChange={() => setChecked(!checked)}
                         inputProps={{ 'aria-label': 'primary checkbox' }}
                         style={{ padding: "0px" }}

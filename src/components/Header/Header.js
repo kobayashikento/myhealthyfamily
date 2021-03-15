@@ -34,8 +34,8 @@ const CssTextField = withStyles({
 })(TextField);
 
 const isEmpty = (obj) => {
-    for(let key in obj) {
-        if(obj.hasOwnProperty(key))
+    for (let key in obj) {
+        if (obj.hasOwnProperty(key))
             return false;
     }
     return true;
@@ -61,7 +61,7 @@ const Header = (props) => {
         let temp = [];
         for (let i = 0; i < 4; i++) {
             temp.push(
-                <Skeleton animation="wave" width={70} style={{ margin: "20px" }} />
+                <Skeleton key={`header-skeleton-${i}`} animation="wave" width={70} style={{ margin: "20px" }} />
             )
         }
         return temp;
@@ -71,10 +71,10 @@ const Header = (props) => {
         <div className="header">
             <div className="content-container" style={{ width: "auto", left: "50%", transform: "translateX(-50%)", zIndex: 5 }}>
                 {!(isEmpty(shopDetails)) ?
-                    <Typography style={{ fontSize: "3.2rem", fontWeight: "bold" }}>
-                        <a href="/" style={{ textDecoration: "none", color: "black" }}>
+                    <Typography style={{ fontSize: "3.2rem", fontWeight: "bold", fontFamily: 'FirusasHeader, "Times New Roman", Times, Georgia, serif' }}>
+                        <Link to="/" style={{ textDecoration: "none", color: "black" }}>
                             {shopDetails.name}
-                        </a>
+                        </Link>
                     </Typography>
                     :
                     <Skeleton animation="wave" width={250} height={20} />
@@ -82,7 +82,7 @@ const Header = (props) => {
             </div>
             <Container maxWidth="lg" className="content-wrapper" style={{ height: "40px" }}>
                 <div style={{ display: "flex", alignItems: "center" }}>
-                    <Typography style={{ fontSize: "14px", fontWeight: "bold", marginRight: "1rem" }}>
+                    <Typography style={{ fontSize: "14px", marginRight: "1rem", fontFamily: "SofiaB" }}>
                         SEARCH
                     </Typography>
                     <animated.div style={searchSpring} onClick={() => setSearchHover(true)} >
@@ -94,20 +94,22 @@ const Header = (props) => {
                     <LocalMallOutlinedIcon className="cartOpacity" fontSize="large" style={{ cursor: "pointer" }} />
                 </div>
             </Container>
-            <div style={{ display: "flex", justifyContent: "center", paddingTop: "8px" }}>
+            <div style={{ display: "flex", justifyContent: "center", padding: "8px 20px 0 20px", fontFamily: "SofiaM" }}>
                 {
                     featured.length === 0 ?
                         makeSkeleton()
                         :
                         <div style={{ display: "flex" }}>
-                            <Link className="header_link">Best sellers</Link>
+                            <Link to={`/best-sellers`} className="header_link">Best sellers</Link>
                             {featured.map((ele, index) => {
                                 if (ele.title.toLowerCase() === "best sellers") {
                                     return null
                                 }
                                 return (
-                                    <div onMouseEnter={() => setDropbarHover(index + 1)} onMouseLeave={() => setDropbarHover(0)}>
-                                        <Link className="header_link" key={`header-link-${index}`}>
+                                    <div key={`header-${ele.title}`} onMouseEnter={() => setDropbarHover(index + 1)} onMouseLeave={() => setDropbarHover(0)}>
+                                        <Link
+                                            onClick={() => setDropbarHover(0)}
+                                            to={`/${ele.title.toLowerCase().replaceAll("/", "-").replaceAll(" ", "-")}`} className="header_link" key={`header-link-${index}`}>
                                             {ele.title}
                                         </Link>
                                         <Spring
@@ -117,14 +119,14 @@ const Header = (props) => {
                                         >
                                             {prop =>
                                                 <div style={prop}>
-                                                    <HeaderDropDown content={[ele]} />
+                                                    <HeaderDropDown content={[ele]} width={props.width} setDropbarhover={(index) => setDropbarHover(index)}/>
                                                 </div>
                                             }
                                         </Spring>
                                     </div>
                                 )
                             })}
-                            <Link className="header_link" style={{ color: "#e13367" }}>SALE</Link>
+                            <a className="header_link" style={{ color: "#e13367" }}>SALE</a>
                         </div>
                 }
             </div>

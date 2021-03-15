@@ -59,7 +59,7 @@ const FooterMenu = (props) => {
                                 Do you have any questions or suggestions?
                     </Typography>
                             <Typography style={{ fontSize: `${20 / 1920 * props.width}px`, marginBottom: "15px", textDecoration: "underline", fontWeight: "bold" }}>
-                                kentokobayashidev@gmail.com
+                                kentokobayashik@gmail.com
                     </Typography>
                             <Typography style={typoStyle}>
                                 Do you need assistance? Give us a call.

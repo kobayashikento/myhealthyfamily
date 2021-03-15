@@ -109,10 +109,10 @@ const SearchPopUp = (props) => {
                         <img src={`${display[item].images[0].src}`} />
                     </div>
                     <div>
-                        <Typography style={{ fontSize: "16px", fontWeight: "500", marginBottom: "15px" }}>
+                        <Typography style={{ fontSize: "16px", fontWeight: "500", marginBottom: "10px" }}>
                             {display[item].title}
                         </Typography>
-                        <Typography style={{ fontSize: "14px", marginBottom: "15px", color: "#555454" }}>
+                        <Typography style={{ fontSize: "14px", marginBottom: "10px", color: "#555454" }}>
                             {display[item].productType}
                         </Typography>
                         <div>

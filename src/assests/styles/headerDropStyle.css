@@ -26,8 +26,11 @@
 .headerDrop_item {
     position: relative;
     width: 100%;
-    margin-bottom: 21px;
     padding-bottom: 3px;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.imgFilter {
+    filter: contrast(0.7);
 }

@@ -10,7 +10,17 @@
 
 @font-face {
 	font-family: "SofiaM";
-	src: local("Sofia Pro Medium Az"), url(./assests/fonts/Sofia Pro Medium Az.otf);
+	src: local("SofiaP_M"), url(./assests/fonts/SofiaP_M.otf);
+}
+
+@font-face {
+	font-family: "SofiaB";
+	src: local("SofiaP_B"), url(./assests/fonts/SofiaP_B.otf);
+}
+
+@font-face {
+	font-family: "SofiaR";
+	src: local("SofiaP_R"), url(./assests/fonts/SofiaP_R.otf);
 }
 
 html {
