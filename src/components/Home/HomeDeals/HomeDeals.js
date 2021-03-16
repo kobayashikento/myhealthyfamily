@@ -16,13 +16,13 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 import { useSpring, animated } from 'react-spring';
+import { Link } from 'react-router-dom';
 
 import { Skeleton } from '@material-ui/lab';
 
 const HomeDeals = (props) => {
 
-    const skeleRef = React.useRef();
-    const { featured } = useShopify();
+    const { fetchProduct } = useShopify();
     const slider = React.useRef();
 
     const [best, setBest] = React.useState([]);
@@ -39,19 +39,8 @@ const HomeDeals = (props) => {
     };
 
     React.useEffect(() => {
-        setBest(featured);
-    }, [featured])
-
-    const getBestSeller = () => {
-        let temp = []
-        best.forEach(item => {
-            if (item.title === "Best Sellers") {
-                temp = item
-                return;
-            }
-        })
-        return temp;
-    }
+        setBest(props.content);
+    }, [props.content])
 
     const allHoverSpring = useSpring({
         to: { width: allHover ? "100%" : "0%" },
@@ -59,7 +48,6 @@ const HomeDeals = (props) => {
     })
 
     const handleClick = (direction) => {
-        console.log(activeSlide)
         if (slider.current !== undefined) {
             if (direction === 0 && activeSlide !== 0) {
                 slider.current.slickGoTo(activeSlide - 1);
@@ -85,29 +73,24 @@ const HomeDeals = (props) => {
         }
         return content;
     }
+    function handleItemClick(e, product_id) {
+        e.preventDefault()
+        const id = product_id;
+        //props.scrollbar.current.scrollToTop();
+        fetchProduct(id).then((res) => {
+            props.history.push(`/product/${res.id}`)
+        })
+    }
 
     return (
         best.length !== 0 ?
             <Container maxWidth="lg">
-                <Typography style={{ fontSize: `${(18 / 1920 * props.width)}px`, color: "#959494", padding: "0 12px 12px 12px" }} className="homedeals_title">
-                    SHOW NOW
-                </Typography>
-                <div style={{ display: "flex", justifyContent: 'center', alignItems: "center", overflow: "hidden" }}>
-                    <Divider style={{ width: "100%" }} />
-                    <Typography style={{
-                        fontSize: `${(55 / 1920 * props.width)}px`,
-                        fontFamily: `FirusasHeader, "Times New Roman", Times, Georgia, serif`,
-                        fontWeight: "bold"
-                    }}
-                        className="homedeals_title">
-                        Best Sellers
-                </Typography>
-                    <Divider style={{ width: "100%" }} />
-                </div>
                 <Slider ref={slider} {...settings}>
-                    {getBestSeller().products.map((ele, index) => {
+                    {props.content.map((ele, index) => {
                         return (
-                            <HomeDealsProduct key={`home-deals-${index}`} content={ele} />
+                            <div key={`product-${ele.id}`} onClick={(e) => handleItemClick(e, ele.id)}>
+                                <HomeDealsProduct key={`home-deals-${index}`} content={ele} />
+                            </div>
                         )
                     })}
                 </Slider>
@@ -117,29 +100,22 @@ const HomeDeals = (props) => {
                         <ChevronLeftIcon fontSize="large" />
                     </IconButton>
                     <Divider orientation="vertical" style={{ height: "30px", margin: "0 15px 0 15px" }} />
-                    <IconButton disabled={activeSlide === best.length - 4} onClick={() => handleClick(1)}>
+                    <IconButton disabled={activeSlide >= best.length - 4} onClick={() => handleClick(1)}>
                         <ChevronRightIcon fontSize="large" />
                     </IconButton>
-                    <div style={{
+                    <Link to="/all" style={{
                         width: "fit-content", cursor: "pointer", position: "absolute", bottom: "0px", right: "0px", paddingRight: "20px",
-                        display: "flex", flexDirection: "column"
+                        display: "flex", flexDirection: "column", textDecoration: "none", color: "inherit"
                     }} onMouseEnter={() => setAllHover(true)} onMouseLeave={() => setAllHover(false)}>
                         <Typography style={{ fontSize: "15px", fontWeight: "500" }}>
                             View All Products →
                                 </Typography>
                         <animated.div style={allHoverSpring} />
-                    </div>
+                    </Link>
                 </div>
             </Container>
             :
             <Container maxWidth="lg">
-                <div style={{ display: "flex", justifyContent: 'center', alignItems: "center", overflow: "hidden" }}>
-                    <Divider style={{ width: "100%" }} />
-                    <Typography style={{ fontSize: `${(45 / 1920 * props.width)}px` }} className="homedeals_title">
-                        Best Sellers
-            </Typography>
-                    <Divider style={{ width: "100%" }} />
-                </div>
                 <div style={{ display: "flex" }}>
                     {makeProductSekelton()}
                 </div>

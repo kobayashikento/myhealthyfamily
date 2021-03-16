@@ -40,7 +40,7 @@ const HomeDealsProduct = (props) => {
             boxShadow: hover ? "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px" : "rgba(99, 99, 99, 0.0) 0px 2px 8px 0px", transform: hover ? "scale(1.1)" : "scale(1)"
         },
         from: {
-            boxShadow: "rgba(99, 99, 99, 0.0) 0px 2px 8px 0px", transform: "scale(1)", margin: "25px 15px 20px 15px"
+            boxShadow: "rgba(99, 99, 99, 0.0) 0px 2px 8px 0px", transform: "scale(1)", margin: "25px 15px 25px 15px"
         },
         config: { config: config.stiff }
     })

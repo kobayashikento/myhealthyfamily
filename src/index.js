@@ -9,16 +9,19 @@ import { ThemeProvider } from '@material-ui/styles';
 import "./app.css"
 
 const theme = createMuiTheme({
-    typography: {
-        fontFamily: 'SofiaR',
-    }
+	typography: {
+		fontFamily: 'SofiaR',
+	}
 });
 
 ReactDOM.render(
-	<Provider store={store}>
-		<ThemeProvider theme={theme}>
-			<App />
-		</ThemeProvider>
-	</Provider>,
+	<React.StrictMode>
+		<Provider store={store}>
+			<ThemeProvider theme={theme}>
+				<App />
+			</ThemeProvider>
+		</Provider>
+	</React.StrictMode>
+	,
 	document.getElementById("root")
 )

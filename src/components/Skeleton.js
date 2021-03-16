@@ -7,8 +7,10 @@ import HomeContent from './Home/HomeContent/HomeContent';
 import Contact from "./Footer/Contact";
 import FooterMenu from "./Footer/FooterMenu";
 
+import { Typography, Divider } from '@material-ui/core';
+
 export default (props) => {
-	const { shopDetails } = useShopify();
+	const { shopDetails, featured } = useShopify();
 
 	function useWindowSize() {
 		const [size, setSize] = React.useState([0, 0]);
@@ -25,11 +27,37 @@ export default (props) => {
 
 	const [width, height] = useWindowSize();
 
+	const getBestSeller = () => {
+		let temp = [];
+		featured.forEach(ele => {
+			if (ele.title.toLowerCase() === "best sellers") {
+				ele.products.forEach(p => {
+					temp.push(p);
+				})
+			}
+		})
+		return temp;
+	}
 	return (
 		<div>
 			<Hero width={width} />
-			<HomeDeals width={width} />
-			<HomeContent shopDetails={shopDetails} width={width} />
+			<Typography style={{ fontSize: `${(18 / 1920 * width)}px`, color: "#959494", padding: "0 12px 12px 12px" }} className="homedeals_title">
+				SHOW NOW
+                </Typography>
+			<div style={{ display: "flex", justifyContent: 'center', alignItems: "center", overflow: "hidden" }}>
+				<Divider style={{ width: "100%" }} />
+				<Typography style={{
+					fontSize: `${(55 / 1920 * width)}px`,
+					fontFamily: `FirusasHeader, "Times New Roman", Times, Georgia, serif`,
+					fontWeight: "bold"
+				}}
+					className="homedeals_title">
+					Best Sellers
+                </Typography>
+				<Divider style={{ width: "100%" }} />
+			</div>
+			<HomeDeals width={width} history={props.history} scrollbar={props.scrollbar} content={getBestSeller()} />
+			<HomeContent shopDetails={shopDetails} width={width} scrollbar={props.scrollbar} />
 			<Contact width={width} />
 			<FooterMenu width={width} shopDetails={shopDetails} />
 		</div>

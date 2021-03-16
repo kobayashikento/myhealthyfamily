@@ -72,7 +72,7 @@ const Header = (props) => {
             <div className="content-container" style={{ width: "auto", left: "50%", transform: "translateX(-50%)", zIndex: 5 }}>
                 {!(isEmpty(shopDetails)) ?
                     <Typography style={{ fontSize: "3.2rem", fontWeight: "bold", fontFamily: 'FirusasHeader, "Times New Roman", Times, Georgia, serif' }}>
-                        <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+                        <Link to="/" onClick={() => props.scrollbar.current.scrollToTop()} style={{ textDecoration: "none", color: "black" }}>
                             {shopDetails.name}
                         </Link>
                     </Typography>
@@ -106,7 +106,7 @@ const Header = (props) => {
                                     return null
                                 }
                                 return (
-                                    <div key={`header-${ele.title}`} onMouseEnter={() => setDropbarHover(index + 1)} onMouseLeave={() => setDropbarHover(0)}>
+                                    <div onClick={() => props.scrollbar.current.scrollToTop()} key={`header-${ele.title}`} onMouseEnter={() => setDropbarHover(index + 1)} onMouseLeave={() => setDropbarHover(0)}>
                                         <Link
                                             onClick={() => setDropbarHover(0)}
                                             to={`/${ele.title.toLowerCase().replaceAll("/", "-").replaceAll(" ", "-")}`} className="header_link" key={`header-link-${index}`}>
@@ -126,7 +126,7 @@ const Header = (props) => {
                                     </div>
                                 )
                             })}
-                            <a className="header_link" style={{ color: "#e13367" }}>SALE</a>
+                            <Link to="/sale" className="header_link" style={{ color: "#e13367" }}>SALE</Link>
                         </div>
                 }
             </div>

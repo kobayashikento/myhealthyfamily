@@ -1,10 +1,12 @@
-import { Typography, Button, Link } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
+import { Typography, Button } from '@material-ui/core';
 
 import { animated, useSpring } from 'react-spring';
 
 import heroPic from '../../assests/pictures/MHF_coverphoto.png';
+
+import { Link } from 'react-router-dom';
 
 const Hero = (props) => {
     const [hover, setHover] = React.useState(false);
@@ -37,7 +39,7 @@ const Hero = (props) => {
                     </Typography>
                 <div style={{ width: "fit-content", overflow: "hidden", position: "relative" }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
                     <animated.div style={fillBoxSpring} />
-                    <Link style={{ textDecoration: "none" }} href={`/best-sellers`}>
+                    <Link style={{ textDecoration: "none" }} to={`/best-sellers`}>
                         <Button style={{ border: "2px solid white", borderRadius: "2px", background: "white" }} >
                             <Typography style={{
                                 textAlign: "left", fontSize: `${20 / 1920 * props.width}px`, fontWeight: "600",

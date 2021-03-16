@@ -1,8 +1,10 @@
-import { Typography, Link } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React from 'react';
 
 import { animated, useSpring } from 'react-spring';
+
+import { Link } from 'react-router-dom';
 
 const HomeContentDetails = (props) => {
 
@@ -24,7 +26,7 @@ const HomeContentDetails = (props) => {
 
     return (
         <div style={{ margin: "0 50px 0px 50px", cursor: "pointer", overflow: "hidden", position: "relative" }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-            <Link href={`/${convertLink(props.content.title)}`}>
+            <Link to={`/${convertLink(props.content.title)}`}>
                 <animated.div style={{ ...scaleSpring, backgroundImage: `url(${props.content.image.src})` }} />
                 <animated.div style={{ ...buttonSpring }}>
                     <Typography style={{

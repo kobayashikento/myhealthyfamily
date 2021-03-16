@@ -96,12 +96,12 @@ function getProduct(id) {
 
 	largeclient.graphQLClient.send(productsQuery).then(({ model, data }) => {
 		// Do something with the products
-		console.log(model);
+		// console.log(model);
 	});
 
 	return async (dispatch) => {
 		const resp = await client.product.fetch(id)
-		console.log(resp, id)
+		// console.log(resp, id)
 		dispatch({
 			type: PRODUCT_FOUND,
 			payload: resp,

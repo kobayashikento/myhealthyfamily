@@ -8,7 +8,7 @@ export default (props) => {
 		e.preventDefault()
 		const id = product_id
 		fetchProduct(id).then((res) => {
-			props.history.push(`/Product/${res.id}`)
+			props.history.push(`/product/${res.id}`)
 		})
 	}
 

@@ -24,7 +24,6 @@ const SortByDropdown = (props) => {
     // need collection 
     // need state for keeping track of which sort is active
     const handleChange = (e) => {
-        console.log(e.target.value)
         props.setSortBy(e.target.value);
     }
 
@@ -32,7 +31,7 @@ const SortByDropdown = (props) => {
         return (
             list.map((item, index) => {
                 return (
-                    <MenuItem style={{ fontSize: "15px" }} value={index}>{item}</MenuItem>
+                    <MenuItem key={`sortitem-${index}`} style={{ fontSize: "15px" }} value={index}>{item}</MenuItem>
                 )
             })
         )

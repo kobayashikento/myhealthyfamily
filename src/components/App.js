@@ -10,6 +10,7 @@ import Header from './Header/Header';
 import Catalog from './Product/Catalog';
 
 import { Scrollbars } from 'react-custom-scrollbars';
+import AllCatalog from "./Product/AllCatalog";
 
 function useWindowSize() {
 	const [size, setSize] = React.useState([0, 0]);
@@ -26,13 +27,16 @@ function useWindowSize() {
 
 const App = (props) => {
 
+	const scrollbar = React.useRef();
+
 	const {
 		createShop,
 		createCheckout,
 		fetchProducts,
 		fetchCollection,
 		featured,
-		shopDetails
+		shopDetails,
+		products
 	} = useShopify()
 
 	useEffect(() => {
@@ -48,33 +52,58 @@ const App = (props) => {
 		return (
 			featured.map((ele) => {
 				let convertedLink = ele.title.toLowerCase().replaceAll("/", "-").replaceAll(" ", "-");
-				return <Route path={`/${convertedLink}`}
+				return <Route key={`route-${convertedLink}`} path={`/${convertedLink}`}
 					render={props =>
-						<Catalog {...props} collection={ele} shopDetails={shopDetails} width={width} />
+						<Catalog {...props} collection={ele} shopDetails={shopDetails} width={width} history={props.history} scrollbar={scrollbar} />
 					} />
 			})
 		)
 	}
 
+	const getSale = () => {
+		// .products => [], .title => string, 
+		let temp = { title: "Sale" }
+		let saleProduct = [];
+		products.forEach(ele => {
+			if (ele.variants[0].compareAtPrice !== null) {
+				saleProduct.push(ele)
+			}
+		})
+		temp["products"] = saleProduct;
+		console.log(temp)
+		return temp;
+	}
+
 	return (
 		<Scrollbars
+			ref={scrollbar}
 			style={{ width: width, height: height }}
 			autoHide
-			renderTrackHorizontal={props => <div {...props} className="track-horizontal" style={{display:"none"}}/>}
-			renderThumbHorizontal={props => <div {...props} className="thumb-horizontal" style={{display:"none"}}/>}
+			renderTrackHorizontal={props => <div {...props} className="track-horizontal" style={{ display: "none" }} />}
+			renderThumbHorizontal={props => <div {...props} className="thumb-horizontal" style={{ display: "none" }} />}
 		>
 			<Alert />
-
 			<Router>
 				<Route exact path="/" render={() => <Redirect to="/home" />} />
-				<Route path="/" render={props => <Header {...props} history={props.history} width={width} />} />
+				<Route path="/" render={props => <Header {...props} history={props.history} width={width} scrollbar={scrollbar} />} />
 				<Switch>
-					<Route exact path="/home" render={props => <Skeleton {...props} />} />
+					<Route exact path="/home" render={props => <Skeleton {...props} history={props.history} scrollbar={scrollbar} />} />
 					{featured.length !== 0 ?
 						createPaths()
 						:
 						null
 					}
+					<Route exact path={`/sale`}
+						render={props =>
+							<Catalog {...props} collection={getSale()} shopDetails={shopDetails} width={width}
+								history={props.history} scrollbar={scrollbar} />
+						} />
+					<Route exact path={`/all`}
+						render={props =>
+							<AllCatalog {...props} collection={products} shopDetails={shopDetails} width={width}
+								history={props.history} scrollbar={scrollbar} featured={featured} />
+						} />
+					<Route path="/product/:productId" component={ProductView} />
 				</Switch>
 			</Router>
 		</Scrollbars>
