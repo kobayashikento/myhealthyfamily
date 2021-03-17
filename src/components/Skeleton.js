@@ -9,8 +9,12 @@ import FooterMenu from "./Footer/FooterMenu";
 
 import { Typography, Divider } from '@material-ui/core';
 
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
 export default (props) => {
 	const { shopDetails, featured } = useShopify();
+
+	const matches = useMediaQuery('(min-width:1024px)', { noSsr: true });
 
 	function useWindowSize() {
 		const [size, setSize] = React.useState([0, 0]);
@@ -38,28 +42,36 @@ export default (props) => {
 		})
 		return temp;
 	}
+
 	return (
-		<div>
-			<Hero width={width} />
-			<Typography style={{ fontSize: `${(18 / 1920 * width)}px`, color: "#959494", padding: "0 12px 12px 12px" }} className="homedeals_title">
-				SHOW NOW
+		matches ?
+			<div>
+				< Hero width={width} />
+				<Typography style={{ fontSize: `${(18 / 1920 * width)}px`, color: "#959494", padding: "0 12px 12px 12px" }} className="homedeals_title">
+					SHOW NOW
                 </Typography>
-			<div style={{ display: "flex", justifyContent: 'center', alignItems: "center", overflow: "hidden" }}>
-				<Divider style={{ width: "100%" }} />
-				<Typography style={{
-					fontSize: `${(55 / 1920 * width)}px`,
-					fontFamily: `FirusasHeader, "Times New Roman", Times, Georgia, serif`,
-					fontWeight: "bold"
-				}}
-					className="homedeals_title">
-					Best Sellers
+				<div style={{ display: "flex", justifyContent: 'center', alignItems: "center", overflow: "hidden" }}>
+					<Divider style={{ width: "100%" }} />
+					<Typography style={{
+						fontSize: `${(55 / 1920 * width)}px`,
+						fontFamily: `FirusasHeader, "Times New Roman", Times, Georgia, serif`,
+						fontWeight: "bold"
+					}}
+						className="homedeals_title">
+						Best Sellers
                 </Typography>
-				<Divider style={{ width: "100%" }} />
+					<Divider style={{ width: "100%" }} />
+				</div>
+				<HomeDeals width={width} history={props.history} scrollbar={props.scrollbar} content={getBestSeller()} />
+				<HomeContent shopDetails={shopDetails} width={width} scrollbar={props.scrollbar} />
+				<Contact width={width} />
+				<FooterMenu width={width} shopDetails={shopDetails} />
+			</div >
+			:
+			<div style={{ display: "flex", justifyContent: "center", marginTop: "50%" }}>
+				<Typography>
+					Currently implementing the mobile compatibility, come back later!
+					</Typography>
 			</div>
-			<HomeDeals width={width} history={props.history} scrollbar={props.scrollbar} content={getBestSeller()} />
-			<HomeContent shopDetails={shopDetails} width={width} scrollbar={props.scrollbar} />
-			<Contact width={width} />
-			<FooterMenu width={width} shopDetails={shopDetails} />
-		</div>
 	)
 }

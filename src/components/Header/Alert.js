@@ -14,6 +14,8 @@ function isEmpty(obj) {
     return Object.keys(obj).length === 0;
 }
 
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
 const Alert = () => {
     const { shopDetails, setCurrency } = useShopify();
 
@@ -21,6 +23,8 @@ const Alert = () => {
     const [hover, setHover] = React.useState(0);
 
     const [openPreference, setOpenPreference] = React.useState(false);
+
+    const matches = useMediaQuery('(min-width:1024px)', { noSsr: true });
 
     React.useEffect(() => {
         if (!isEmpty(shopDetails)) {
@@ -44,43 +48,46 @@ const Alert = () => {
     }
 
     return (
-        <header className="alert">
-            <div className="content-container">
-                <Typography style={{ fontSize: "14px" }}>
-                    Free Worldwide Shipping This Month
-                </Typography>
-            </div>
-            <Container maxWidth="lg" className="content-wrapper">
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <div style={{ cursor: "pointer" }} onMouseEnter={() => setHover(1)} onMouseLeave={() => setHover(0)} onClick={() => setOpenPreference(true)}>
-                        <Typography style={{ fontSize: "13px" }}>
-                            {curr[0] !== null ? curr[0].country : "Canada"}, {curr[1] !== null ? Object.keys[curr[1]] : "CAD"} {curr[1] !== null ? curr[1].format : "$"}
-                        </Typography>
-                        <animated.div style={{ ...lineSpring }} />
-                    </div>
-                    <Typography style={{ fontSize: "14px", marginBottom: "1px" }}>
-                        {'\u00A0'} | {'\u00A0'}
-                    </Typography>
-                    <div style={{ cursor: "pointer" }} onMouseEnter={() => setHover(2)} onMouseLeave={() => setHover(0)} onClick={() => setOpenPreference(true)}>
-                        <Typography style={{ fontSize: "13px" }}>
-                            {"English"}
-                        </Typography>
-                        <animated.div style={{ ...lineLanSpring }} />
-                    </div>
-                </div>
-                <div style={{ display: "flex" }}>
+        matches ?
+            <header className="alert">
+                <div className="content-container">
                     <Typography style={{ fontSize: "14px" }}>
-                        Let's talk!
-                    </Typography>
-                    <Typography style={{ fontSize: "14px", fontWeight: "bold", textIndent: "4px" }}>
-                        +833-432-6432
-                    </Typography>
+                        Free Worldwide Shipping This Month
+                </Typography>
                 </div>
-            </Container>
-            <Preference open={openPreference} setOpenPreference={(state) => setOpenPreference(state)}
-                handleCurrChange={(arr) => handleCurrChange(arr)}
-                currency={curr} paymentSettings={shopDetails.paymentSettings} />
-        </header>
+                <Container maxWidth="lg" className="content-wrapper">
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                        <div style={{ cursor: "pointer" }} onMouseEnter={() => setHover(1)} onMouseLeave={() => setHover(0)} onClick={() => setOpenPreference(true)}>
+                            <Typography style={{ fontSize: "13px" }}>
+                                {curr[0] !== null ? curr[0].country : "Canada"}, {curr[1] !== null ? Object.keys[curr[1]] : "CAD"} {curr[1] !== null ? curr[1].format : "$"}
+                            </Typography>
+                            <animated.div style={{ ...lineSpring }} />
+                        </div>
+                        <Typography style={{ fontSize: "14px", marginBottom: "1px" }}>
+                            {'\u00A0'} | {'\u00A0'}
+                        </Typography>
+                        <div style={{ cursor: "pointer" }} onMouseEnter={() => setHover(2)} onMouseLeave={() => setHover(0)} onClick={() => setOpenPreference(true)}>
+                            <Typography style={{ fontSize: "13px" }}>
+                                {"English"}
+                            </Typography>
+                            <animated.div style={{ ...lineLanSpring }} />
+                        </div>
+                    </div>
+                    <div style={{ display: "flex" }}>
+                        <Typography style={{ fontSize: "14px" }}>
+                            Let's talk!
+                    </Typography>
+                        <Typography style={{ fontSize: "14px", fontWeight: "bold", textIndent: "4px" }}>
+                            +833-432-6432
+                    </Typography>
+                    </div>
+                </Container>
+                <Preference open={openPreference} setOpenPreference={(state) => setOpenPreference(state)}
+                    handleCurrChange={(arr) => handleCurrChange(arr)}
+                    currency={curr} paymentSettings={shopDetails.paymentSettings} />
+            </header>
+            :
+            <div></div>
     )
 }
 
