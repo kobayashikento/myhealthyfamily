@@ -10,6 +10,10 @@ import { animated, useSpring } from 'react-spring';
 
 import { Link } from 'react-router-dom';
 
+function isEmpty(obj) {
+    return Object.keys(obj).length === 0;
+}
+
 const HomeContent = (props) => {
 
     const { featured } = useShopify();
@@ -29,15 +33,22 @@ const HomeContent = (props) => {
     return (
         <Container maxWidth="lg" style={{ marginTop: "5.5vmax", display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "5.5vmax" }}>
             <div style={{ display: "flex", justifyContent: "center" }}>
-                <Typography style={{ fontSize: `${(45 / 1920 * props.width)}px` }} >
-                    Shop now
+                {
+                    isEmpty(props.shopDetails) ?
+                        <Skeleton animation="wave" width={150} height={20} />
+                        :
+                        <div style={{ display: "flex" }}>
+                            <Typography style={{ fontSize: `${(45 / 1920 * props.width)}px` }} >
+                                Shop now
                 </Typography>
-                <Typography style={{ fontSize: `${(45 / 1920 * props.width)}px`, fontFamily: "FirusasHeader, Times New Roman, Times, Georgia, serif", fontStyle: "italic", textIndent: "1rem" }} >
-                    with
+                            <Typography style={{ fontSize: `${(45 / 1920 * props.width)}px`, fontFamily: "FirusasHeader, Times New Roman, Times, Georgia, serif", fontStyle: "italic", textIndent: "1rem" }} >
+                                with
                 </Typography>
-                <Typography style={{ fontSize: `${(45 / 1920 * props.width)}px`, textIndent: "1rem" }}>
-                    {props.shopDetails.name}
-                </Typography>
+                            <Typography style={{ fontSize: `${(45 / 1920 * props.width)}px`, textIndent: "1rem" }}>
+                                {props.shopDetails.info.name}
+                            </Typography>
+                        </div>
+                }
             </div>
             <Grid container spacing={9} justify="center" style={{ paddingTop: "2.2vmax", margin: "0", minHeight: "50vh" }}>
                 {

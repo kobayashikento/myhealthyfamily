@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import { BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom"
 import Cart from "./Cart"
 import Skeleton from './Skeleton';
-import ProductView from "./ProductView"
+import ProductView from "./Product/ProductView"
 import { useShopify } from "../hooks"
 
 import Alert from './Header/Alert';
@@ -11,6 +11,7 @@ import Catalog from './Product/Catalog';
 
 import { Scrollbars } from 'react-custom-scrollbars';
 import AllCatalog from "./Product/AllCatalog";
+import InfoSkeleton from './Information/InfoSkeleton';
 
 function useWindowSize() {
 	const [size, setSize] = React.useState([0, 0]);
@@ -26,7 +27,6 @@ function useWindowSize() {
 }
 
 const App = (props) => {
-
 	const scrollbar = React.useRef();
 
 	const {
@@ -48,7 +48,7 @@ const App = (props) => {
 
 	const [width, height] = useWindowSize();
 
-	const createPaths = () => {
+	const createCategoryPaths = () => {
 		return (
 			featured.map((ele) => {
 				let convertedLink = ele.title.toLowerCase().replaceAll("/", "-").replaceAll(" ", "-");
@@ -70,8 +70,29 @@ const App = (props) => {
 			}
 		})
 		temp["products"] = saleProduct;
-		console.log(temp)
 		return temp;
+	}
+
+	const aboutRoutes = {
+		"Store": ["About us", "Contact"],
+		"Service": ["Refund Policy", "Privacy Policy", "Terms of Service"]
+	}
+
+	const createAboutRoutes = () => {
+		let routes = []
+		for (const route in aboutRoutes) {
+			aboutRoutes[route].map(r => {
+				let convertedLink = r.toLowerCase().replaceAll("/", "-").replaceAll(" ", "-");
+				routes.push(
+					<Route key={`route-${convertedLink}`} path={`/${convertedLink}`}
+						render={props =>
+							<InfoSkeleton {...props} shopDetails={shopDetails} width={width}
+								history={props.history} scrollbar={scrollbar} route={r} />
+						} />
+				)
+			})
+		}
+		return routes;
 	}
 
 	return (
@@ -89,7 +110,7 @@ const App = (props) => {
 				<Switch>
 					<Route exact path="/home" render={props => <Skeleton {...props} history={props.history} scrollbar={scrollbar} />} />
 					{featured.length !== 0 ?
-						createPaths()
+						createCategoryPaths()
 						:
 						null
 					}
@@ -103,6 +124,7 @@ const App = (props) => {
 							<AllCatalog {...props} collection={products} shopDetails={shopDetails} width={width}
 								history={props.history} scrollbar={scrollbar} featured={featured} />
 						} />
+					{createAboutRoutes()}
 					<Route path="/product/:productId" component={ProductView} />
 				</Switch>
 			</Router>

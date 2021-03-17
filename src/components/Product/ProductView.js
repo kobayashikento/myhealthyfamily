@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { useShopify } from "../hooks"
+import { useShopify } from "../../hooks"
 
 import { Spring } from 'react-spring/renderprops-universal';
 
-import Contact from '../components/Footer/Contact';
-import FooterMenu from '../components/Footer/FooterMenu';
+import Contact from '../Footer/Contact';
+import FooterMenu from '../Footer/FooterMenu';
 import { Breadcrumbs, Container, Grid, Typography, FormControl, Select, MenuItem, Divider, IconButton } from "@material-ui/core";
 
 import { withStyles } from '@material-ui/core/styles';
 
-import { currencyDic, deliveryPolicy } from '../assests/constants';
+import { currencyDic, deliveryPolicy } from '../../assests/constants';
 
 import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
-import HomeDeals from "./Home/HomeDeals/HomeDeals";
+import HomeDeals from "../Home/HomeDeals/HomeDeals";
 import { animated, useSpring } from "react-spring";
 
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, CarouselContext } from 'pure-react-carousel';
@@ -305,7 +305,7 @@ const ProductView = (props) => {
 								{prop =>
 									<div onMouseEnter={() => setBreadHover(1)} onMouseLeave={() => setBreadHover(0)}>
 										<Link to="/" style={linkStyle}>
-											{shopDetails.name}
+											{shopDetails.info.name}
 										</Link>
 										<div style={prop} />
 									</div>

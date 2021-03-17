@@ -76,10 +76,18 @@ const HomeDeals = (props) => {
     function handleItemClick(e, product_id) {
         e.preventDefault()
         const id = product_id;
-        //props.scrollbar.current.scrollToTop();
         fetchProduct(id).then((res) => {
             props.history.push(`/product/${res.id}`)
+            if (props.scrollbar !== undefined) {
+                props.scrollbar.current.scrollToTop();
+            }
         })
+    }
+
+    const handleViewAll = () => {
+        if (props.scrollbar !== undefined) {
+            props.scrollbar.current.scrollToTop();
+        }
     }
 
     return (
@@ -106,7 +114,7 @@ const HomeDeals = (props) => {
                     <Link to="/all" style={{
                         width: "fit-content", cursor: "pointer", position: "absolute", bottom: "0px", right: "0px", paddingRight: "20px",
                         display: "flex", flexDirection: "column", textDecoration: "none", color: "inherit"
-                    }} onMouseEnter={() => setAllHover(true)} onMouseLeave={() => setAllHover(false)}>
+                    }} onMouseEnter={() => setAllHover(true)} onMouseLeave={() => setAllHover(false)} onClick={() => handleViewAll()}>
                         <Typography style={{ fontSize: "15px", fontWeight: "500" }}>
                             View All Products →
                                 </Typography>

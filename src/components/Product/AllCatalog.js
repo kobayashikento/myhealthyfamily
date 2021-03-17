@@ -51,7 +51,7 @@ const AllCatalog = (props) => {
                         {prop =>
                             <div onMouseEnter={() => setBreadHover(1)} onMouseLeave={() => setBreadHover(0)}>
                                 <Link to="/" style={linkStyle}>
-                                    {props.shopDetails.name}
+                                    {props.shopDetails.info.name}
                                 </Link>
                                 <div style={prop} />
                             </div>
@@ -124,7 +124,7 @@ const AllCatalog = (props) => {
                 </Grid>
             </Container>
             <Contact width={props.width} />
-            <FooterMenu width={props.width} shopDetails={props.shopDetails} />
+            <FooterMenu width={props.width} shopDetails={props.shopDetails} scrollbar={props.scrollbar} />
         </div >
     )
 }

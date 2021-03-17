@@ -15,6 +15,7 @@ function isEmpty(obj) {
 }
 
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { Skeleton } from '@material-ui/lab';
 
 const Alert = () => {
     const { shopDetails, setCurrency } = useShopify();
@@ -28,7 +29,7 @@ const Alert = () => {
 
     React.useEffect(() => {
         if (!isEmpty(shopDetails)) {
-            setCurr([currencyDic[shopDetails.currencyCode], currencyDic[shopDetails.currencyCode]])
+            setCurr([currencyDic[shopDetails.info.currencyCode], currencyDic[shopDetails.info.currencyCode]])
         }
     }, [shopDetails])
 
@@ -57,12 +58,16 @@ const Alert = () => {
                 </div>
                 <Container maxWidth="lg" className="content-wrapper">
                     <div style={{ display: "flex", alignItems: "center" }}>
-                        <div style={{ cursor: "pointer" }} onMouseEnter={() => setHover(1)} onMouseLeave={() => setHover(0)} onClick={() => setOpenPreference(true)}>
-                            <Typography style={{ fontSize: "13px" }}>
-                                {curr[0] !== null ? curr[0].country : "Canada"}, {curr[1] !== null ? Object.keys[curr[1]] : "CAD"} {curr[1] !== null ? curr[1].format : "$"}
-                            </Typography>
-                            <animated.div style={{ ...lineSpring }} />
-                        </div>
+                        {
+                            isEmpty(shopDetails) ? <Skeleton animation="wave" width={70} height={10}/> 
+                            :
+                            <div style={{ cursor: "pointer" }} onMouseEnter={() => setHover(1)} onMouseLeave={() => setHover(0)} onClick={() => setOpenPreference(true)}>
+                                <Typography style={{ fontSize: "13px" }}>
+                                    {curr[0] !== null ? curr[0].country : "Canada"}, {curr[1] !== null ? Object.keys[curr[1]] : "CAD"} {curr[1] !== null ? curr[1].format : "$"}
+                                </Typography>
+                                <animated.div style={{ ...lineSpring }} />
+                            </div>
+                        }
                         <Typography style={{ fontSize: "14px", marginBottom: "1px" }}>
                             {'\u00A0'} | {'\u00A0'}
                         </Typography>
@@ -82,9 +87,13 @@ const Alert = () => {
                     </Typography>
                     </div>
                 </Container>
-                <Preference open={openPreference} setOpenPreference={(state) => setOpenPreference(state)}
-                    handleCurrChange={(arr) => handleCurrChange(arr)}
-                    currency={curr} paymentSettings={shopDetails.paymentSettings} />
+                {
+                    isEmpty(shopDetails) ? null
+                        :
+                        <Preference open={openPreference} setOpenPreference={(state) => setOpenPreference(state)}
+                            handleCurrChange={(arr) => handleCurrChange(arr)}
+                            currency={curr} paymentSettings={shopDetails.info.paymentSettings} />
+                }
             </header>
             :
             <div></div>

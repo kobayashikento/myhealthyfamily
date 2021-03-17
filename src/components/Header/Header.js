@@ -78,7 +78,7 @@ const Header = (props) => {
                     {!(isEmpty(shopDetails)) ?
                         <Typography style={{ fontSize: "3.2rem", fontWeight: "bold", fontFamily: 'FirusasHeader, "Times New Roman", Times, Georgia, serif' }}>
                             <Link to="/" onClick={() => props.scrollbar.current.scrollToTop()} style={{ textDecoration: "none", color: "black" }}>
-                                {shopDetails.name}
+                                {shopDetails.info.name}
                             </Link>
                         </Typography>
                         :

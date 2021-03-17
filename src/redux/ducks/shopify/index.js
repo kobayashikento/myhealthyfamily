@@ -86,19 +86,6 @@ function getProducts() {
 
 // Gets individual item based on id
 function getProduct(id) {
-
-	const productsQuery = largeclient.graphQLClient.query((root) => {
-		root.addConnection('products', { args: { first: 10 } }, (product) => {
-			product.add('title');
-			product.add('tags');// Add fields to be returned
-		});
-	});
-
-	largeclient.graphQLClient.send(productsQuery).then(({ model, data }) => {
-		// Do something with the products
-		// console.log(model);
-	});
-
 	return async (dispatch) => {
 		const resp = await client.product.fetch(id)
 		// console.log(resp, id)
@@ -138,11 +125,17 @@ function checkout() {
 
 // Gets Shopify store information
 function shopInfo() {
+	const shopInfoPromise = client.shop.fetchInfo().then((resp) => {
+		return resp;
+	})
+	const shopPolicyPromise = client.shop.fetchPolicies().then((resp) => {
+		return resp;
+	})
 	return (dispatch) => {
-		client.shop.fetchInfo().then((resp) => {
+		Promise.all([shopInfoPromise, shopPolicyPromise]).then((values) => {
 			dispatch({
 				type: SHOP_FOUND,
-				payload: resp,
+				payload: { "info": values[0], "policies": values[1] }
 			})
 		})
 	}
@@ -245,7 +238,6 @@ export function useShopify() {
 	const openCart = () => dispatch(handleCartOpen())
 	const setCount = (count) => dispatch(handleSetCount(count))
 	const setCurrency = (curr) => dispatch(handleSetCurrency(curr))
-
 	const addVariant = (checkoutId, lineItemsToAdd) =>
 		dispatch(addVariantToCart(checkoutId, lineItemsToAdd))
 	const updateQuantity = (lineItemId, quantity, checkoutID) =>
