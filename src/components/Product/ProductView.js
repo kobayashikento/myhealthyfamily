@@ -21,6 +21,9 @@ import 'pure-react-carousel/dist/react-carousel.es.css';
 
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import { Skeleton } from "@material-ui/lab";
+
+import parse from 'html-react-parser';
 
 function useWindowSize() {
 	const [size, setSize] = React.useState([0, 0]);
@@ -203,6 +206,24 @@ const ProductView = (props) => {
 		}
 	}
 
+	const createDescription = () => {
+
+		try {
+			return <div style={{fontSize: "15px", fontFamily: "SofiaR"}}>{parse(`${product.descriptionHtml}`)}</div>
+		} catch (error) {
+			return (
+				description.map((each, i) => {
+					return <div
+						key={`line-description +${i}`}>
+						<Typography style={{ fontSize: "15px" }}>
+							{each}
+						</Typography>
+					</div>
+				})
+			)
+		}
+	}
+
 	return (
 		<div style={{ marginTop: "2.2vmax" }}>
 			<Container maxWidth="lg" style={{ marginBottom: "4.4vmax", paddingLeft: "3.3vmax" }}>
@@ -304,9 +325,12 @@ const ProductView = (props) => {
 							>
 								{prop =>
 									<div onMouseEnter={() => setBreadHover(1)} onMouseLeave={() => setBreadHover(0)}>
-										<Link to="/" style={linkStyle}>
-											{shopDetails.info.name}
-										</Link>
+										{
+											isEmpty(shopDetails) ? <Skeleton animation="wave" width={50} height={10} /> :
+												<Link to="/" style={linkStyle}>
+													{shopDetails.info.name}
+												</Link>
+										}
 										<div style={prop} />
 									</div>
 								}
@@ -430,15 +454,9 @@ const ProductView = (props) => {
 							{
 								descIndex ?
 									<div style={{ maxWidth: "80%" }}>
-										{description &&
-											description.map((each, i) => {
-												return <div
-													key={`line-description +${i}`}>
-													<Typography style={{ fontSize: "15px" }}>
-														{each}
-													</Typography>
-												</div>
-											})}
+										{description === undefined ? <Skeleton animation="wave" width={100} height={10} />
+											: createDescription()
+										}
 									</div>
 									:
 									<div style={{ maxWidth: "80%" }}>
@@ -446,11 +464,13 @@ const ProductView = (props) => {
 											{deliveryPolicy.short}
 										</Typography>
 										<div style={{ width: "fit-content" }}>
+											<Link to='/refund-policy' style={{textDecoration: "none", color: "inherit"}}>
 											<Typography onMouseEnter={() => setReadHover(true)} onMouseLeave={() => setReadHover(false)}
-												style={{ fontSize: "15px", marginTop: "1rem", cursor: "pointer" }}>
+												style={{ fontSize: "15px", marginTop: "2.2vmax", cursor: "pointer", fontWeight: "bold" }}>
 												Read More Here
 										</Typography>
 											<animated.div style={readSpring} />
+											</Link>
 										</div>
 									</div>
 							}
