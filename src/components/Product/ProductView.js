@@ -293,7 +293,7 @@ const ProductView = (props) => {
 													})
 												}
 											</Slider>
-											<IconButton disabled={imgIndex > product.images.length - 1} onClick={() => handleImgArrow("next")}
+											<IconButton disabled={imgIndex >= product.images.length - 1} onClick={() => handleImgArrow("next")}
 												style={{
 													background: "transparent", border: "none", position: "absolute",
 													top: "40%", right: "0"
