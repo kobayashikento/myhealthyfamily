@@ -98,9 +98,9 @@ const App = (props) => {
 	return (
 		<Scrollbars
 			ref={scrollbar}
-			style={{ width: width, height: height }}
+			style={{ width: width, height: height}}
 			autoHide
-			renderTrackHorizontal={props => <div {...props} className="track-horizontal" style={{ display: "none" }} />}
+			renderTrackHorizontal={props => <div {...props} style={{display: 'none'}} className="track-horizontal"/>}
 			renderThumbHorizontal={props => <div {...props} className="thumb-horizontal" style={{ display: "none" }} />}
 		>
 			<Alert />

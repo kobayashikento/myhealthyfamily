@@ -72,6 +72,7 @@ const CssFormControl = withStyles({
 const ProductView = (props) => {
 
 	const [imgIndex, setImgIndex] = React.useState(0);
+	const [verImgIndex, setVerImgIndex] = React.useState(0);
 	const [imgHover, setImgHover] = React.useState(0);
 	const [breadHover, setBreadHover] = React.useState(0);
 	const [variation, setVariation] = React.useState(0);
@@ -200,8 +201,15 @@ const ProductView = (props) => {
 
 	const handleImgArrow = (dir) => {
 		if (dir === "next" && imgIndex + 1 <= product.images.length - 1) {
+			if (product.images.length - verImgIndex >= 5) {
+				setVerImgIndex(imgIndex);
+			}
 			setImgIndex(imgIndex + 1);
+
 		} else if (dir === "back" && imgIndex !== 0) {
+			if (verImgIndex - 1 >= 0) {
+				setVerImgIndex(verImgIndex - 1);
+			}
 			setImgIndex(imgIndex - 1);
 		}
 	}
@@ -209,7 +217,7 @@ const ProductView = (props) => {
 	const createDescription = () => {
 
 		try {
-			return <div style={{fontSize: "15px", fontFamily: "SofiaR"}}>{parse(`${product.descriptionHtml}`)}</div>
+			return <div style={{ fontSize: "15px", fontFamily: "SofiaR" }}>{parse(`${product.descriptionHtml}`)}</div>
 		} catch (error) {
 			return (
 				description.map((each, i) => {
@@ -232,20 +240,23 @@ const ProductView = (props) => {
 						{
 							isEmpty(product) ? null :
 								<Grid container justify="center" spacing={5} style={{ position: "sticky", top: "150px" }}>
-									<Grid item xs={3} style={{ maxHeight: "500px", overflow: "hidden" }}>
+									<Grid item xs={3} style={{ maxHeight: "500px" }}>
 										<CarouselProvider
-											naturalSlideWidth={100}
-											naturalSlideHeight={100}
+											naturalSlideWidth={50}
+											naturalSlideHeight={50}
 											totalSlides={product.images.length}
 											orientation="vertical"
 											visibleSlides={4}
-											currentSlide={imgIndex}
+											dragEnabled={false}
+											currentSlide={verImgIndex}
 										>
 											<Slider>
 												{
 													product.images.map((ele, index) => {
 														return (
-															<Slide index={index} onClick={() => setImgIndex(index)} onMouseEnter={() => setImgHover(index)} onMouseLeave={() => setImgHover(-1)}>
+															<Slide style={{ opacity: imgHover === index || imgIndex === index ? 0.5 : 1}}
+																index={index} onClick={() => setImgIndex(index)} onMouseEnter={() => setImgHover(index)}
+																onMouseLeave={() => setImgHover(-1)}>
 																<Spring
 																	to={{ transform: imgHover === index ? "scale(1.1)" : "scale(1)" }}
 																	from={{
@@ -256,8 +267,7 @@ const ProductView = (props) => {
 																		<img
 																			style={{
 																				...prop,
-																				filter: imgIndex === index ? "brightness(0.8)" : "",
-																				marginRight: "auto", marginLeft: "auto", padding: "15px 0", cursor: "pointer"
+																				marginRight: "auto", marginLeft: "auto", padding: "8px 0", cursor: "pointer"
 																			}}
 																			src={ele.src}
 																			alt={`${ele.title} product shot`}
@@ -464,12 +474,12 @@ const ProductView = (props) => {
 											{deliveryPolicy.short}
 										</Typography>
 										<div style={{ width: "fit-content" }}>
-											<Link to='/refund-policy' style={{textDecoration: "none", color: "inherit"}}>
-											<Typography onMouseEnter={() => setReadHover(true)} onMouseLeave={() => setReadHover(false)}
-												style={{ fontSize: "15px", marginTop: "2.2vmax", cursor: "pointer", fontWeight: "bold" }}>
-												Read More Here
+											<Link to='/refund-policy' style={{ textDecoration: "none", color: "inherit" }}>
+												<Typography onMouseEnter={() => setReadHover(true)} onMouseLeave={() => setReadHover(false)}
+													style={{ fontSize: "15px", marginTop: "2.2vmax", cursor: "pointer", fontWeight: "bold" }}>
+													Read More Here
 										</Typography>
-											<animated.div style={readSpring} />
+												<animated.div style={readSpring} />
 											</Link>
 										</div>
 									</div>
