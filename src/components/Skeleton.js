@@ -64,7 +64,7 @@ export default (props) => {
 				</div>
 				<HomeDeals width={width} history={props.history} scrollbar={props.scrollbar} content={getBestSeller()} />
 				<HomeContent shopDetails={shopDetails} width={width} scrollbar={props.scrollbar} />
-				<Contact width={width} />
+				<Contact width={width} scrollbar={props.scrollbar} />
 				<FooterMenu width={width} shopDetails={shopDetails} scrollbar={props.scrollbar} />
 			</div >
 			:

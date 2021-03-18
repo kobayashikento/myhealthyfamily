@@ -106,7 +106,7 @@ const App = (props) => {
 			renderTrackHorizontal={props => <div {...props} style={{display: 'none'}} className="track-horizontal"/>}
 			renderThumbHorizontal={props => <div {...props} className="thumb-horizontal" style={{ display: "none" }} />}
 		>
-			<Alert />
+			<Alert/>
 			<Router>
 				<Route exact path="/" render={() => <Redirect to="/home" />} />
 				<Route path="/" render={props => <Header {...props} history={props.history} width={width} scrollbar={scrollbar} />} />

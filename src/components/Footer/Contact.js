@@ -7,6 +7,8 @@ import { animated, useSpring } from 'react-spring';
 
 import { withStyles } from '@material-ui/core/styles';
 
+import { Link } from 'react-router-dom';
+
 const CssTextField = withStyles({
     root: {
         '& .MuiInputLabel-outlined': {
@@ -50,6 +52,7 @@ const CssTextField = withStyles({
 const Contact = (props) => {
 
     const [hover, setHover] = React.useState(false);
+    const [email, setEmail] = React.useState(undefined);
 
     const fillBoxSpring = useSpring({
         to: { transform: !hover ? "translateY(100%)" : "translateY(0%)" },
@@ -59,6 +62,26 @@ const Contact = (props) => {
     });
 
     const [checked, setChecked] = React.useState(false);
+    const handleClick = () => {
+        if (props.scrollbar !== undefined) {
+            props.scrollbar.current.scrollToTop();
+        }
+    }
+
+    const valid = (str) => {
+        if (str === undefined) {
+            return true;
+        } else if (str.trim() === "") {
+            return false;
+        }
+        return true;
+    }
+
+    const validate = () => {
+        if (email === undefined) {
+            setEmail("")
+        }
+    }
 
     return (
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -68,47 +91,52 @@ const Contact = (props) => {
             </Typography>
             <div style={{ maxWidth: "600px", display: "flex", height: "50px", flexDirection: "column" }}>
                 <div style={{ display: "flex", height: "50px" }}>
-                    <CssTextField label="Email Address" variant="outlined" style={{ borderRadius: "0px" }} />
-                    <div style={{
+                    <CssTextField helperText={valid(email) ? "" : "Email address required."} error={!valid(email)} onChange={(e) => setEmail(e.target.value)}
+                        label="Email Address" variant="outlined" style={{ borderRadius: "0px" }} />
+                    <div onClick={() => validate()} style={{
                         width: "fit-content", overflow: "hidden", position: "relative", borderTop: "1px solid black",
                         borderBottom: "1px solid black", borderRight: "1px solid black", display: "flex"
                     }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
                         <animated.div style={fillBoxSpring} />
                         <Button style={{ border: "2px solid white", borderRadius: "2px", background: "white", width: "100%" }} >
                             <Typography style={{
-                                textAlign: "left", fontSize: `14px`, fontWeight: "600",
-                                color: hover ? "white" : "black", padding: "7px 15px", zIndex: 2
-                            }} >Subscribe</Typography>
+                            textAlign: "left", fontSize: `14px`, fontWeight: "600",
+                            color: hover ? "white" : "black", padding: "7px 15px", zIndex: 2
+                        }} >Subscribe</Typography>
                         </Button>
-                    </div>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", marginTop: "10px" }}>
-                    <Checkbox
-                        checked={checked}
-                        onChange={() => setChecked(!checked)}
-                        inputProps={{ 'aria-label': 'primary checkbox' }}
-                        style={{ padding: "0px" }}
-                    />
-                    <div style={{ display: "flex", marginLeft: "1rem" }}>
-                        <Typography style={{ fontSize: `15px` }}>
-                            I accept the
+            </div>
+            <div style={{ display: "flex", alignItems: "center", marginTop: "2rem" }}>
+                <Checkbox
+                    checked={checked}
+                    onChange={() => setChecked(!checked)}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                    style={{ padding: "0px" }}
+                />
+                <div style={{ display: "flex", marginLeft: "1rem", }}>
+                    <Typography style={{ fontSize: `15px` }}>
+                        I accept the
             </Typography>
+                    <Link to="/terms-of-service" onClick={() => handleClick()} style={{ color: "inherit", textDecoration: "none" }}>
                         <Typography style={{ fontSize: `15px`, textIndent: "4px", cursor: "pointer", textDecoration: "underline" }}>
                             terms
             </Typography>
-                        <Typography style={{ fontSize: `15px`, textIndent: "4px" }}>
-                            and
+                    </Link>
+                    <Typography style={{ fontSize: `15px`, textIndent: "4px" }}>
+                        and
             </Typography>
+                    <Link to="/terms-of-service" onClick={() => handleClick()} style={{ color: "inherit", textDecoration: "none" }}>
                         <Typography style={{ fontSize: `15px`, textIndent: "4px", cursor: "pointer", textDecoration: "underline" }}>
                             conditions
             </Typography>
-                        <Typography style={{ fontSize: `15px` }}>
-                            .
+                    </Link>
+                    <Typography style={{ fontSize: `15px` }}>
+                        .
             </Typography>
-                    </div>
                 </div>
             </div>
         </div>
+        </div >
     )
 }
 
