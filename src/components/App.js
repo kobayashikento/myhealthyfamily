@@ -34,15 +34,18 @@ const App = (props) => {
 		createCheckout,
 		fetchProducts,
 		fetchCollection,
+		fetchPages,
 		featured,
 		shopDetails,
-		products
+		products,
+		pages
 	} = useShopify()
 
 	useEffect(() => {
 		createShop()
 		fetchProducts()
 		createCheckout()
+		fetchPages()
 		fetchCollection()
 	}, []);
 
@@ -87,7 +90,7 @@ const App = (props) => {
 					<Route key={`route-${convertedLink}`} path={`/${convertedLink}`}
 						render={props =>
 							<InfoSkeleton {...props} shopDetails={shopDetails} width={width}
-								history={props.history} scrollbar={scrollbar} route={r} />
+								history={props.history} scrollbar={scrollbar} route={r} pages={pages}/>
 						} />
 				)
 			})

@@ -107,7 +107,7 @@ const FooterMenu = (props) => {
                                 Do you need assistance? Give us a call.
                     </Typography>
                             <Typography style={{ fontSize: `${25 / 1920 * props.width}px`, marginBottom: "15px", fontWeight: "bold" }}>
-                                +833-432-6432
+                                +647-228-3697
                     </Typography>
                         </div>
                     </Grid>

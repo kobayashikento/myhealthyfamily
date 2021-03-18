@@ -10,9 +10,9 @@ const client = Client.buildClient({
 })
 
 // fetch the large, unoptimized version of the SDK
-import largeClient from 'shopify-buy/index.unoptimized.umd';
+import unoptimizedClientUMD from 'shopify-buy/index.unoptimized.umd';
 
-const largeclient = largeClient.buildClient({
+const unoptimizedClient = unoptimizedClientUMD.buildClient({
 	domain: DOMAIN,
 	storefrontAccessToken: API_KEY
 });
@@ -29,6 +29,7 @@ const OPEN_CART = "shopify/OPEN_CART"
 const CLOSE_CART = "shopify/CLOSE_CART"
 const CART_COUNT = "shopify/CART_COUNT"
 const SET_CURRENCY = "shopify/SET_CURRENCY"
+const PAGES_FOUND = "shopify/PAGES_FOUND"
 
 const initialState = {
 	isCartOpen: false,
@@ -38,7 +39,8 @@ const initialState = {
 	featured: [],
 	product: {},
 	shop: {},
-	currency: "CAD"
+	currency: "CAD",
+	pages: {}
 }
 
 export default (state = initialState, action) => {
@@ -67,6 +69,8 @@ export default (state = initialState, action) => {
 			return { ...state, cartCount: action.payload }
 		case SET_CURRENCY:
 			return { ...state, currency: action.payload }
+		case PAGES_FOUND:
+			return { ...state, pages: action.payload }
 		default:
 			return state
 	}
@@ -131,11 +135,32 @@ function shopInfo() {
 	const shopPolicyPromise = client.shop.fetchPolicies().then((resp) => {
 		return resp;
 	})
+
 	return (dispatch) => {
 		Promise.all([shopInfoPromise, shopPolicyPromise]).then((values) => {
 			dispatch({
 				type: SHOP_FOUND,
 				payload: { "info": values[0], "policies": values[1] }
+			})
+		})
+	}
+}
+
+function getPages() {
+	return (dispatch) => {
+		const pagesQuery = unoptimizedClient.graphQLClient.query((root) => {
+			root.addConnection('pages', { args: { first: 10 } }, (page) => {
+				page.add('id');
+				page.add('title');
+				page.add('body');
+				page.add('bodySummary');
+			});
+		});
+
+		unoptimizedClient.graphQLClient.send(pagesQuery).then(({ model, data }) => {
+			dispatch({
+				type: PAGES_FOUND,
+				payload: model,
 			})
 		})
 	}
@@ -229,9 +254,11 @@ export function useShopify() {
 	)
 	const shopDetails = useSelector((appState) => appState.shopifyState.shop)
 	const currency = useSelector((appState) => appState.shopifyState.currency)
+	const pages = useSelector((appState) => appState.shopifyState.pages)
 	const fetchProducts = () => dispatch(getProducts())
 	const fetchProduct = (id) => dispatch(getProduct(id))
 	const fetchCollection = () => dispatch(getCollection())
+	const fetchPages = () => dispatch(getPages())
 	const createCheckout = () => dispatch(checkout())
 	const createShop = () => dispatch(shopInfo())
 	const closeCart = () => dispatch(handleCartClose())
@@ -254,10 +281,12 @@ export function useShopify() {
 		cartCount,
 		shopDetails,
 		currency,
+		pages,
 		addVariant,
 		fetchProducts,
 		fetchProduct,
 		fetchCollection,
+		fetchPages,
 		createCheckout,
 		createShop,
 		closeCart,

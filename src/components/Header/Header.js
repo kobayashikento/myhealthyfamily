@@ -19,6 +19,9 @@ import HeaderDropDown from './HeaderDropDown';
 import { Spring } from 'react-spring/renderprops';
 import { Skeleton } from '@material-ui/lab';
 
+import InputAdornment from "@material-ui/core/InputAdornment";
+import ClearIcon from "@material-ui/icons/Clear";
+
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const CssTextField = withStyles({
@@ -71,6 +74,30 @@ const Header = (props) => {
         return temp;
     }
 
+    const handleClick = () => {
+        setInput("");
+    };
+
+    const handleMouseDown = (event) => {
+        event.preventDefault();
+    };
+
+    const endAdornment = () => {
+        if (input !== "") {
+            return (
+                <InputAdornment style={{position: "absolute", right: "0px"}}>
+                    <ClearIcon
+                        onClick={handleClick}
+                        onMouseDown={handleMouseDown}
+                        style={{ color: "black", cursor: "pointer" }}
+                    />
+                </InputAdornment>
+            );
+        }
+
+        return "";
+    };
+
     return (
         matches ?
             <div className="header">
@@ -91,7 +118,11 @@ const Header = (props) => {
                             SEARCH
                     </Typography>
                         <animated.div style={searchSpring} onClick={() => setSearchHover(true)} >
-                            <CssTextField type="search" style={{ width: "210px" }} value={input} onChange={handleChange} />
+                            <CssTextField style={{ width: "210px" }} value={input} onChange={handleChange}
+                                InputProps={{
+                                    startAdornment: endAdornment()
+                                }}
+                            />
                         </animated.div>
                         <SearchPopUp history={props.history} input={input} searchHover={searchHover} setSearchHover={(bool) => setSearchHover(bool)} />
                     </div>

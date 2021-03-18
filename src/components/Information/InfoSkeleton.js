@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { Skeleton } from '@material-ui/lab';
 
 import parse from 'html-react-parser';
+import ContactUs from './ContactUs';
 
 function isEmpty(obj) {
     return Object.keys(obj).length === 0;
@@ -73,11 +74,29 @@ const InfoSkeleton = (props) => {
             </div>
         )
     }
-    
+
+    const getAboutUsPage = () => {
+        let temp;
+        if (!isEmpty(props.pages)) {
+            props.pages.pages.forEach(p => {
+                if (p.title === "About Us") {
+                    try {
+                        return temp = parse(p.body);
+                    } catch (error) {
+                        return temp = p.bodySummary;
+                    }
+                }
+            })
+        }
+        return <div style={{ fontFamily: "SofiaR", fontWeight: "14px" }}>{temp}</div>
+    }
+
     const createContent = () => {
         switch (props.route) {
             case "About us":
-                return (props.shopDetails.info.description);
+                return (getAboutUsPage());
+            case "Contact":
+                return (<ContactUs />)
             case "Refund Policy":
                 return (parse(props.shopDetails.policies.refundPolicy.body));
             case "Privacy Policy":

@@ -59,14 +59,14 @@ const Alert = () => {
                 <Container maxWidth="lg" className="content-wrapper">
                     <div style={{ display: "flex", alignItems: "center" }}>
                         {
-                            isEmpty(shopDetails) ? <Skeleton animation="wave" width={70} height={10}/> 
-                            :
-                            <div style={{ cursor: "pointer" }} onMouseEnter={() => setHover(1)} onMouseLeave={() => setHover(0)} onClick={() => setOpenPreference(true)}>
-                                <Typography style={{ fontSize: "13px" }}>
-                                    {curr[0] !== null ? curr[0].country : "Canada"}, {curr[1] !== null ? Object.keys[curr[1]] : "CAD"} {curr[1] !== null ? curr[1].format : "$"}
-                                </Typography>
-                                <animated.div style={{ ...lineSpring }} />
-                            </div>
+                            isEmpty(shopDetails) ? <Skeleton animation="wave" width={70} height={10} />
+                                :
+                                <div style={{ cursor: "pointer" }} onMouseEnter={() => setHover(1)} onMouseLeave={() => setHover(0)} onClick={() => setOpenPreference(true)}>
+                                    <Typography style={{ fontSize: "13px" }}>
+                                        {curr[0] !== null ? curr[0].country : "Canada"}, {curr[1] !== null ? Object.keys[curr[1]] : "CAD"} {curr[1] !== null ? curr[1].format : "$"}
+                                    </Typography>
+                                    <animated.div style={{ ...lineSpring }} />
+                                </div>
                         }
                         <Typography style={{ fontSize: "14px", marginBottom: "1px" }}>
                             {'\u00A0'} | {'\u00A0'}
@@ -83,7 +83,7 @@ const Alert = () => {
                             Let's talk!
                     </Typography>
                         <Typography style={{ fontSize: "14px", fontWeight: "bold", textIndent: "4px" }}>
-                            +833-432-6432
+                            +647-228-3697
                     </Typography>
                     </div>
                 </Container>
