@@ -7,3 +7,7 @@
 .mainImage:hover > :first-child  {
     opacity: 0;
 }
+
+.mainImage:hover > :nth-child(2)  {
+    transform: scale(1.5) !important;
+}

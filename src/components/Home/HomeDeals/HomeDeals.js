@@ -78,6 +78,7 @@ const HomeDeals = (props) => {
         const id = product_id;
         fetchProduct(id).then((res) => {
             props.history.push(`/product/${res.id}`)
+            console.log(props.scrollbar)
             if (props.scrollbar !== undefined) {
                 props.scrollbar.current.scrollToTop();
             }

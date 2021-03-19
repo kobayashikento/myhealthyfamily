@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import { BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom"
-import Cart from "./Cart"
+import Cart from "./Product/Cart"
 import Skeleton from './Skeleton';
 import ProductView from "./Product/ProductView"
 import { useShopify } from "../hooks"
@@ -128,7 +128,7 @@ const App = (props) => {
 								history={props.history} scrollbar={scrollbar} featured={featured} />
 						} />
 					{createAboutRoutes()}
-					<Route path="/product/:productId" component={ProductView} />
+					<Route path="/product/:productId" render={(prop) => <ProductView {...prop} scrollbar={scrollbar}/>} />
 				</Switch>
 			</Router>
 		</Scrollbars>

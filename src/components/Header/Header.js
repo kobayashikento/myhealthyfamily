@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Link } from 'react-router-dom';
-import { Typography, Container, TextField, InputAdornment, useMediaQuery } from '@material-ui/core';
+import { Typography, Container, TextField, InputAdornment, useMediaQuery, Badge } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { animated, useSpring } from 'react-spring';
 import { Spring } from 'react-spring/renderprops';
@@ -15,6 +15,7 @@ import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
 // import files
 import SearchPopUp from './SearchPopUp';
 import HeaderDropDown from './HeaderDropDown';
+import Cart from '../Product/Cart';
 
 import '../../assests/styles/headerStyle.css';
 
@@ -23,7 +24,7 @@ import { isEmpty } from '../../assests/functions';
 
 const Header = (props) => {
     // states
-    const { shopDetails, featured } = useShopify();
+    const { shopDetails, featured, openCart, closeCart, cartCount } = useShopify();
     const [searchHover, setSearchHover] = React.useState(false);
     const [dropbarHover, setDropbarHover] = React.useState(0);
     const [input, setInput] = React.useState('');
@@ -101,8 +102,11 @@ const Header = (props) => {
                         </animated.div>
                         <SearchPopUp history={props.history} input={input} searchHover={searchHover} setSearchHover={(bool) => setSearchHover(bool)} />
                     </div>
-                    <div>
-                        <LocalMallOutlinedIcon className="cartOpacity" fontSize="large" style={{ cursor: "pointer" }} />
+                    <div onMouseEnter={() => openCart()} onMouseLeave={() => closeCart()}>
+                        <Badge badgeContent={cartCount} color="secondary">
+                            <LocalMallOutlinedIcon className="cartOpacity" style={{ cursor: "pointer", fontSize: "2.5rem" }} />
+                        </Badge>
+                        <Cart />
                     </div>
                 </Container>
                 <div style={{ display: "flex", justifyContent: "center", padding: "8px 20px 0 20px", fontFamily: "SofiaM" }}>

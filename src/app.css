@@ -104,7 +104,7 @@ h2 {
 }
 
 .button {
-	background-color: #2752ff;
+	background-color: black;
 	color: white;
 	border: none;
 	font-size: 1.2rem;
@@ -114,7 +114,9 @@ h2 {
 
 .button:hover,
 .button:focus {
-	background-color: #222222;
+	background-color: white;
+	color: black;
+	border: 1px solid black;
 }
 
 .button:disabled {
@@ -250,7 +252,6 @@ h2 {
 /* LINE ITEMS
   * ============================== */
 .Line-item {
-	margin-bottom: 20px;
 	overflow: hidden;
 	backface-visibility: visible;
 	min-height: 65px;
@@ -272,6 +273,7 @@ h2 {
 
 .Line-item__content {
 	width: 100%;
+	padding-right: 10px;
 	padding-left: 75px;
 }
 
@@ -279,6 +281,7 @@ h2 {
 	display: inline-block;
 	width: 100%;
 	margin-bottom: 5px;
+	margin-top: 10px;
 	position: relative;
 }
 

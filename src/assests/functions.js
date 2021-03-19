@@ -3,7 +3,11 @@ function isEmpty(obj) {
 }
 
 const convertedLink = (str) => {
-    return str.toLowerCase().replaceAll("/", "-").replaceAll(" ", "-");
+    try {
+        return str.toLowerCase().replaceAll("/", "-").replaceAll(" ", "-");
+    } catch {
+        return
+    }
 }
 
 export {

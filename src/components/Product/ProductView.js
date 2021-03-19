@@ -1,29 +1,31 @@
 import React, { useEffect, useState } from "react"
+
 import { Link } from "react-router-dom"
 import { useShopify } from "../../hooks"
 
 import { Spring } from 'react-spring/renderprops-universal';
+import { animated, useSpring } from "react-spring";
 
-import Contact from '../Footer/Contact';
-import FooterMenu from '../Footer/FooterMenu';
-import { Breadcrumbs, Container, Grid, Typography, FormControl, Select, MenuItem, Divider, IconButton } from "@material-ui/core";
+import { Breadcrumbs, Container, Grid, Typography, FormControl, Select, MenuItem, Divider, IconButton, Snackbar } from "@material-ui/core";
+import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import { CarouselProvider, Slider, Slide, ImageWithZoom } from 'pure-react-carousel';
+import 'pure-react-carousel/dist/react-carousel.es.css';
+import { Skeleton } from "@material-ui/lab";
+import CloseIcon from '@material-ui/icons/Close';
+
+import parse from 'html-react-parser';
 
 import { withStyles } from '@material-ui/core/styles';
 
+import Contact from '../Footer/Contact';
+import FooterMenu from '../Footer/FooterMenu';
+import HomeDeals from "../Home/HomeDeals/HomeDeals";
+
 import { currencyDic } from '../../assests/constants';
 
-import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
-import HomeDeals from "../Home/HomeDeals/HomeDeals";
-import { animated, useSpring } from "react-spring";
-
-import { CarouselProvider, Slider, Slide, ImageWithZoom } from 'pure-react-carousel';
-import 'pure-react-carousel/dist/react-carousel.es.css';
-
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import { Skeleton } from "@material-ui/lab";
-
-import parse from 'html-react-parser';
+import { isEmpty, convertedLink } from '../../assests/functions';
 
 import '../../assests/styles/productViewStyle.css';
 
@@ -38,16 +40,6 @@ function useWindowSize() {
 		return () => window.removeEventListener('resize', updateSize);
 	}, []);
 	return size;
-}
-
-const convertLink = (string) => {
-	if (string !== undefined) {
-		return string.toLowerCase().replaceAll("/", "-").replaceAll(" ", "-");
-	}
-}
-
-function isEmpty(obj) {
-	return Object.keys(obj).length === 0;
 }
 
 const CssFormControl = withStyles({
@@ -71,8 +63,9 @@ const CssFormControl = withStyles({
 	},
 })(FormControl);
 
-const ProductView = (props) => {
+const linkStyle = { fontSize: "14px", textDecoration: "none", color: "inherit", textTransform: "capitalize" }
 
+const ProductView = (props) => {
 	const [imgIndex, setImgIndex] = React.useState(0);
 	const [verImgIndex, setVerImgIndex] = React.useState(0);
 	const [imgHover, setImgHover] = React.useState(0);
@@ -81,8 +74,8 @@ const ProductView = (props) => {
 	const [addCartHover, setAddCartHover] = React.useState(false);
 	const [descIndex, setDescIndex] = React.useState(true);
 	const [readHover, setReadHover] = React.useState(false);
-
-	const linkStyle = { fontSize: "14px", textDecoration: "none", color: "inherit", textTransform: "capitalize" }
+	const [width, height] = useWindowSize();
+	const [open, setOpen] = React.useState(false);
 
 	const {
 		product,
@@ -96,29 +89,19 @@ const ProductView = (props) => {
 	} = useShopify()
 
 	const id = props.match.params.productId
-	const defaultSize = product.variants && product.variants[0].id.toString()
-	const [size, setSize] = useState("")
-	const [quantity, setQuantity] = useState(1)
-
 	const description = product.description && product.description.split(".")
 
-	const [width, height] = useWindowSize();
+	function addToCart(variant, quantity) {
+		try {
+			const lineItemsToAdd = [
+				{ variantId: variant, quantity: parseInt(quantity, 10) },
+			]
+			const checkoutId = checkoutState.id
+			addVariant(checkoutId, lineItemsToAdd)
+			setOpen(true)
+			openCart()
+		} catch (error) {
 
-	function changeSize(sizeId, quantity) {
-		openCart()
-		if (sizeId === "") {
-			sizeId = defaultSize
-			const lineItemsToAdd = [
-				{ variantId: sizeId, quantity: parseInt(quantity, 10) },
-			]
-			const checkoutId = checkoutState.id
-			addVariant(checkoutId, lineItemsToAdd)
-		} else {
-			const lineItemsToAdd = [
-				{ variantId: sizeId, quantity: parseInt(quantity, 10) },
-			]
-			const checkoutId = checkoutState.id
-			addVariant(checkoutId, lineItemsToAdd)
 		}
 	}
 
@@ -179,7 +162,7 @@ const ProductView = (props) => {
 	}
 
 	const handleChange = (e) => {
-		setVariation(e.target.value)
+		setVariation(e.target.value);
 	}
 
 	const getSameType = () => {
@@ -226,19 +209,26 @@ const ProductView = (props) => {
 		}
 	}
 
-	React.useEffect(() => {
-		if (imgIndex - 3 > verImgIndex) {
-			setVerImgIndex(verImgIndex + 1);
-		} else {
-			if (verImgIndex !== 0) {
-				setVerImgIndex(verImgIndex - 1);
-			}
+	// React.useEffect(() => {
+	// 	if (imgIndex - 3 > verImgIndex) {
+	// 		setVerImgIndex(verImgIndex + 1);
+	// 	} else {
+	// 		if (verImgIndex !== 0) {
+	// 			setVerImgIndex(verImgIndex - 1);
+	// 		}
+	// 	}
+	// }, [imgIndex])
+
+	const handleClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
 		}
-	}, [imgIndex])
+		setOpen(false);
+	};
 
 	const shadow = "rgba(14, 30, 37, 0.8) 0px 2px 4px 0px, rgba(14, 30, 37, 0.8) 0px 2px 8px 0px";
 	const noShadow = "rgba(14, 30, 37, 0) 0px 2px 4px 0px, rgba(14, 30, 37, 0) 0px 2px 8px 0px";
-
+console.log("redner")
 	return (
 		<div style={{ marginTop: "2.2vmax" }}>
 			<Container maxWidth="lg" style={{ marginBottom: "4.4vmax", paddingLeft: "3.3vmax" }}>
@@ -303,7 +293,6 @@ const ProductView = (props) => {
 											<Slider>
 												{
 													product.images.map((ele, index) => {
-														console.log(ele)
 														return (
 															<Slide key={`product-image-${index}`} index={index}>
 																<ImageWithZoom
@@ -367,8 +356,8 @@ const ProductView = (props) => {
 									>
 										{prop =>
 											<div onMouseEnter={() => setBreadHover(2)} onMouseLeave={() => setBreadHover(0)}>
-												<Link to={`/${convertLink(findFeatured())}`} style={linkStyle}>
-													{convertLink(findFeatured())}
+												<Link to={`/${convertedLink(findFeatured())}`} style={linkStyle}>
+													{convertedLink(findFeatured())}
 												</Link>
 												<div style={prop} />
 											</div>
@@ -422,12 +411,11 @@ const ProductView = (props) => {
 										border: "1px solid black", padding: "0 50px", ...prop,
 										marginLeft: "1.1vmax", cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center"
 									}}
+										onClick={() => addToCart(product.variants[variation].id.toString(), 1)}
 										onMouseEnter={() => setAddCartHover(true)} onMouseLeave={() => setAddCartHover(false)}
 									>
 										<LocalMallOutlinedIcon style={{ fontSize: "16px" }} />
-										<Typography style={{ fontSize: "16px", marginLeft: "1.1vmax" }}>
-											Add To Cart
-										</Typography>
+										<Typography style={{ fontSize: "16px", marginLeft: "1.1vmax" }}>Add To Cart</Typography>
 									</div>
 								}
 							</Spring>
@@ -496,56 +484,6 @@ const ProductView = (props) => {
 							}
 						</div>
 					</Grid>
-					{/* <div className="Product__info">
-						<h2 className="Product__title2"></h2>
-						<ul className="Product__description">
-							{description &&
-								description.map((each, i) => {
-									return <li key={`line-description +${i}`}>{each}</li>
-								})}
-						</ul>
-						<div>
-							<label htmlFor={"prodOptions"}>Size</label>
-							<select
-								id="prodOptions"
-								name={size}
-								onChange={(e) => {
-									setSize(e.target.value)
-								}}
-							>
-								{product.variants &&
-									product.variants.map((item, i) => {
-										return (
-											<option
-												value={item.id.toString()}
-												key={item.title + i}
-											>{`${item.title}`}</option>
-										)
-									})}
-							</select>
-						</div>
-						<div>
-							<label>Quantity</label>
-							<input
-								className="quantity"
-								type="number"
-								min={1}
-								value={quantity}
-								onChange={(e) => {
-									setQuantity(e.target.value)
-								}}
-							></input>
-						</div>
-						<h3 className="Product__price">
-							${product.variants && product.variants[0].price}
-						</h3>
-						<button
-							className="prodBuy button"
-							onClick={(e) => changeSize(size, quantity)}
-						>
-							Add to Cart
-					</button>
-					</div> */}
 				</Grid>
 				{
 					getSameType().length !== 0 ?
@@ -567,10 +505,27 @@ const ProductView = (props) => {
 						: null
 				}
 			</Container>
+			<Snackbar
+				anchorOrigin={{
+					vertical: 'bottom',
+					horizontal: 'left',
+				}}
+				open={open}
+				autoHideDuration={3000}
+				onClose={handleClose}
+				message="Item Added to Cart"
+				action={
+					<React.Fragment>
+						<IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+							<CloseIcon fontSize="small" />
+						</IconButton>
+					</React.Fragment>
+				}
+			/>
 			<Contact width={width} />
 			<FooterMenu width={width} shopDetails={shopDetails} />
 		</div>
 	)
 }
 
-export default React.memo(ProductView);
+export default (ProductView);

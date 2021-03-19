@@ -40,7 +40,7 @@ const initialState = {
 	product: {},
 	shop: {},
 	currency: "CAD",
-	pages: {}
+	pages: {},
 }
 
 export default (state = initialState, action) => {
@@ -240,7 +240,6 @@ function handleSetCurrency(curr) {
 	}
 }
 
-
 export function useShopify() {
 	const dispatch = useDispatch()
 	const cartStatus = useSelector((appState) => appState.shopifyState.isCartOpen)
@@ -254,6 +253,7 @@ export function useShopify() {
 	const shopDetails = useSelector((appState) => appState.shopifyState.shop)
 	const currency = useSelector((appState) => appState.shopifyState.currency)
 	const pages = useSelector((appState) => appState.shopifyState.pages)
+	const scrollbar = useSelector((appState) => appState.shopifyState.scrollbar)
 	const fetchProducts = () => dispatch(getProducts())
 	const fetchProduct = (id) => dispatch(getProduct(id))
 	const fetchCollection = () => dispatch(getCollection())

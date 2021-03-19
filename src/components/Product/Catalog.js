@@ -94,22 +94,22 @@ const Catalog = (props) => {
         return (content);
     }
 
-    const getAllTags = () => {
-        const tagsArr = [];
-        let id = "Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0LzY1NTY4OTg3ODc1MDc="
-        let item = fetchProduct(id)
-        // props.collection.products.forEach(product => {
-        //     let item = fetchProduct(product.id)
-        //     // product.tags.forEach(tag => {
-        //     //     if (!(tagsArr.includes(tag))) {
-        //     //         tagsArr.push(tag)
-        //     //     }
-        //     // })
-        // })
+    // const getAllTags = () => {
+    //     const tagsArr = [];
+    //     let id = "Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0LzY1NTY4OTg3ODc1MDc="
+    //     let item = fetchProduct(id)
+    //     // props.collection.products.forEach(product => {
+    //     //     let item = fetchProduct(product.id)
+    //     //     // product.tags.forEach(tag => {
+    //     //     //     if (!(tagsArr.includes(tag))) {
+    //     //     //         tagsArr.push(tag)
+    //     //     //     }
+    //     //     // })
+    //     // })
 
-        //console.log(tagsArr)
-        return item.tags
-    }
+    //     //console.log(tagsArr)
+    //     return item.tags
+    // }
 
     React.useEffect(() => {
         let temp = [];
@@ -154,9 +154,9 @@ const Catalog = (props) => {
         e.preventDefault()
         const id = product_id;
         fetchProduct(id).then((res) => {
-            props.history.push(`/product/${res.id}`)
+            props.history.push(`/product/${res.id}`);
+            props.scrollbar.current.scrollToTop();
         })
-        props.scrollbar.current.scrollToTop();
     }
 
     const [catHover, setCatHover] = React.useState(false);
