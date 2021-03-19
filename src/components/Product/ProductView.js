@@ -376,18 +376,18 @@ console.log("redner")
 							{isEmpty(product) ?
 								null
 								:
-								product.variants[0].compareAtPrice !== null ?
+								product.variants[variation].compareAtPrice !== null ?
 									<div style={{ display: "flex", alignItems: "center" }}>
 										<Typography style={{ fontSize: `${25 / 1920 * width}px`, color: "#959494", marginRight: "15px", textDecoration: "line-through" }}>
-											{currencyDic[currency].symbol} {getCurrPrice(product.variants[0], 1)[0]}
+											{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 1)[0]}
 										</Typography>
 										<Typography style={{ fontSize: `${40 / 1920 * width}px`, color: "#e13367" }}>
-											{currencyDic[currency].symbol} {getCurrPrice(product.variants[0], 1)[1]} | {getPercent(getCurrPrice(product.variants[0], 1))}% OFF
+											{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 1)[1]} | {getPercent(getCurrPrice(product.variants[variation], 1))}% OFF
 										</Typography>
 									</div>
 									:
 									<Typography style={{ fontSize: `${40 / 1920 * width}px`, color: "black" }}>
-										{currencyDic[currency].symbol} {getCurrPrice(product.variants[0], 0)[0]}
+										{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 0)[0]}
 									</Typography>
 							}
 						</div>
