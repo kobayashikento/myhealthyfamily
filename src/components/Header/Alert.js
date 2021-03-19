@@ -1,28 +1,24 @@
 import React from 'react';
 
-import { Typography, Container } from '@material-ui/core';
+import { Typography, Container, useMediaQuery } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import { animated, useSpring } from 'react-spring';
-
-import '../../assests/styles/alertStyle.css';
-
 import { useShopify } from "../../hooks";
+
 import Preference from './Preference';
 
 import { currencyDic } from '../../assests/constants';
+import { isEmpty } from '../../assests/functions';
 
-function isEmpty(obj) {
-    return Object.keys(obj).length === 0;
-}
+import '../../assests/styles/alertStyle.css';
 
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Skeleton } from '@material-ui/lab';
 
 const Alert = () => {
+    //states
     const { shopDetails, setCurrency } = useShopify();
 
     const [curr, setCurr] = React.useState([null, null]);
     const [hover, setHover] = React.useState(0);
-
     const [openPreference, setOpenPreference] = React.useState(false);
 
     const matches = useMediaQuery('(min-width:1024px)', { noSsr: true });
@@ -52,9 +48,7 @@ const Alert = () => {
         matches ?
             <header className="alert">
                 <div className="content-container">
-                    <Typography style={{ fontSize: "14px" }}>
-                        Free Worldwide Shipping This Month
-                </Typography>
+                    <Typography style={{ fontSize: "14px" }}>Free Worldwide Shipping This Month</Typography>
                 </div>
                 <Container maxWidth="lg" className="content-wrapper">
                     <div style={{ display: "flex", alignItems: "center" }}>
@@ -68,9 +62,7 @@ const Alert = () => {
                                     <animated.div style={{ ...lineSpring }} />
                                 </div>
                         }
-                        <Typography style={{ fontSize: "14px", marginBottom: "1px" }}>
-                            {'\u00A0'} | {'\u00A0'}
-                        </Typography>
+                        <Typography style={{ fontSize: "14px", marginBottom: "1px" }}>{'\u00A0'} | {'\u00A0'}</Typography>
                         <div style={{ cursor: "pointer" }} onMouseEnter={() => setHover(2)} onMouseLeave={() => setHover(0)} onClick={() => setOpenPreference(true)}>
                             <Typography style={{ fontSize: "13px" }}>
                                 {"English"}
@@ -79,12 +71,8 @@ const Alert = () => {
                         </div>
                     </div>
                     <div style={{ display: "flex" }}>
-                        <Typography style={{ fontSize: "14px" }}>
-                            Let's talk!
-                    </Typography>
-                        <Typography style={{ fontSize: "14px", fontWeight: "bold", textIndent: "4px" }}>
-                            +647-228-3697
-                    </Typography>
+                        <Typography style={{ fontSize: "14px" }}>Let's talk!</Typography>
+                        <Typography style={{ fontSize: "14px", fontWeight: "bold", textIndent: "4px" }}>+647-228-3697</Typography>
                     </div>
                 </Container>
                 {

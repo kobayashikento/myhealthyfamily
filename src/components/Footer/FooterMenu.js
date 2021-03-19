@@ -1,33 +1,22 @@
-import { Typography, Grid, Divider } from '@material-ui/core';
 import React from 'react';
 
+import { Typography, Grid, Divider } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import { Link } from 'react-router-dom';
 
 import { Spring } from 'react-spring/renderprops-universal';
-import { Skeleton } from '@material-ui/lab';
 
-const convertedLink = (r) => {
-    return r.toLowerCase().replaceAll("/", "-").replaceAll(" ", "-");
-}
+import { isEmpty, convertedLink } from '../../assests/functions';
 
-function isEmpty(obj) {
-    return Object.keys(obj).length === 0;
-}
+//styles
+const typoHeaderStyle = { fontSize: `22px`, fontWeight: "bold", marginBottom: "20px" }
+const typoStyle = { fontSize: `14px`, marginBottom: "15px" }
+const linkStyle = { fontSize: "14px", textDecoration: "none", color: "inherit", fontFamily: "SofiaR" }
 
 const FooterMenu = (props) => {
-
-    const typoHeaderStyle = {
-        fontSize: `22px`, fontWeight: "bold", marginBottom: "20px"
-    }
-
-    const typoStyle = {
-        fontSize: `14px`, marginBottom: "15px"
-    }
-
+    //states 
     const [navIndex, setNavIndex] = React.useState(0);
     const [navIndexSec, setNavIndexSec] = React.useState(0);
-
-    const linkStyle = { fontSize: "14px", textDecoration: "none", color: "inherit", fontFamily: "SofiaR" }
 
     const navSection = [["About us", "Contact"],
     ["Refund Policy", "Privacy Policy", "Terms of Service"]]
@@ -43,9 +32,7 @@ const FooterMenu = (props) => {
                 return (
                     <Spring
                         to={{ width: state === index + 1 ? "100%" : "0%" }}
-                        from={{
-                            width: "0%", backgroundColor: "black", height: "1.5px", marginBottom: "12px"
-                        }}
+                        from={{ width: "0%", backgroundColor: "black", height: "1.5px", marginBottom: "12px" }}
                         key={`footerlink-${item}`}
                     >
                         {prop =>
@@ -84,9 +71,7 @@ const FooterMenu = (props) => {
                         {createNavLinks(navSection[0], navIndex, setNavIndex)}
                     </Grid>
                     <Grid item xs={3}>
-                        <Typography style={typoHeaderStyle}>
-                            Customer Service
-                    </Typography>
+                        <Typography style={typoHeaderStyle}>Customer Service</Typography>
                         {createNavLinks(navSection[1], navIndexSec, setNavIndexSec)}
                     </Grid>
                     <Grid>
@@ -94,21 +79,13 @@ const FooterMenu = (props) => {
                     </Grid>
                     <Grid item xs={3}>
                         <div style={{ display: "flex", flexDirection: "column" }}>
-                            <Typography style={typoHeaderStyle}>
-                                Contact Us
-                    </Typography>
-                            <Typography style={typoStyle}>
-                                Do you have any questions or suggestions?
-                    </Typography>
+                            <Typography style={typoHeaderStyle}>Contact Us</Typography>
+                            <Typography style={typoStyle}>Do you have any questions or suggestions?</Typography>
                             <Typography style={{ fontSize: `${20 / 1920 * props.width}px`, marginBottom: "15px", textDecoration: "underline", fontWeight: "bold" }}>
                                 kentokobayashik@gmail.com
-                    </Typography>
-                            <Typography style={typoStyle}>
-                                Do you need assistance? Give us a call.
-                    </Typography>
-                            <Typography style={{ fontSize: `${25 / 1920 * props.width}px`, marginBottom: "15px", fontWeight: "bold" }}>
-                                +647-228-3697
-                    </Typography>
+                            </Typography>
+                            <Typography style={typoStyle}>Do you need assistance? Give us a call.</Typography>
+                            <Typography style={{ fontSize: `${25 / 1920 * props.width}px`, marginBottom: "15px", fontWeight: "bold" }}>+647-228-3697</Typography>
                         </div>
                     </Grid>
                 </Grid>

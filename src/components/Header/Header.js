@@ -1,53 +1,28 @@
 import React from 'react';
 
 import { Link } from 'react-router-dom';
-
-import { Typography, Container, TextField } from '@material-ui/core';
+import { Typography, Container, TextField, InputAdornment, useMediaQuery } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { animated, useSpring } from 'react-spring';
+import { Spring } from 'react-spring/renderprops';
+import { Skeleton } from '@material-ui/lab';
+import { useShopify } from "../../hooks";
+
+// icons 
+import ClearIcon from '@material-ui/icons/Clear';
+import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
+
+// import files
+import SearchPopUp from './SearchPopUp';
+import HeaderDropDown from './HeaderDropDown';
 
 import '../../assests/styles/headerStyle.css';
 
-import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
-
-import SearchPopUp from './SearchPopUp';
-
-import { animated, useSpring } from 'react-spring';
-
-import { useShopify } from "../../hooks";
-import HeaderDropDown from './HeaderDropDown';
-
-import { Spring } from 'react-spring/renderprops';
-import { Skeleton } from '@material-ui/lab';
-
-import InputAdornment from "@material-ui/core/InputAdornment";
-import ClearIcon from "@material-ui/icons/Clear";
-
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-
-const CssTextField = withStyles({
-    root: {
-        '& label.Mui-focused': {
-            color: 'black',
-        },
-        '& .MuiInput-underline:after': {
-            borderBottomColor: 'black',
-        },
-        '& .MuiInputBase-root': {
-            fontSize: "14px"
-        }
-    },
-})(TextField);
-
-const isEmpty = (obj) => {
-    for (let key in obj) {
-        if (obj.hasOwnProperty(key))
-            return false;
-    }
-    return true;
-}
+import { StyledTextFieldHeader } from '../../assests/styles/styledComponents';
+import { isEmpty } from '../../assests/functions';
 
 const Header = (props) => {
-
+    // states
     const { shopDetails, featured } = useShopify();
     const [searchHover, setSearchHover] = React.useState(false);
     const [dropbarHover, setDropbarHover] = React.useState(0);
@@ -85,7 +60,7 @@ const Header = (props) => {
     const endAdornment = () => {
         if (input !== "") {
             return (
-                <InputAdornment style={{position: "absolute", right: "0px"}}>
+                <InputAdornment style={{ position: "absolute", right: "0px" }}>
                     <ClearIcon
                         onClick={handleClick}
                         onMouseDown={handleMouseDown}
@@ -118,7 +93,7 @@ const Header = (props) => {
                             SEARCH
                     </Typography>
                         <animated.div style={searchSpring} onClick={() => setSearchHover(true)} >
-                            <CssTextField style={{ width: "210px" }} value={input} onChange={handleChange}
+                            <StyledTextFieldHeader style={{ width: "210px" }} value={input} onChange={handleChange}
                                 InputProps={{
                                     startAdornment: endAdornment()
                                 }}

@@ -10,7 +10,7 @@ import { Breadcrumbs, Container, Grid, Typography, FormControl, Select, MenuItem
 
 import { withStyles } from '@material-ui/core/styles';
 
-import { currencyDic, deliveryPolicy } from '../../assests/constants';
+import { currencyDic } from '../../assests/constants';
 
 import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
 import HomeDeals from "../Home/HomeDeals/HomeDeals";
@@ -25,7 +25,7 @@ import { Skeleton } from "@material-ui/lab";
 
 import parse from 'html-react-parser';
 
-import '../../assests/styles/productViewStyle.css'; 
+import '../../assests/styles/productViewStyle.css';
 
 function useWindowSize() {
 	const [size, setSize] = React.useState([0, 0]);
@@ -203,20 +203,13 @@ const ProductView = (props) => {
 
 	const handleImgArrow = (dir) => {
 		if (dir === "next" && imgIndex + 1 <= product.images.length - 1) {
-			if (product.images.length - verImgIndex >= 5) {
-				setVerImgIndex(imgIndex);
-			}
 			setImgIndex(imgIndex + 1);
 		} else if (dir === "back" && imgIndex !== 0) {
-			if (verImgIndex - 1 >= 0) {
-				setVerImgIndex(verImgIndex - 1);
-			}
 			setImgIndex(imgIndex - 1);
 		}
 	}
 
 	const createDescription = () => {
-
 		try {
 			return <div style={{ fontSize: "15px", fontFamily: "SofiaR" }}>{parse(`${product.descriptionHtml}`)}</div>
 		} catch (error) {
@@ -233,6 +226,16 @@ const ProductView = (props) => {
 		}
 	}
 
+	React.useEffect(() => {
+		if (imgIndex - 3 > verImgIndex) {
+			setVerImgIndex(verImgIndex + 1);
+		} else {
+			if (verImgIndex !== 0) {
+				setVerImgIndex(verImgIndex - 1);
+			}
+		}
+	}, [imgIndex])
+
 	const shadow = "rgba(14, 30, 37, 0.8) 0px 2px 4px 0px, rgba(14, 30, 37, 0.8) 0px 2px 8px 0px";
 	const noShadow = "rgba(14, 30, 37, 0) 0px 2px 4px 0px, rgba(14, 30, 37, 0) 0px 2px 8px 0px";
 
@@ -244,10 +247,10 @@ const ProductView = (props) => {
 						{
 							isEmpty(product) ? null :
 								<Grid container justify="center" spacing={5} style={{ position: "sticky", top: "150px" }}>
-									<Grid item xs={2} style={{ maxHeight: "500px" }}>
+									<Grid item xs={2} style={{ maxHeight: "70vh" }}>
 										<CarouselProvider
-											naturalSlideWidth={50}
-											naturalSlideHeight={50}
+											naturalSlideWidth={150}
+											naturalSlideHeight={150}
 											totalSlides={product.images.length}
 											orientation="vertical"
 											visibleSlides={6}
@@ -262,14 +265,15 @@ const ProductView = (props) => {
 																opacity: imgHover === index || imgIndex === index ? 0.8 : 1,
 															}}
 																index={index} onClick={() => setImgIndex(index)} onMouseEnter={() => setImgIndex(index)}
-																>
+															>
 																<Spring
 																	to={{
 																		transform: imgHover === index ? "scale(1.1)" : "scale(1)",
 																		boxShadow: imgIndex === index ? shadow : noShadow
 																	}}
 																	from={{
-																		transform: "scale(1)", cursor: "pointer", boxShadow: noShadow
+																		transform: "scale(1)", cursor: "pointer", boxShadow: noShadow,
+																		height: "50px", width: "50px"
 																	}}
 																>
 																	{prop =>
@@ -289,7 +293,7 @@ const ProductView = (props) => {
 											</Slider>
 										</CarouselProvider>
 									</Grid>
-									<Grid item xs={10} style={{ position: "relative", maxHeight: "500px", overflow: "hidden", marginTop: "20px" }}>
+									<Grid item xs={10} style={{ position: "relative", maxHeight: "500px", overflow: "hidden" }}>
 										<CarouselProvider
 											naturalSlideWidth={100}
 											naturalSlideHeight={125}
@@ -459,9 +463,7 @@ const ProductView = (props) => {
 												marginLeft: "3.3vmax",
 												pointerEvents: !descIndex ? "none" : "", cursor: "pointer", width: "fit-content"
 											}}>
-											<Typography style={{ fontSize: "16px", color: !descIndex ? "black" : "grey" }}>
-												DELIVERY & RETURNS
-								</Typography>
+											<Typography style={{ fontSize: "16px", color: !descIndex ? "black" : "grey" }}>DELIVERY & RETURNS</Typography>
 											<div style={prop} />
 										</div>
 									}
@@ -479,7 +481,7 @@ const ProductView = (props) => {
 									:
 									<div style={{ maxWidth: "80%" }}>
 										<Typography style={{ fontSize: "15px" }}>
-											{deliveryPolicy.short}
+											{shopDetails.policies.refundPolicy.body}
 										</Typography>
 										<div style={{ width: "fit-content" }}>
 											<Link to='/refund-policy' style={{ textDecoration: "none", color: "inherit" }}>
