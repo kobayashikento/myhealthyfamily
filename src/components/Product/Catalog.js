@@ -11,9 +11,14 @@ import { Link } from 'react-router-dom';
 import { useShopify } from "../../hooks";
 
 import { animated, useSpring } from 'react-spring';
+import { Skeleton } from '@material-ui/lab';
 
 const convertedLink = (ele) => {
     return ele.toLowerCase().replaceAll("/", "-").replaceAll(" ", "-");
+}
+
+function isEmpty(obj) {
+	return Object.keys(obj).length === 0;
 }
 
 const Catalog = (props) => {
@@ -175,9 +180,13 @@ const Catalog = (props) => {
                     >
                         {prop =>
                             <div onMouseEnter={() => setBreadHover(1)} onMouseLeave={() => setBreadHover(0)}>
-                                <Link to="/" style={linkStyle}>
-                                    {props.shopDetails.info.name}
-                                </Link>
+                                {
+                                    isEmpty(props.shopDetails) ? <Skeleton animation="wave" width={70} height={10} />
+                                        :
+                                        <Link to="/" style={linkStyle}>
+                                            {props.shopDetails.info.name}
+                                        </Link>
+                                }
                                 <div style={prop} />
                             </div>
                         }
@@ -257,7 +266,7 @@ const Catalog = (props) => {
                             {products.map((ele, index) => {
                                 return (
                                     <Grid key={`item-${index}`} item xs={4} onClick={(e) => handleItemClick(e, ele.id)}>
-                                        <HomeDealsProduct content={ele} scrollbar={props.scrollbar}/>
+                                        <HomeDealsProduct content={ele} scrollbar={props.scrollbar} />
                                     </Grid>
                                 )
                             })}

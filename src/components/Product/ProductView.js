@@ -16,7 +16,7 @@ import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
 import HomeDeals from "../Home/HomeDeals/HomeDeals";
 import { animated, useSpring } from "react-spring";
 
-import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext, CarouselContext } from 'pure-react-carousel';
+import { CarouselProvider, Slider, Slide, ImageWithZoom } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
@@ -24,6 +24,8 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { Skeleton } from "@material-ui/lab";
 
 import parse from 'html-react-parser';
+
+import '../../assests/styles/productViewStyle.css'; 
 
 function useWindowSize() {
 	const [size, setSize] = React.useState([0, 0]);
@@ -205,7 +207,6 @@ const ProductView = (props) => {
 				setVerImgIndex(imgIndex);
 			}
 			setImgIndex(imgIndex + 1);
-
 		} else if (dir === "back" && imgIndex !== 0) {
 			if (verImgIndex - 1 >= 0) {
 				setVerImgIndex(verImgIndex - 1);
@@ -232,6 +233,9 @@ const ProductView = (props) => {
 		}
 	}
 
+	const shadow = "rgba(14, 30, 37, 0.8) 0px 2px 4px 0px, rgba(14, 30, 37, 0.8) 0px 2px 8px 0px";
+	const noShadow = "rgba(14, 30, 37, 0) 0px 2px 4px 0px, rgba(14, 30, 37, 0) 0px 2px 8px 0px";
+
 	return (
 		<div style={{ marginTop: "2.2vmax" }}>
 			<Container maxWidth="lg" style={{ marginBottom: "4.4vmax", paddingLeft: "3.3vmax" }}>
@@ -240,13 +244,13 @@ const ProductView = (props) => {
 						{
 							isEmpty(product) ? null :
 								<Grid container justify="center" spacing={5} style={{ position: "sticky", top: "150px" }}>
-									<Grid item xs={3} style={{ maxHeight: "500px" }}>
+									<Grid item xs={2} style={{ maxHeight: "500px" }}>
 										<CarouselProvider
 											naturalSlideWidth={50}
 											naturalSlideHeight={50}
 											totalSlides={product.images.length}
 											orientation="vertical"
-											visibleSlides={4}
+											visibleSlides={6}
 											dragEnabled={false}
 											currentSlide={verImgIndex}
 										>
@@ -254,24 +258,28 @@ const ProductView = (props) => {
 												{
 													product.images.map((ele, index) => {
 														return (
-															<Slide style={{ opacity: imgHover === index || imgIndex === index ? 0.5 : 1}}
-																index={index} onClick={() => setImgIndex(index)} onMouseEnter={() => setImgHover(index)}
-																onMouseLeave={() => setImgHover(-1)}>
+															<Slide key={`ver-image-${index}`} style={{
+																opacity: imgHover === index || imgIndex === index ? 0.8 : 1,
+															}}
+																index={index} onClick={() => setImgIndex(index)} onMouseEnter={() => setImgIndex(index)}
+																>
 																<Spring
-																	to={{ transform: imgHover === index ? "scale(1.1)" : "scale(1)" }}
+																	to={{
+																		transform: imgHover === index ? "scale(1.1)" : "scale(1)",
+																		boxShadow: imgIndex === index ? shadow : noShadow
+																	}}
 																	from={{
-																		transform: "scale(1)"
+																		transform: "scale(1)", cursor: "pointer", boxShadow: noShadow
 																	}}
 																>
 																	{prop =>
-																		<img
-																			style={{
-																				...prop,
-																				marginRight: "auto", marginLeft: "auto", padding: "8px 0", cursor: "pointer"
-																			}}
-																			src={ele.src}
-																			alt={`${ele.title} product shot`}
-																		/>
+																		<div style={{ margin: "8px" }}>
+																			<img
+																				style={prop}
+																				src={ele.src}
+																				alt={`${ele.id} product shot`}
+																			/>
+																		</div>
 																	}
 																</Spring>
 															</Slide>
@@ -281,7 +289,7 @@ const ProductView = (props) => {
 											</Slider>
 										</CarouselProvider>
 									</Grid>
-									<Grid item xs={9} style={{ position: "relative", maxHeight: "500px", overflow: "hidden", marginTop: "20px" }}>
+									<Grid item xs={10} style={{ position: "relative", maxHeight: "500px", overflow: "hidden", marginTop: "20px" }}>
 										<CarouselProvider
 											naturalSlideWidth={100}
 											naturalSlideHeight={125}
@@ -291,12 +299,17 @@ const ProductView = (props) => {
 											<Slider>
 												{
 													product.images.map((ele, index) => {
+														console.log(ele)
 														return (
-															<Slide index={index}>
-																<img
-																	style={{ marginRight: "auto", marginLeft: "auto", padding: "0 20px" }}
+															<Slide key={`product-image-${index}`} index={index}>
+																<ImageWithZoom
+																	style={{
+																		marginRight: "auto", marginLeft: "auto",
+																		padding: "0 20px", maxHeight: "60vh",
+																	}}
+																	className="mainImage"
 																	src={ele.src}
-																	alt={`${ele.title} product shot`}
+																	alt={`${ele.id} product shot`}
 																/>
 															</Slide>
 														)
@@ -318,11 +331,6 @@ const ProductView = (props) => {
 										</CarouselProvider>
 									</Grid>
 								</Grid>
-							// <img
-							// 	style={{ position: "sticky", top: "200px" }}
-							// 	src={product.images[imgIndex - 1].src}
-							// 	alt={`${product.title} product shot`}
-							// />
 						}
 					</Grid>
 					<Grid item xs={6} style={{ paddingLeft: "4.4vmax" }}>
