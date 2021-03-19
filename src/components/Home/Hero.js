@@ -37,7 +37,8 @@ const Hero = (props) => {
                 }}>
                     Try MyHealthyFamily
                     </Typography>
-                <div style={{ width: "fit-content", overflow: "hidden", position: "relative" }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+                <div onClick={() => props.scrollbar.current.scrollToTop()}
+                    style={{ width: "fit-content", overflow: "hidden", position: "relative" }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
                     <animated.div style={fillBoxSpring} />
                     <Link style={{ textDecoration: "none" }} to={`/best-sellers`}>
                         <Button style={{ border: "2px solid white", borderRadius: "2px", background: "white" }} >

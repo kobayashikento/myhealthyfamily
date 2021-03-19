@@ -46,7 +46,7 @@ export default (props) => {
 	return (
 		matches ?
 			<div>
-				< Hero width={width} />
+				< Hero width={width} scrollbar={props.scrollbar} />
 				<Typography style={{ fontSize: `${(18 / 1920 * width)}px`, color: "#959494", padding: "0 12px 12px 12px" }} className="homedeals_title">
 					SHOW NOW
                 </Typography>
