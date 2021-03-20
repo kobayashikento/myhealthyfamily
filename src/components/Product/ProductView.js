@@ -228,7 +228,7 @@ const ProductView = (props) => {
 
 	const shadow = "rgba(14, 30, 37, 0.8) 0px 2px 4px 0px, rgba(14, 30, 37, 0.8) 0px 2px 8px 0px";
 	const noShadow = "rgba(14, 30, 37, 0) 0px 2px 4px 0px, rgba(14, 30, 37, 0) 0px 2px 8px 0px";
-console.log("redner")
+
 	return (
 		<div style={{ marginTop: "2.2vmax" }}>
 			<Container maxWidth="lg" style={{ marginBottom: "4.4vmax", paddingLeft: "3.3vmax" }}>

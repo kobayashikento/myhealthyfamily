@@ -30,6 +30,7 @@ const CLOSE_CART = "shopify/CLOSE_CART"
 const CART_COUNT = "shopify/CART_COUNT"
 const SET_CURRENCY = "shopify/SET_CURRENCY"
 const PAGES_FOUND = "shopify/PAGES_FOUND"
+const TAGS_FOUND = "shopify/TAGS_FOUND"
 
 const initialState = {
 	isCartOpen: false,
@@ -41,6 +42,7 @@ const initialState = {
 	shop: {},
 	currency: "CAD",
 	pages: {},
+	tags: []
 }
 
 export default (state = initialState, action) => {
@@ -71,6 +73,8 @@ export default (state = initialState, action) => {
 			return { ...state, currency: action.payload }
 		case PAGES_FOUND:
 			return { ...state, pages: action.payload }
+		case TAGS_FOUND:
+			return { ...state, tags: action.payload }
 		default:
 			return state
 	}
@@ -88,10 +92,33 @@ function getProducts() {
 	}
 }
 
+function handleGetTags(types) {
+	// takes in an array of types
+	return (dispatch) => {
+		let queries = [];
+
+		const query = unoptimizedClient.graphQLClient.query((root) => {
+			root.addConnection('products', { args: {first: 10, query: "product_type:'Back'" } }, (product) => {
+				product.add('tags')
+				product.add('id')
+			});
+		})
+
+		unoptimizedClient.graphQLClient.send(query).then(({ model, data }) => {
+			console.log(model)
+			// dispatch({
+			// 	type: TAGS_FOUND,
+			// 	payload: model,
+			// })
+		})
+	}
+}
+
 // Gets individual item based on id
 function getProduct(id) {
 	return async (dispatch) => {
-		const resp = await client.product.fetch(id)
+		const resp = await client.product.fetch(id);
+
 		dispatch({
 			type: PRODUCT_FOUND,
 			payload: resp,
@@ -253,7 +280,7 @@ export function useShopify() {
 	const shopDetails = useSelector((appState) => appState.shopifyState.shop)
 	const currency = useSelector((appState) => appState.shopifyState.currency)
 	const pages = useSelector((appState) => appState.shopifyState.pages)
-	const scrollbar = useSelector((appState) => appState.shopifyState.scrollbar)
+	const tags = useSelector((appState) => appState.shopifyState.tags)
 	const fetchProducts = () => dispatch(getProducts())
 	const fetchProduct = (id) => dispatch(getProduct(id))
 	const fetchCollection = () => dispatch(getCollection())
@@ -262,6 +289,7 @@ export function useShopify() {
 	const createShop = () => dispatch(shopInfo())
 	const closeCart = () => dispatch(handleCartClose())
 	const openCart = () => dispatch(handleCartOpen())
+	const getTags = (arr) => dispatch(handleGetTags(arr))
 	const setCount = (count) => dispatch(handleSetCount(count))
 	const setCurrency = (curr) => dispatch(handleSetCurrency(curr))
 	const addVariant = (checkoutId, lineItemsToAdd) =>
@@ -281,6 +309,7 @@ export function useShopify() {
 		shopDetails,
 		currency,
 		pages,
+		tags,
 		addVariant,
 		fetchProducts,
 		fetchProduct,
@@ -289,6 +318,7 @@ export function useShopify() {
 		createCheckout,
 		createShop,
 		closeCart,
+		getTags,
 		openCart,
 		updateQuantity,
 		removeLineItem,

@@ -18,7 +18,7 @@ const CssFormControl = withStyles({
     },
 })(FormControl);
 
-const list = ["A-Z Alphabet", "Z-A Alphabet", "Price Low-High", "Price High-Low", "Sale", "Newest", "Oldest"]
+const list = ["A-Z Alphabet", "Z-A Alphabet", "Price Low-High", "Price High-Low", "Newest", "Oldest"]
 
 const SortByDropdown = (props) => {
     // need collection 

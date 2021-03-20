@@ -13,27 +13,31 @@ import { useShopify } from "../../hooks";
 import { animated, useSpring } from 'react-spring';
 import { Skeleton } from '@material-ui/lab';
 
-const convertedLink = (ele) => {
-    return ele.toLowerCase().replaceAll("/", "-").replaceAll(" ", "-");
-}
+import { isEmpty } from '../../assests/functions';
 
-function isEmpty(obj) {
-	return Object.keys(obj).length === 0;
-}
+const linkStyle = { fontSize: "14px", textDecoration: "none", color: "inherit" }
 
 const Catalog = (props) => {
 
     //takes in props collection
-    const { fetchProduct } = useShopify();
+    const { fetchProduct, getTags } = useShopify();
 
     const [navIndex, setNavIndex] = React.useState(0);
-    //0: Alphabet, 1: Price, 2: Newest, 3: Sale
+    //0: Alphabet up, 1: Alphabet down, 2: Price low, 3: Price high, 4: newest, 5: oldest
     const [sortBy, setSortBy] = React.useState(0);
     const [products, setProducts] = React.useState([]);
     const [category, setCategory] = React.useState("default");
+    const [catHover, setCatHover] = React.useState(false);
+    const [breadHover, setBreadHover] = React.useState(0);
 
-    const linkStyle = { fontSize: "14px", textDecoration: "none", color: "inherit" }
+    // onMount set the default sort option to be alphabetic
+    React.useEffect(() => {
+        let temp = [...props.collection.products.sort((a, b) => a.title.localeCompare(b.title))];
+        console.log(getTags(["spine"]))
+        setProducts(temp);
+    }, [])
 
+    // make the side nav for produdct types
     const getAllProductTypes = () => {
         let tempTypes = {};
         let content = [];
@@ -56,7 +60,7 @@ const Catalog = (props) => {
                     to={{ transform: navIndex === newIndex ? "translateX(1rem)" : "translateX(0rem)" }}
                     from={{
                         transform: "translateX(0rem)", color: "#2b2b2b",
-                        fontSize: `15px`, cursor: "pointer", fontFamily: "SofiaR", marginBottom: "20px",
+                        fontSize: `15px`, cursor: "pointer", fontFamily: "SofiaR", marginBottom: "8px",
                     }}
                     key={`link-${props.collection.title}-${newIndex}`}
                 >
@@ -111,44 +115,61 @@ const Catalog = (props) => {
     //     return item.tags
     // }
 
+    const sortProducts = (productArr, type) => {
+        switch (type) {
+            case 0:
+                return (productArr.sort((a, b) => a.title.localeCompare(b.title)));
+            case 1:
+                return (productArr.sort((a, b) => b.title.localeCompare(a.title)));
+            case 2:
+                return (productArr.sort(function (a, b) {
+                    if ((a.variants[0].compareAtPrice === null ?
+                        a.variants[0].price : a.variants[0].compareAtPrice)
+                        < (b.variants[0].compareAtPrice === null ? b.variants[0].price : b.variants[0].compareAtPrice)) { return -1; }
+                    if ((a.variants[0].compareAtPrice === null ? a.variants[0].price : a.variants[0].compareAtPrice) >
+                        (b.variants[0].compareAtPrice === null ? b.variants[0].price : b.variants[0].compareAtPrice)) { return 1; }
+                    return 0;
+                }))
+            case 3:
+                return (productArr.sort(function (a, b) {
+                    if ((a.variants[0].compareAtPrice === null ?
+                        a.variants[0].price : a.variants[0].compareAtPrice)
+                        > (b.variants[0].compareAtPrice === null ? b.variants[0].price : b.variants[0].compareAtPrice)) { return -1; }
+                    if ((a.variants[0].compareAtPrice === null ? a.variants[0].price : a.variants[0].compareAtPrice) <
+                        (b.variants[0].compareAtPrice === null ? b.variants[0].price : b.variants[0].compareAtPrice)) { return 1; }
+                    return 0;
+                }))
+            case 4:
+                return (productArr.sort((a, b) => a.createdAt.localeCompare(b.createdAt)));
+            case 5:
+                return (productArr.sort((a, b) => b.createdAt.localeCompare(a.createdAt)));
+            default:
+        }
+    }
+
+    // Change the category based on types
     React.useEffect(() => {
         let temp = [];
         if (category === "default") {
-            temp = props.collection.products
-        } else {
-            props.collection.products.forEach(ele => {
-                if (ele.productType.toLowerCase() === category) {
-                    temp.push(ele)
-                }
-            })
+            temp = sortProducts([...props.collection.products], sortBy);
+            return setProducts(temp);
         }
-        setProducts(temp);
-    }, [category]);
+        props.collection.products.forEach(ele => {
+            if (ele.productType.toLowerCase() === category) {
+                temp.push(ele)
+            }
+        })
+        let sortArr = sortProducts(temp, sortBy);
+        return setProducts(sortArr);
+    }, [category, sortBy]);
 
+    // Handle Sorting Options 
     React.useEffect(() => {
-        switch (sortBy) {
-            case 0:
-                products.sort((a, b) => a.title.localeCompare(b.title));
-                break;
-            case 1:
-                products.sort((a, b) => b.title.localeCompare(a.title));
-                break;
-            case 2:
-            // products.sort(function (a, b) {
-            //     if ((a.variants[0].compareAtPrice === null ? a.variants[0].price : a.variants[0].compareAtPrice) <
-            //         ({ return -1; }
-            //     if ((a.variants[0].compareAtPrice === null ? a.variants[0].price : a.variants[0].compareAtPrice) >
-            //             (b.variants[0].compareAtPrice === null ? b.variants[0].price : b.variants[0].compareAtPrice)) { return 1; }
-            //     return 0;
-            // })
-            // break;
-            default:
+        if (products.length !== 0) {
+            let sortedArr = sortProducts(products, sortBy);
+            setProducts([...sortedArr]);
         }
     }, [sortBy])
-
-    React.useEffect(() => {
-        setProducts(props.collection.products.sort((a, b) => a.title.localeCompare(b.title)));
-    }, [props.collection])
 
     function handleItemClick(e, product_id) {
         e.preventDefault()
@@ -159,14 +180,10 @@ const Catalog = (props) => {
         })
     }
 
-    const [catHover, setCatHover] = React.useState(false);
-
     const catSpring = useSpring({
         to: { width: catHover ? "100%" : "0%" },
         from: { width: "0%", height: "1.5px", background: "black", marginBottom: `20px`, }
     })
-
-    const [breadHover, setBreadHover] = React.useState(0)
 
     return (
         <div>
@@ -240,14 +257,14 @@ const Catalog = (props) => {
                             </Typography>
                             {getAllProductTypes()}
                         </div>
-                        {/* <div style={{ marginTop: "4.4vmax" }}>
+                        <div style={{ marginTop: "3.3vmax" }}>
                             <Typography style={{
                                 fontSize: `17px`, fontWeight: "bold",
                                 width: "fit-content", marginBottom: `20px`
                             }}>
                                 Tags
                             </Typography>
-                        </div> */}
+                        </div>
                     </Grid>
                     <Grid item xs={10}>
                         <div style={{
@@ -280,4 +297,4 @@ const Catalog = (props) => {
     )
 }
 
-export default React.memo(Catalog);
+export default (Catalog);
