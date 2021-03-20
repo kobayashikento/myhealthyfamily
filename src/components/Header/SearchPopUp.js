@@ -10,6 +10,8 @@ import { useShopify } from "../../hooks";
 import { animated, useSpring } from 'react-spring';
 import { Spring } from 'react-spring/renderprops';
 
+import { convertedLink } from '../../assests/functions';
+
 import { currencyDic } from '../../assests/constants';
 
 import { Link } from 'react-router-dom';
@@ -55,16 +57,18 @@ const SearchPopUp = (props) => {
     }
 
     const getCollectionFromCategory = (category) => {
-        let temp = undefined; 
+        let temp = undefined;
 
         featured.forEach(ele => {
-            let val = false; 
-            ele.products.forEach(product => {
-                if (product.productType.toLowerCase() === category.toLowerCase()) {
-                    return val = true;
-                }
-            })
-            if (val) {temp = ele}
+            if (ele.title !== "Best Sellers") {
+                let val = false;
+                ele.products.forEach(product => {
+                    if (product.productType.toLowerCase() === category.toLowerCase()) {
+                        return val = true;
+                    }
+                })
+                if (val) { temp = ele }
+            }
         })
         return temp;
     }
@@ -80,10 +84,12 @@ const SearchPopUp = (props) => {
                             key={`category-${index}`}
                         >
                             {prop =>
-                                <div style={{ cursor: "pointer", color: "black", textDecoration: "none", width: "fit-content" }} onMouseEnter={() => setHover(index + 1)} onMouseLeave={() => setHover(0)}>
-                                    <Typography style={{ fontSize: "15px", fontWeight: "500", width: "fit-content" }}>
-                                        {category}
-                                    </Typography>
+                                <div style={{ cursor: "pointer", width: "fit-content" }} onMouseEnter={() => setHover(index + 1)} onMouseLeave={() => setHover(0)} onClick={handleClickLink}>
+                                    <Link to={`/${convertedLink(getCollectionFromCategory(category).title)}`} style={{ color: "black", textDecoration: "none" }}>
+                                        <Typography style={{ fontSize: "15px", fontWeight: "500", width: "fit-content" }}>
+                                            {category}
+                                        </Typography>
+                                    </Link>
                                     <animated.div style={prop} />
                                 </div>
                             }
