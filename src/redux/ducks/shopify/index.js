@@ -97,19 +97,20 @@ function handleGetTags(types) {
 	return (dispatch) => {
 		let queries = [];
 
-		const query = unoptimizedClient.graphQLClient.query((root) => {
-			root.addConnection('products', { args: {first: 10, query: "product_type:'Back'" } }, (product) => {
-				product.add('tags')
-				product.add('id')
-			});
+		types.forEach(type => {
+			queries.push(unoptimizedClient.graphQLClient.query((root) => {
+				root.addConnection('products', { args: { first: 10, query: `product_type:'${type}'` } }, (product) => {
+					product.add('tags')
+					product.add('id')
+				});
+			}))
 		})
 
-		unoptimizedClient.graphQLClient.send(query).then(({ model, data }) => {
-			console.log(model)
-			// dispatch({
-			// 	type: TAGS_FOUND,
-			// 	payload: model,
-			// })
+		unoptimizedClient.graphQLClient.send(queries[0]).then(({ model, data }) => {
+			dispatch({
+				type: TAGS_FOUND,
+				payload: model,
+			})
 		})
 	}
 }

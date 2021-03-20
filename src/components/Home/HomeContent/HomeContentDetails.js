@@ -25,17 +25,30 @@ const HomeContentDetails = (props) => {
     }
 
     return (
-        <div style={{ margin: "0 50px 0px 50px", cursor: "pointer", overflow: "hidden", position: "relative" }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-            <Link to={`/${convertLink(props.content.title)}`}>
-                <animated.div style={{ ...scaleSpring, backgroundImage: `url(${props.content.image.src})` }} />
-                <animated.div style={{ ...buttonSpring }}>
-                    <Typography style={{
-                        textAlign: "left", fontSize: `${14}px`, fontWeight: "600", width: "fit-content",
-                        color: "black", padding: `${15 / 1920 * props.width}px ${55 / 1920 * props.width}px`, zIndex: 2, textTransform: "capitalize"
-                    }} >{props.content.title.toLowerCase()}</Typography>
-                </animated.div>
-            </Link>
-        </div>
+        props.matches ?
+            <div style={{ margin: "0 50px 0px 50px", cursor: "pointer", overflow: "hidden", position: "relative" }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+                <Link to={`/${convertLink(props.content.title)}`}>
+                    <animated.div style={{ ...scaleSpring, backgroundImage: `url(${props.content.image.src})` }} />
+                    <animated.div style={{ ...buttonSpring }}>
+                        <Typography style={{
+                            textAlign: "left", fontSize: `${14}px`, fontWeight: "600", width: "fit-content",
+                            color: "black", padding: `${15 / 1920 * props.width}px ${55 / 1920 * props.width}px`, zIndex: 2, textTransform: "capitalize"
+                        }} >{props.content.title.toLowerCase()}</Typography>
+                    </animated.div>
+                </Link>
+            </div>
+            :
+            <div style={{ cursor: "pointer", overflow: "hidden", position: "relative" }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+                <Link to={`/${convertLink(props.content.title)}`}>
+                    <animated.div style={{ ...scaleSpring, backgroundImage: `url(${props.content.image.src})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+                    <animated.div style={{ ...buttonSpring }}>
+                        <Typography style={{
+                            textAlign: "left", fontSize: `${14}px`, fontWeight: "600", width: "fit-content",
+                            color: "black", padding: `${15 / 1920 * props.width}px ${55 / 1920 * props.width}px`, zIndex: 2, textTransform: "capitalize"
+                        }} >{props.content.title.toLowerCase()}</Typography>
+                    </animated.div>
+                </Link>
+            </div>
     )
 }
 

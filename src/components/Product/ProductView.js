@@ -23,7 +23,7 @@ import Contact from '../Footer/Contact';
 import FooterMenu from '../Footer/FooterMenu';
 import HomeDeals from "../Home/HomeDeals/HomeDeals";
 
-import { currencyDic } from '../../assests/constants';
+import { currencyDic, returnText } from '../../assests/constants';
 
 import { isEmpty, convertedLink } from '../../assests/functions';
 
@@ -200,7 +200,7 @@ const ProductView = (props) => {
 				description.map((each, i) => {
 					return <div
 						key={`line-description +${i}`}>
-						<Typography style={{ fontSize: "15px" }}>
+						<Typography variant="body1">
 							{each}
 						</Typography>
 					</div>
@@ -339,7 +339,9 @@ const ProductView = (props) => {
 										{
 											isEmpty(shopDetails) ? <Skeleton animation="wave" width={50} height={10} /> :
 												<Link to="/" style={linkStyle}>
-													{shopDetails.info.name}
+													<Typography variant="h6">
+														{shopDetails.info.name}
+													</Typography>
 												</Link>
 										}
 										<div style={prop} />
@@ -357,7 +359,9 @@ const ProductView = (props) => {
 										{prop =>
 											<div onMouseEnter={() => setBreadHover(2)} onMouseLeave={() => setBreadHover(0)}>
 												<Link to={`/${convertedLink(findFeatured())}`} style={linkStyle}>
-													{convertedLink(findFeatured())}
+													<Typography variant="h6">
+														{convertedLink(findFeatured())}
+													</Typography>
 												</Link>
 												<div style={prop} />
 											</div>
@@ -366,11 +370,11 @@ const ProductView = (props) => {
 									: null
 							}
 						</Breadcrumbs>
-						<Typography style={{ fontSize: `30px`, fontWeight: "500", maxWidth: "80%" }}>
+						<Typography variant="h3" style={{ fontWeight: "500", maxWidth: "80%" }}>
 							{product.title}
 						</Typography>
-						<Typography style={{ fontSize: `18px`, color: "#555454", margin: "16px 0 36px" }}>
-							{product.productType}
+						<Typography variant="h5" style={{ color: "#555454", margin: "16px 0 36px" }}>
+							{product.vendor}
 						</Typography>
 						<div style={{ display: "flex", margin: "3.3vmax 0" }}>
 							{isEmpty(product) ?
@@ -378,10 +382,10 @@ const ProductView = (props) => {
 								:
 								product.variants[variation].compareAtPrice !== null ?
 									<div style={{ display: "flex", alignItems: "center" }}>
-										<Typography style={{ fontSize: `${25 / 1920 * width}px`, color: "#959494", marginRight: "15px", textDecoration: "line-through" }}>
+										<Typography variant="h5" style={{ color: "#2b2b2b", marginRight: "15px", textDecoration: "line-through" }}>
 											{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 1)[0]}
 										</Typography>
-										<Typography style={{ fontSize: `${40 / 1920 * width}px`, color: "#e13367" }}>
+										<Typography variant="h4" style={{ color: "#e13367" }}>
 											{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 1)[1]} | {getPercent(getCurrPrice(product.variants[variation], 1))}% OFF
 										</Typography>
 									</div>
@@ -469,7 +473,7 @@ const ProductView = (props) => {
 									:
 									<div style={{ maxWidth: "80%" }}>
 										<Typography style={{ fontSize: "15px" }}>
-											{shopDetails.policies.refundPolicy.body}
+											{returnText}
 										</Typography>
 										<div style={{ width: "fit-content" }}>
 											<Link to='/refund-policy' style={{ textDecoration: "none", color: "inherit" }}>
@@ -506,6 +510,7 @@ const ProductView = (props) => {
 				}
 			</Container>
 			<Snackbar
+				severity="info"
 				anchorOrigin={{
 					vertical: 'bottom',
 					horizontal: 'left',
@@ -513,7 +518,7 @@ const ProductView = (props) => {
 				open={open}
 				autoHideDuration={3000}
 				onClose={handleClose}
-				message="Item Added to Cart"
+				message="Item added to cart"
 				action={
 					<React.Fragment>
 						<IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>

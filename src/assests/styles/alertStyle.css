@@ -5,6 +5,16 @@
     background-color: #f1f0f0;
 }
 
+.alertM {
+    position: relative;
+    z-index: 5;
+    height: 8vw;
+    background-color: #f1f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .content-container {
     position: absolute;
     display: flex;

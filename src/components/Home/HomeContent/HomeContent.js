@@ -31,52 +31,99 @@ const HomeContent = (props) => {
     }
 
     return (
-        <Container maxWidth="lg" style={{ marginTop: "5.5vmax", display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "5.5vmax" }}>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-                {
-                    isEmpty(props.shopDetails) ?
-                        <Skeleton animation="wave" width={150} height={20} />
-                        :
-                        <div style={{ display: "flex" }}>
-                            <Typography style={{ fontSize: `${(45 / 1920 * props.width)}px` }} >
-                                Shop now
+        props.matches ?
+            <Container maxWidth="lg" style={{ marginTop: "5.5vmax", display: "flex", flexDirection: "column", alignItems: "center", marginBottom: "5.5vmax" }}>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    {
+                        isEmpty(props.shopDetails) ?
+                            <Skeleton animation="wave" width={150} height={20} />
+                            :
+                            <div style={{ display: "flex" }}>
+                                <Typography style={{ fontSize: `${(45 / 1920 * props.width)}px` }} >
+                                    Shop now
                 </Typography>
-                            <Typography style={{ fontSize: `${(45 / 1920 * props.width)}px`, fontFamily: "FirusasHeader, Times New Roman, Times, Georgia, serif", fontStyle: "italic", textIndent: "1rem" }} >
-                                with
+                                <Typography style={{ fontSize: `${(45 / 1920 * props.width)}px`, fontFamily: "FirusasHeader, Times New Roman, Times, Georgia, serif", fontStyle: "italic", textIndent: "1rem" }} >
+                                    with
                 </Typography>
-                            <Typography style={{ fontSize: `${(45 / 1920 * props.width)}px`, textIndent: "1rem" }}>
-                                {props.shopDetails.info.name}
-                            </Typography>
-                        </div>
-                }
+                                <Typography style={{ fontSize: `${(45 / 1920 * props.width)}px`, textIndent: "1rem" }}>
+                                    {props.shopDetails.info.name}
+                                </Typography>
+                            </div>
+                    }
+                </div>
+                <Grid container spacing={9} justify="center" style={{ paddingTop: "2.2vmax", margin: "0", minHeight: "50vh" }}>
+                    {
+                        featured.map(ele => {
+                            if (ele.title.toLowerCase() !== "best sellers") {
+                                return (
+                                    <Grid key={`content-${ele.title}`} item xs={5} onClick={handleClick}>
+                                        <HomeContentDetails matches={props.matches} content={ele} width={props.width} />
+                                    </Grid>
+                                )
+                            }
+                        })
+                    }
+                </Grid>
+                <Link to="/all" onClick={() => props.scrollbar.current.scrollToTop()} style={{
+                    width: "fit-content", overflow: "hidden", position: "relative",
+                    marginTop: "1.1vmax", border: "1px solid #e4e4e4", textDecoration: "none", color: "inherit"
+                }}
+                    onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+                    <animated.div style={fillBoxSpring} />
+                    <Button style={{ border: "2px solid white", borderRadius: "2px", background: "white", width: "100%" }} >
+                        <Typography style={{
+                            textAlign: "left", fontSize: `14px`, fontWeight: "600",
+                            color: hover ? "white" : "black", padding: "7px 15px", zIndex: 2
+                        }} >View All Products</Typography>
+                    </Button>
+                </Link>
+            </Container>
+            :
+            <div style={{ width: "96vw", overflow: "hidden" }}>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    {
+                        isEmpty(props.shopDetails) ?
+                            <Skeleton animation="wave" width={150} height={20} />
+                            :
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                <Typography style={{ fontSize: `${(65 / 1024 * props.width)}px` }} >
+                                    Shop now
+                </Typography>
+                                <Typography style={{ fontSize: `${(65 / 1024 * props.width)}px`, fontFamily: "FirusasHeader, Times New Roman, Times, Georgia, serif", fontStyle: "italic", textIndent: "1rem" }} >
+                                    with
+                </Typography>
+                                <Typography style={{ fontSize: `${(65 / 1024 * props.width)}px`, textIndent: "1rem" }}>
+                                    {props.shopDetails.info.name}
+                                </Typography>
+                            </div>
+                    }
+                </div>
+                <Grid container spacing={3} justify="center" style={{ paddingTop: "2.2vmax", margin: "0", minHeight: "50vh" }}>
+                    {
+                        featured.map(ele => {
+                            if (ele.title.toLowerCase() !== "best sellers") {
+                                return (
+                                    <Grid key={`content-${ele.title}`} item xs={6} onClick={handleClick}>
+                                        <HomeContentDetails matches={props.matches} content={ele} width={props.width} />
+                                    </Grid>
+                                )
+                            }
+                        })
+                    }
+                </Grid>
+                <div style={{marginTop: "4.4vmax", display: "flex", justifyContent: "center"}}>
+                    <Link to="/all" onClick={() => props.scrollbar.current.scrollToTop()} style={{
+                        width: "fit-content", overflow: "hidden", textDecoration: "none", color: "inherit"
+                    }}>
+                        <Button style={{ borderRadius: "0px", background: "black" }} >
+                            <Typography style={{
+                                textAlign: "left", fontSize: `14px`, fontWeight: "600",
+                                color: "white", padding: "7px 15px", zIndex: 2
+                            }} >View All Products</Typography>
+                        </Button>
+                    </Link>
+                </div>
             </div>
-            <Grid container spacing={9} justify="center" style={{ paddingTop: "2.2vmax", margin: "0", minHeight: "50vh" }}>
-                {
-                    featured.map(ele => {
-                        if (ele.title.toLowerCase() !== "best sellers") {
-                            return (
-                                <Grid key={`content-${ele.title}`} item xs={5} onClick={handleClick}>
-                                    <HomeContentDetails content={ele} width={props.width} />
-                                </Grid>
-                            )
-                        }
-                    })
-                }
-            </Grid>
-            <Link to="/all" onClick={() => props.scrollbar.current.scrollToTop()} style={{
-                width: "fit-content", overflow: "hidden", position: "relative",
-                marginTop: "1.1vmax", border: "1px solid #e4e4e4", textDecoration: "none", color: "inherit"
-            }}
-                onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-                <animated.div style={fillBoxSpring} />
-                <Button style={{ border: "2px solid white", borderRadius: "2px", background: "white", width: "100%" }} >
-                    <Typography style={{
-                        textAlign: "left", fontSize: `14px`, fontWeight: "600",
-                        color: hover ? "white" : "black", padding: "7px 15px", zIndex: 2
-                    }} >View All Products</Typography>
-                </Button>
-            </Link>
-        </Container>
     );
 }
 

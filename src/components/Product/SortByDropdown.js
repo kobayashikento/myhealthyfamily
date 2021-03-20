@@ -2,6 +2,7 @@ import { FormControl, InputLabel, Select, MenuItem, Typography } from '@material
 import React from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const CssFormControl = withStyles({
     root: {
@@ -21,6 +22,8 @@ const CssFormControl = withStyles({
 const list = ["A-Z Alphabet", "Z-A Alphabet", "Price Low-High", "Price High-Low", "Newest", "Oldest"]
 
 const SortByDropdown = (props) => {
+    const matches = useMediaQuery('(min-width:1024px)', { noSsr: true });
+
     // need collection 
     // need state for keeping track of which sort is active
     const handleChange = (e) => {
@@ -38,19 +41,31 @@ const SortByDropdown = (props) => {
     }
 
     return (
-        <div style={{ display: "flex", alignItems: "center" }}>
-            <Typography style={{ fontSize: "15px", marginRight: "15px" }}>
-                Sort By
+        matches ?
+            <div style={{ display: "flex", alignItems: "center" }}>
+                <Typography style={{ fontSize: "15px", marginRight: "15px" }}>
+                    Sort By
             </Typography>
-            <CssFormControl style={{ fontSize: "15px" }}>
-                <Select
-                    value={props.sortBy}
-                    onChange={handleChange}
-                >
-                    {createSortByList()}
-                </Select>
-            </CssFormControl>
-        </div>
+                <CssFormControl style={{ fontSize: "15px" }}>
+                    <Select
+                        value={props.sortBy}
+                        onChange={handleChange}
+                    >
+                        {createSortByList()}
+                    </Select>
+                </CssFormControl>
+            </div>
+            :
+            <div style={{ display: "flex", alignItems: "center" }}>
+                <CssFormControl style={{ fontSize: "15px" }}>
+                    <Select
+                        value={props.sortBy}
+                        onChange={handleChange}
+                    >
+                        {createSortByList()}
+                    </Select>
+                </CssFormControl>
+            </div>
     )
 }
 

@@ -15,3 +15,12 @@
     margin: 30px auto 0;
     padding: 0 30px;
 }
+
+.homedeals_title_M {
+    position: relative;
+    padding: 0 20px;
+    font: 36px/1 FirusasHeader, Times New Roman, Times, Georgia, serif;
+    text-align: center;
+    background: #fff;
+    white-space: pre;
+}

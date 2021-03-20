@@ -1,4 +1,4 @@
-import { Breadcrumbs, Container, Grid, Typography } from '@material-ui/core';
+import { Breadcrumbs, Button, Container, Grid, IconButton, Typography } from '@material-ui/core';
 import React from 'react';
 import { Spring } from 'react-spring/renderprops-universal';
 import HomeDealsProduct from '../Home/HomeDeals/HomeDealsProduct';
@@ -14,13 +14,16 @@ import { animated, useSpring } from 'react-spring';
 import { Skeleton } from '@material-ui/lab';
 
 import { isEmpty } from '../../assests/functions';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import TuneIcon from '@material-ui/icons/Tune';
 
 const linkStyle = { fontSize: "14px", textDecoration: "none", color: "inherit" }
 
 const Catalog = (props) => {
 
     //takes in props collection
-    const { fetchProduct, getTags } = useShopify();
+    const { fetchProduct, getTags, tags } = useShopify();
+    const matches = useMediaQuery('(min-width:1024px)', { noSsr: true });
 
     const [navIndex, setNavIndex] = React.useState(0);
     //0: Alphabet up, 1: Alphabet down, 2: Price low, 3: Price high, 4: newest, 5: oldest
@@ -33,28 +36,26 @@ const Catalog = (props) => {
     // onMount set the default sort option to be alphabetic
     React.useEffect(() => {
         let temp = [...props.collection.products.sort((a, b) => a.title.localeCompare(b.title))];
-        console.log(getTags(["spine"]))
         setProducts(temp);
     }, [])
 
     // make the side nav for produdct types
-    const getAllProductTypes = () => {
+    const ProductList = React.memo(() => {
         let tempTypes = {};
         let content = [];
 
         props.collection.products.forEach(product => {
-            if (!(product.productType.toLowerCase() in tempTypes)) {
-                tempTypes[product.productType.toLowerCase()] = 1;
+            if (!(product.productType in tempTypes)) {
+                tempTypes[product.productType] = 1;
             } else {
-                let tempCount = tempTypes[product.productType.toLowerCase()];
-                tempTypes[product.productType.toLowerCase()] = tempCount + 1;
+                let tempCount = tempTypes[product.productType];
+                tempTypes[product.productType] = tempCount + 1;
             }
         })
 
         let index = 0;
         for (const type in tempTypes) {
             const newIndex = index += 1;
-
             content.push(
                 <Spring
                     to={{ transform: navIndex === newIndex ? "translateX(1rem)" : "translateX(0rem)" }}
@@ -76,44 +77,27 @@ const Catalog = (props) => {
                                 }} />
                                 <span>
                                     {type}
+                                    <Spring
+                                        to={{ width: navIndex === newIndex ? "100%" : "0%" }}
+                                        from={{
+                                            width: "0%", height: "1.5px", backgroundColor: "black", marginTop: "2px"
+                                        }}
+                                        key={`link-${props.collection.title}-${newIndex}-underline`}
+                                    >
+                                        {innerprop => <div style={innerprop} />}
+                                    </Spring>
                                 </span>
-                                <span style={{ marginLeft: "4px", color: "grey" }}>
+                                <span style={{ marginLeft: "4px", color: "grey", marginBottom: "4px" }}>
                                     ({tempTypes[type]})
                                 </span>
                             </div>
-                            <Spring
-                                to={{ width: navIndex === newIndex ? "100%" : "0%" }}
-                                from={{
-                                    width: "0%", height: "1.5px", backgroundColor: "black", marginTop: "2px"
-                                }}
-                                key={`link-${props.collection.title}-${newIndex}-underline`}
-                            >
-                                {innerprop => <div style={innerprop} />}
-                            </Spring>
                         </div>
                     }
                 </Spring>
             )
         }
         return (content);
-    }
-
-    // const getAllTags = () => {
-    //     const tagsArr = [];
-    //     let id = "Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0LzY1NTY4OTg3ODc1MDc="
-    //     let item = fetchProduct(id)
-    //     // props.collection.products.forEach(product => {
-    //     //     let item = fetchProduct(product.id)
-    //     //     // product.tags.forEach(tag => {
-    //     //     //     if (!(tagsArr.includes(tag))) {
-    //     //     //         tagsArr.push(tag)
-    //     //     //     }
-    //     //     // })
-    //     // })
-
-    //     //console.log(tagsArr)
-    //     return item.tags
-    // }
+    })
 
     const sortProducts = (productArr, type) => {
         switch (type) {
@@ -155,7 +139,7 @@ const Catalog = (props) => {
             return setProducts(temp);
         }
         props.collection.products.forEach(ele => {
-            if (ele.productType.toLowerCase() === category) {
+            if (ele.productType.toLowerCase() === category.toLowerCase()) {
                 temp.push(ele)
             }
         })
@@ -186,9 +170,106 @@ const Catalog = (props) => {
     })
 
     return (
-        <div>
-            <Container maxWidth="lg" style={{ marginBottom: "5.5vmax" }}>
-                <Breadcrumbs>
+        matches ?
+            <div>
+                <Container maxWidth="lg" style={{ marginBottom: "5.5vmax" }}>
+                    <Breadcrumbs>
+                        <Spring
+                            to={{ width: breadHover === 1 ? "100%" : "0%" }}
+                            from={{
+                                width: "0%", background: "grey", height: "1.5px"
+                            }}
+                        >
+                            {prop =>
+                                <div onMouseEnter={() => setBreadHover(1)} onMouseLeave={() => setBreadHover(0)}>
+                                    {
+                                        isEmpty(props.shopDetails) ? <Skeleton animation="wave" width={70} height={10} />
+                                            :
+                                            <Link to="/" style={linkStyle}>
+                                                <Typography variant="h6">
+                                                    {props.shopDetails.info.name}
+                                                </Typography>
+                                            </Link>
+                                    }
+                                    <div style={prop} />
+                                </div>
+                            }
+                        </Spring>
+                        <Spring
+                            to={{ width: breadHover === 2 ? "100%" : "0%" }}
+                            from={{
+                                width: "0%", background: "grey", height: "1.5px",
+                                color: category === "default" ? "black" : "grey"
+                            }}
+                        >
+                            {prop =>
+                                <div style={{ pointerEvents: category === "default" ? "none" : "auto", }} onMouseEnter={() => setBreadHover(2)} onMouseLeave={() => setBreadHover(0)}>
+                                    <Typography variant="h6" color="textPrimary" style={{
+                                        textTransform: "capitalize", color: category === "default" ? "black" : "grey", cursor: "pointer"
+                                    }} onClick={() => setCategory("default")}
+                                    >
+                                        {props.collection.title.toLowerCase()}
+                                    </Typography>
+                                    <div style={prop} />
+                                </div>
+                            }
+                        </Spring>
+                        {
+                            category === "default" ? null :
+                                <Typography variant="h6" color="textPrimary" style={{ textTransform: "capitalize" }}>
+                                    {category}
+                                </Typography>
+                        }
+                    </Breadcrumbs>
+                    <Typography style={{
+                        fontSize: `${50 / 1920 * props.width}px`, textTransform: "capitalize", fontWeight: "500",
+                        width: "fit-content", margin: "27px auto 27px auto", fontFamily: 'FirusasHeader, "Times New Roman", Times, Georgia, serif'
+                    }}
+                    >
+                        {props.collection.title.toLowerCase()}
+                    </Typography>
+                    <Grid container spacing={7} justify="flex-start">
+                        <Grid item xs={2} style={{ display: "flex", flexDirection: "column" }}>
+                            <div>
+                                <Typography style={{ fontSize: "17px", fontWeight: "bold", width: "fit-content", textTransform: "uppercase", cursor: "pointer" }}
+                                    onClick={() => setCategory("default")} onMouseEnter={() => setCatHover(true)} onMouseLeave={() => setCatHover(false)}
+                                >
+                                    {props.collection.title.toLowerCase()}
+                                    <animated.div style={catSpring} />
+                                </Typography>
+                                <ProductList />
+                            </div>
+                            <div style={{ marginTop: "3.3vmax" }}>
+                            </div>
+                        </Grid>
+                        <Grid item xs={10}>
+                            <div style={{
+                                margin: "0 25px 10px 20px", display: "flex", justifyContent: "space-between",
+                                alignItems: "center"
+                            }}>
+                                <Typography variant="h5" style={{ color: "#2b2b2b", width: "fit-content" }}>
+                                    {products.length} items
+                    </Typography>
+                                <SortByDropdown sortBy={sortBy} setSortBy={(index) => setSortBy(index)} />
+                            </div>
+                            <Grid container>
+                                {products.map((ele, index) => {
+                                    return (
+                                        <Grid key={`item-${index}`} item xs={4} onClick={(e) => handleItemClick(e, ele.id)}>
+                                            <HomeDealsProduct content={ele} scrollbar={props.scrollbar} />
+                                        </Grid>
+                                    )
+                                })}
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Container>
+                <Contact width={props.width} />
+                <FooterMenu width={props.width} shopDetails={props.shopDetails} scrollbar={props.scrollbar} />
+            </div >
+            :
+            <div style={{ overflow: "hidden" }}>
+                <Breadcrumbs style={{ width: "fit-content", margin: "2.2vmax auto 0 auto" }}>
                     <Spring
                         to={{ width: breadHover === 1 ? "100%" : "0%" }}
                         from={{
@@ -201,7 +282,9 @@ const Catalog = (props) => {
                                     isEmpty(props.shopDetails) ? <Skeleton animation="wave" width={70} height={10} />
                                         :
                                         <Link to="/" style={linkStyle}>
-                                            {props.shopDetails.info.name}
+                                            <Typography variant="h6">
+                                                {props.shopDetails.info.name}
+                                            </Typography>
                                         </Link>
                                 }
                                 <div style={prop} />
@@ -217,10 +300,8 @@ const Catalog = (props) => {
                     >
                         {prop =>
                             <div style={{ pointerEvents: category === "default" ? "none" : "auto", }} onMouseEnter={() => setBreadHover(2)} onMouseLeave={() => setBreadHover(0)}>
-                                <Typography color="textPrimary" style={{
-                                    textTransform: "capitalize", fontSize: "14px",
-                                    color: category === "default" ? "black" : "grey",
-                                    cursor: "pointer"
+                                <Typography variant="h6" color="textPrimary" style={{
+                                    textTransform: "capitalize", color: category === "default" ? "black" : "grey", cursor: "pointer"
                                 }} onClick={() => setCategory("default")}
                                 >
                                     {props.collection.title.toLowerCase()}
@@ -231,69 +312,51 @@ const Catalog = (props) => {
                     </Spring>
                     {
                         category === "default" ? null :
-                            <Typography color="textPrimary" style={{ textTransform: "capitalize", fontSize: "14px" }}>
+                            <Typography variant="h6" color="textPrimary" style={{ textTransform: "capitalize" }}>
                                 {category}
                             </Typography>
                     }
                 </Breadcrumbs>
                 <Typography style={{
-                    fontSize: `${50 / 1920 * props.width}px`, textTransform: "capitalize", fontWeight: "500",
-                    width: "fit-content", margin: "27px auto 27px auto", fontFamily: 'FirusasHeader, "Times New Roman", Times, Georgia, serif'
+                    fontSize: `${80 / 1024 * props.width}px`, textTransform: "capitalize", fontWeight: "500",
+                    width: "fit-content", margin: "14px auto 0 auto", fontFamily: 'FirusasHeader, "Times New Roman", Times, Georgia, serif'
                 }}
                 >
                     {props.collection.title.toLowerCase()}
                 </Typography>
-                <Grid container spacing={7} justify="flex-start">
-                    <Grid item xs={2} style={{ display: "flex", flexDirection: "column" }}>
-                        <div>
-                            <Typography style={{
-                                fontSize: `17px`, fontWeight: "bold",
-                                width: "fit-content", textTransform: "capitalize", cursor: "pointer"
-                            }}
-                                onClick={() => setCategory("default")} onMouseEnter={() => setCatHover(true)} onMouseLeave={() => setCatHover(false)}
-                            >
-                                {props.collection.title.toLowerCase()}
-                                <animated.div style={catSpring} />
-                            </Typography>
-                            {getAllProductTypes()}
-                        </div>
-                        <div style={{ marginTop: "3.3vmax" }}>
-                            <Typography style={{
-                                fontSize: `17px`, fontWeight: "bold",
-                                width: "fit-content", marginBottom: `20px`
-                            }}>
-                                Tags
-                            </Typography>
-                        </div>
-                    </Grid>
-                    <Grid item xs={10}>
-                        <div style={{
-                            margin: "0 25px 10px 20px", display: "flex", justifyContent: "space-between",
-                            alignItems: "center"
-                        }}>
-                            <Typography style={{
-                                fontSize: `15px`, color: "#2b2b2b",
-                                width: "fit-content"
-                            }}>
-                                {products.length} items
-                    </Typography>
+                <Typography variant="h5" style={{ color: "#2b2b2b", width: "fit-content", margin: "0 auto" }}>
+                    {products.length} items
+                </Typography>
+                <div style={{ display: "flex", width: "90vw", margin: "2.2vmax auto 0 auto", justifyContent: "center" }}>
+                    <div style={{ marginRight: "5px" }}>
+                        <Button style={{ border: "1px solid #CDCDCD", display: "flex", alignItems: "center", borderRadius: "0px", minHeight: "50px", padding: "0 20px" }}>
+                            <TuneIcon fontSize="large" style={{ color: "black" }} />
+                            <Typography variant="h6" >Filter</Typography>
+                        </Button>
+                    </div>
+                    <div style={{ marginLeft: "5px" }}>
+                        <Button style={{ border: "1px solid #CDCDCD", display: "flex", alignItems: "center", borderRadius: "0px", minHeight: "50px" }}>
                             <SortByDropdown sortBy={sortBy} setSortBy={(index) => setSortBy(index)} />
-                        </div>
-                        <Grid container>
-                            {products.map((ele, index) => {
-                                return (
-                                    <Grid key={`item-${index}`} item xs={4} onClick={(e) => handleItemClick(e, ele.id)}>
-                                        <HomeDealsProduct content={ele} scrollbar={props.scrollbar} />
-                                    </Grid>
-                                )
-                            })}
-                        </Grid>
+                        </Button>
+                    </div>
+                </div>
+                <div style={{
+                    margin: "0 25px 10px 20px", display: "flex", justifyContent: "space-between",
+                    alignItems: "center"
+                }}>
+                    <Grid container>
+                        {products.map((ele, index) => {
+                            return (
+                                <Grid key={`item-${index}`} item xs={6} onClick={(e) => handleItemClick(e, ele.id)}>
+                                    <HomeDealsProduct content={ele} scrollbar={props.scrollbar} />
+                                </Grid>
+                            )
+                        })}
                     </Grid>
-                </Grid>
-            </Container>
-            <Contact width={props.width} />
-            <FooterMenu width={props.width} shopDetails={props.shopDetails} scrollbar={props.scrollbar} />
-        </div >
+                </div>
+                <Contact width={props.width} />
+                <FooterMenu width={props.width} shopDetails={props.shopDetails} scrollbar={props.scrollbar} />
+            </div>
     )
 }
 

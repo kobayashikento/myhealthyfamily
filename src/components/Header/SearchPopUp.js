@@ -12,21 +12,27 @@ import { Spring } from 'react-spring/renderprops';
 
 import { currencyDic } from '../../assests/constants';
 
+import { Link } from 'react-router-dom';
+
+const categoryTitle = { fontSize: "14px", fontWeight: "bold", paddingBottom: "18px" }
+
 const SearchPopUp = (props) => {
     let popupRef = React.useRef();
 
-    const { products, fetchProduct, currency } = useShopify();
+    const { products, fetchProduct, currency, featured } = useShopify();
     const [categories, setCategories] = React.useState([]);
     const [display, setDisplay] = React.useState({});
     const [hover, setHover] = React.useState(0);
     const [allHover, setAllHover] = React.useState(false);
 
-    const categoryTitle = { fontSize: "14px", fontWeight: "bold", paddingBottom: "18px" }
-
     function handleClick(e, product_id) {
         const id = product_id
         fetchProduct(id).then((res) => {
-            props.history.push(`/Product/${res.id}`)
+            props.history.push(`/Product/${res.id}`);
+            if (props.scrollbar !== undefined) {
+                props.scrollbar.current.scrollToTop()
+            }
+            props.setSearchHover(false);
         })
     }
 
@@ -48,6 +54,21 @@ const SearchPopUp = (props) => {
         return [tempCat, tempDisplay];
     }
 
+    const getCollectionFromCategory = (category) => {
+        let temp = undefined; 
+
+        featured.forEach(ele => {
+            let val = false; 
+            ele.products.forEach(product => {
+                if (product.productType.toLowerCase() === category.toLowerCase()) {
+                    return val = true;
+                }
+            })
+            if (val) {temp = ele}
+        })
+        return temp;
+    }
+
     const makeCategory = () => {
         return (
             categories.map((category, index) => {
@@ -59,8 +80,8 @@ const SearchPopUp = (props) => {
                             key={`category-${index}`}
                         >
                             {prop =>
-                                <div style={{ width: "fit-content", cursor: "pointer" }} onMouseEnter={() => setHover(index + 1)} onMouseLeave={() => setHover(0)}>
-                                    <Typography style={{ fontSize: "15px", fontWeight: "500" }}>
+                                <div style={{ cursor: "pointer", color: "black", textDecoration: "none", width: "fit-content" }} onMouseEnter={() => setHover(index + 1)} onMouseLeave={() => setHover(0)}>
+                                    <Typography style={{ fontSize: "15px", fontWeight: "500", width: "fit-content" }}>
                                         {category}
                                     </Typography>
                                     <animated.div style={prop} />
@@ -109,11 +130,11 @@ const SearchPopUp = (props) => {
                         <img src={`${display[item].images[0].src}`} />
                     </div>
                     <div>
-                        <Typography style={{ fontSize: "16px", fontWeight: "500", marginBottom: "10px" }}>
+                        <Typography variant="h5" style={{ fontWeight: "500", marginBottom: "10px" }}>
                             {display[item].title}
                         </Typography>
-                        <Typography style={{ fontSize: "14px", marginBottom: "10px", color: "#555454" }}>
-                            {display[item].productType}
+                        <Typography variant="h6" style={{ marginBottom: "10px", color: "#555454" }}>
+                            {display[item].vendor}
                         </Typography>
                         <div>
                             {display[item].presentmentPriceRanges !== undefined ?
@@ -169,6 +190,13 @@ const SearchPopUp = (props) => {
         from: { opacity: 0, display: "none" }
     })
 
+    const handleClickLink = () => {
+        if (props.scrollbar !== undefined) {
+            props.scrollbar.current.scrollToTop();
+        }
+        props.setSearchHover(false);
+    }
+
     return (
         <animated.div style={openPopup} ref={popupRef} className="search_popup">
             <CloseIcon style={{ position: "absolute", right: "20px", cursor: "pointer" }} onClick={() => props.setSearchHover(false)} />
@@ -211,11 +239,14 @@ const SearchPopUp = (props) => {
                 key={`category-view-all`}
             >
                 {prop =>
-                    <div style={{ width: "fit-content", cursor: "pointer", position: "absolute", bottom: "0px" }} onMouseEnter={() => setAllHover(true)} onMouseLeave={() => setAllHover(false)}>
-                        <Typography className="headerDrop_item" style={{ fontSize: "15px", fontWeight: "500" }}>
-                            View All →
+                    <div style={{ width: "fit-content", cursor: "pointer", position: "absolute", bottom: "0px" }} onClick={handleClickLink}
+                        onMouseEnter={() => setAllHover(true)} onMouseLeave={() => setAllHover(false)}>
+                        <Link to="/best-sellers" style={{ textDecoration: "none", color: "inherit" }}>
+                            <Typography className="headerDrop_item" style={{ fontSize: "15px", fontWeight: "500" }}>
+                                View All →
                                 </Typography>
-                        <animated.div style={prop} />
+                            <animated.div style={prop} />
+                        </Link>
                     </div>
                 }
             </Spring>

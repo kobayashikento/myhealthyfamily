@@ -46,7 +46,7 @@ export default (props) => {
 	return (
 		matches ?
 			<div>
-				< Hero width={width} scrollbar={props.scrollbar} />
+				<Hero width={width} scrollbar={props.scrollbar} matches={matches} />
 				<Typography style={{ fontSize: `${(18 / 1920 * width)}px`, color: "#959494", padding: "0 12px 12px 12px" }} className="homedeals_title">
 					SHOW NOW
                 </Typography>
@@ -62,16 +62,33 @@ export default (props) => {
                 </Typography>
 					<Divider style={{ width: "100%" }} />
 				</div>
-				<HomeDeals width={width} history={props.history} scrollbar={props.scrollbar} content={getBestSeller()} />
-				<HomeContent shopDetails={shopDetails} width={width} scrollbar={props.scrollbar} />
+				<HomeDeals matches={matches} width={width} history={props.history} scrollbar={props.scrollbar} content={getBestSeller()} />
+				<HomeContent matches={matches} shopDetails={shopDetails} width={width} scrollbar={props.scrollbar} />
 				<Contact width={width} scrollbar={props.scrollbar} />
 				<FooterMenu width={width} shopDetails={shopDetails} scrollbar={props.scrollbar} />
 			</div >
 			:
-			<div style={{ display: "flex", justifyContent: "center", marginTop: "50%" }}>
-				<Typography>
-					Currently implementing the mobile compatibility, come back later!
-					</Typography>
+			<div>
+				< Hero width={width} scrollbar={props.scrollbar} matches={matches} />
+				<Typography style={{ fontSize: `${(45 / 1024 * width)}px`, color: "#959494", padding: "0 12px 12px 12px" }} className="homedeals_title">
+					SHOW NOW
+                </Typography>
+				<div style={{ display: "flex", justifyContent: 'center', alignItems: "center", overflow: "hidden", margin: "0 20px" }}>
+					<Divider style={{ width: "100%" }} />
+					<Typography style={{
+						fontSize: `${(80 / 1024 * width)}px`,
+						fontFamily: `FirusasHeader, "Times New Roman", Times, Georgia, serif`,
+						fontWeight: "bold"
+					}}
+						className="homedeals_title_M">
+						Best Sellers
+			</Typography>
+					<Divider style={{ width: "100%" }} />
+				</div>
+				<HomeDeals matches={matches} width={width} history={props.history} scrollbar={props.scrollbar} content={getBestSeller()} />
+				<HomeContent matches={matches} shopDetails={shopDetails} width={width} scrollbar={props.scrollbar}  />
+				<Contact width={width} scrollbar={props.scrollbar} />
+				<FooterMenu width={width} shopDetails={shopDetails} scrollbar={props.scrollbar} />
 			</div>
 	)
 }

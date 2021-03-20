@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Link } from 'react-router-dom';
-import { Typography, Container, TextField, InputAdornment, useMediaQuery, Badge } from '@material-ui/core';
+import { Typography, Container, IconButton, InputAdornment, useMediaQuery, Badge } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { animated, useSpring } from 'react-spring';
 import { Spring } from 'react-spring/renderprops';
@@ -11,6 +11,8 @@ import { useShopify } from "../../hooks";
 // icons 
 import ClearIcon from '@material-ui/icons/Clear';
 import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
+import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
 
 // import files
 import SearchPopUp from './SearchPopUp';
@@ -100,7 +102,7 @@ const Header = (props) => {
                                 }}
                             />
                         </animated.div>
-                        <SearchPopUp history={props.history} input={input} searchHover={searchHover} setSearchHover={(bool) => setSearchHover(bool)} />
+                        <SearchPopUp history={props.history} input={input} searchHover={searchHover} setSearchHover={(bool) => setSearchHover(bool)} scrollbar={props.scrollbar}/>
                     </div>
                     <div onMouseEnter={() => openCart()} onMouseLeave={() => closeCart()}>
                         <Badge badgeContent={cartCount} color="secondary">
@@ -147,7 +149,35 @@ const Header = (props) => {
                 </div>
             </div>
             :
-            <div></div>
+            <div className="headerM">
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                        <IconButton style={{ padding: "5px" }}>
+                            <MenuIcon fontSize="large" style={{ color: "black" }} />
+                        </IconButton>
+                        <IconButton style={{ padding: "5px" }}>
+                            <SearchIcon fontSize="large" style={{ color: "black" }} />
+                        </IconButton>
+                    </div>
+                    <div style={{ width: "fit-content" }} onMouseEnter={() => openCart()} onMouseLeave={() => closeCart()}>
+                        <Badge badgeContent={cartCount} color="secondary">
+                            <LocalMallOutlinedIcon className="cartOpacity" style={{ cursor: "pointer", fontSize: "2.5rem" }} />
+                        </Badge>
+                        <Cart />
+                    </div>
+                </div>
+                <div style={{ position: "absolute", left: "50%", transform: "translate(-50%, -30px)" }}>
+                    <Typography variant="h4" style={{ width: "fit-content", fontWeight: "bold", fontFamily: 'FirusasHeader, "Times New Roman", Times, Georgia, serif' }}>
+                        <Link to="/" onClick={() => props.scrollbar.current.scrollToTop()} style={{ textDecoration: "none", color: "black" }}>
+                            {
+                                isEmpty(shopDetails) ? null 
+                                :
+                                shopDetails.info.name
+                            }
+                        </Link>
+                    </Typography>
+                </div>
+            </div >
     )
 }
 

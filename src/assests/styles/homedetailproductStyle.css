@@ -1,10 +1,21 @@
-.homedetailproduct_container {
-}
-
 .homedetailproduct_text {
     cursor: pointer;
 }
 
 .homedetailproduct_text:hover { 
     text-decoration: underline;
+}
+
+.saleBadge {
+    position: absolute !important;
+    right: 24px;
+    top: 24px;
+}
+
+.saleBadge>span {
+    font-size: 1.5rem;
+    height: 45px;
+    width: 50px;
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }

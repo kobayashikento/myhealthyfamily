@@ -41,6 +41,46 @@ const StyledTextFieldContact = withStyles({
     },
 })(TextField);
 
+const StyledTextFieldContactMobile = withStyles({
+    root: {
+        '& .MuiInputLabel-outlined': {
+            fontSize: "13px",
+        },
+        '& .MuiOutlinedInput-root': {
+            borderRadius: "0px",
+        },
+        '& label.Mui-focused': {
+            color: 'black',
+        },
+        '& .MuiInput-underline:after': {
+            borderBottomColor: 'black',
+        },
+        '& .MuiInputBase-root': {
+            fontSize: "15px",
+            height: "50px"
+        },
+        '& label.Mui-focused': {
+            color: 'black',
+        },
+        '& .MuiInput-underline:after': {
+            borderBottomColor: 'black',
+        },
+        '& .MuiOutlinedInput-root': {
+            borderRadius: "0px",
+            width: "180px",
+            '& fieldset': {
+                borderColor: 'black',
+            },
+            '&:hover fieldset': {
+                borderColor: 'black',
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: 'black',
+            },
+        },
+    },
+})(TextField);
+
 const StyledTextFieldHeader = withStyles({
     root: {
         '& label.Mui-focused': {
@@ -60,5 +100,6 @@ const linkStyle = { color: "inherit", textDecoration: "none" }
 export {
     StyledTextFieldContact,
     StyledTextFieldHeader,
+    StyledTextFieldContactMobile,
     linkStyle
 }
