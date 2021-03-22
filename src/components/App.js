@@ -8,6 +8,7 @@ import { useShopify } from "../hooks"
 import Alert from './Header/Alert';
 import Header from './Header/Header';
 import Catalog from './Product/Catalog';
+import NotFoundPage from './NotFoundPage';
 
 import { Scrollbars } from 'react-custom-scrollbars';
 import AllCatalog from "./Product/AllCatalog";
@@ -129,6 +130,7 @@ const App = (props) => {
 						} />
 					{createAboutRoutes()}
 					<Route path="/product/:productId" render={(prop) => <ProductView {...prop} scrollbar={scrollbar}/>} />
+					<Route component={NotFoundPage} />
 				</Switch>
 			</Router>
 		</Scrollbars>

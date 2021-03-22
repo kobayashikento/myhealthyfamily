@@ -22,7 +22,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Contact from '../Footer/Contact';
 import FooterMenu from '../Footer/FooterMenu';
 import HomeDeals from "../Home/HomeDeals/HomeDeals";
-
+import NotFoundPage from '../NotFoundPage';
 import { currencyDic, returnText } from '../../assests/constants';
 
 import { isEmpty, convertedLink } from '../../assests/functions';
@@ -170,15 +170,18 @@ const ProductView = (props) => {
 
 	const getSameType = () => {
 		let temp = [];
-		featured.forEach(ele => {
-			if (ele.title.toLowerCase() === findFeatured().toLowerCase()) {
-				ele.products.forEach(p => {
-					if (product.productType === p.productType && p.id !== id) {
-						temp.push(p);
-					}
-				})
-			}
-		})
+		if (!isEmpty(product)) {
+			featured.forEach(ele => {
+				if (ele.title.toLowerCase() === findFeatured().toLowerCase()) {
+					ele.products.forEach(p => {
+						if (product.productType === p.productType && p.id !== id) {
+							temp.push(p);
+						}
+					})
+				}
+			})
+		}
+		
 		return temp;
 	}
 
@@ -212,16 +215,6 @@ const ProductView = (props) => {
 		}
 	}
 
-	// React.useEffect(() => {
-	// 	if (imgIndex - 3 > verImgIndex) {
-	// 		setVerImgIndex(verImgIndex + 1);
-	// 	} else {
-	// 		if (verImgIndex !== 0) {
-	// 			setVerImgIndex(verImgIndex - 1);
-	// 		}
-	// 	}
-	// }, [imgIndex])
-
 	const handleClose = (event, reason) => {
 		if (reason === 'clickaway') {
 			return;
@@ -233,555 +226,558 @@ const ProductView = (props) => {
 	const noShadow = "rgba(14, 30, 37, 0) 0px 2px 4px 0px, rgba(14, 30, 37, 0) 0px 2px 8px 0px";
 
 	return (
-		matches ?
-			<div style={{ marginTop: "2.2vmax" }}>
-				<Container maxWidth="lg" style={{ marginBottom: "4.4vmax", paddingLeft: "3.3vmax" }}>
-					<Grid container spacing={0} justify="flex-end" style={{ margin: "0", paddingBottom: "6.6vmax" }}>
-						<Grid item xs={6} style={{ paddingLeft: "1.1vmax", marginTop: "2.2vmax", position: "relative" }}>
-							{
-								isEmpty(product) ? null :
-									<Grid container justify="center" spacing={5} style={{ position: "sticky", top: "150px" }}>
-										<Grid item xs={2} style={{ maxHeight: "70vh" }}>
-											<CarouselProvider
-												naturalSlideWidth={150}
-												naturalSlideHeight={150}
-												totalSlides={product.images.length}
-												orientation="vertical"
-												visibleSlides={6}
-												dragEnabled={false}
-												currentSlide={verImgIndex}
-											>
-												<Slider>
-													{
-														product.images.map((ele, index) => {
-															return (
-																<Slide key={`ver-image-${index}`} style={{
-																	opacity: imgHover === index || imgIndex === index ? 0.8 : 1,
-																}}
-																	index={index} onClick={() => setImgIndex(index)} onMouseEnter={() => setImgIndex(index)}
-																>
-																	<Spring
-																		to={{
-																			transform: imgHover === index ? "scale(1.1)" : "scale(1)",
-																			boxShadow: imgIndex === index ? shadow : noShadow
-																		}}
-																		from={{
-																			transform: "scale(1)", cursor: "pointer", boxShadow: noShadow,
-																			height: "50px", width: "50px"
-																		}}
-																	>
-																		{prop =>
-																			<div style={{ margin: "8px" }}>
-																				<img
-																					style={prop}
-																					src={ele.src}
-																					alt={`${ele.id} product shot`}
-																				/>
-																			</div>
-																		}
-																	</Spring>
-																</Slide>
-															)
-														})
-													}
-												</Slider>
-											</CarouselProvider>
-										</Grid>
-										<Grid item xs={10} style={{ position: "relative", maxHeight: "500px", overflow: "hidden" }}>
-											<CarouselProvider
-												naturalSlideWidth={100}
-												naturalSlideHeight={125}
-												totalSlides={product.images.length}
-												currentSlide={imgIndex}
-											>
-												<Slider>
-													{
-														product.images.map((ele, index) => {
-															return (
-																<Slide key={`product-image-${index}`} index={index}>
-																	<ImageWithZoom
-																		style={{
-																			marginRight: "auto", marginLeft: "auto",
-																			padding: "0 20px", maxHeight: "60vh",
-																		}}
-																		className="mainImage"
-																		src={ele.src}
-																		alt={`${ele.id} product shot`}
-																	/>
-																</Slide>
-															)
-														})
-													}
-												</Slider>
-												<IconButton disabled={imgIndex >= product.images.length - 1} onClick={() => handleImgArrow("next")}
-													style={{
-														background: "transparent", border: "none", position: "absolute",
-														top: "40%", right: "0"
-													}}><ArrowForwardIosIcon fontSize="large" /></IconButton>
-												<IconButton disabled={imgIndex === 0} onClick={() => handleImgArrow("back")}
-													style={{
-														background: "transparent", border: "none", position: "absolute",
-														top: "40%", left: "1.1vmax"
-													}}>
-													<ArrowBackIosIcon fontSize="large" />
-												</IconButton>
-											</CarouselProvider>
-										</Grid>
-									</Grid>
-							}
-						</Grid>
-						<Grid item xs={6} style={{ paddingLeft: "4.4vmax" }}>
-							<Breadcrumbs style={{ marginBottom: "3.3vmax" }}>
-								<Spring
-									to={{ width: breadHover === 1 ? "100%" : "0%" }}
-									from={{
-										width: "0%", background: "grey", height: "1.5px"
-									}}
-								>
-									{prop =>
-										<div onMouseEnter={() => setBreadHover(1)} onMouseLeave={() => setBreadHover(0)}>
-											{
-												isEmpty(shopDetails) ? <Skeleton animation="wave" width={50} height={10} /> :
-													<Link to="/" style={linkStyle}>
-														<Typography variant="h6">
-															{shopDetails.info.name}
-														</Typography>
-													</Link>
-											}
-											<div style={prop} />
-										</div>
-									}
-								</Spring>
+		isEmpty(product) ?
+			<NotFoundPage />
+			:
+			matches ?
+				<div style={{ marginTop: "2.2vmax" }}>
+					<Container maxWidth="lg" style={{ marginBottom: "4.4vmax", paddingLeft: "3.3vmax" }}>
+						<Grid container spacing={0} justify="flex-end" style={{ margin: "0", paddingBottom: "6.6vmax" }}>
+							<Grid item xs={6} style={{ paddingLeft: "1.1vmax", marginTop: "2.2vmax", position: "relative" }}>
 								{
-									!isEmpty(product) ?
-										<Spring
-											to={{ width: breadHover === 2 ? "100%" : "0%" }}
-											from={{
-												width: "0%", background: "grey", height: "1.5px"
-											}}
-										>
-											{prop =>
-												<div onMouseEnter={() => setBreadHover(2)} onMouseLeave={() => setBreadHover(0)}>
-													<Link to={`/${convertedLink(findFeatured())}`} style={linkStyle}>
-														<Typography variant="h6">
-															{convertedLink(findFeatured())}
-														</Typography>
-													</Link>
-													<div style={prop} />
-												</div>
-											}
-										</Spring>
-										: null
+									isEmpty(product) ? null :
+										<Grid container justify="center" spacing={5} style={{ position: "sticky", top: "150px" }}>
+											<Grid item xs={2} style={{ maxHeight: "70vh" }}>
+												<CarouselProvider
+													naturalSlideWidth={150}
+													naturalSlideHeight={150}
+													totalSlides={product.images.length}
+													orientation="vertical"
+													visibleSlides={6}
+													dragEnabled={false}
+													currentSlide={verImgIndex}
+												>
+													<Slider>
+														{
+															product.images.map((ele, index) => {
+																return (
+																	<Slide key={`ver-image-${index}`} style={{
+																		opacity: imgHover === index || imgIndex === index ? 0.8 : 1,
+																	}}
+																		index={index} onClick={() => setImgIndex(index)} onMouseEnter={() => setImgIndex(index)}
+																	>
+																		<Spring
+																			to={{
+																				transform: imgHover === index ? "scale(1.1)" : "scale(1)",
+																				boxShadow: imgIndex === index ? shadow : noShadow
+																			}}
+																			from={{
+																				transform: "scale(1)", cursor: "pointer", boxShadow: noShadow,
+																				height: "50px", width: "50px"
+																			}}
+																		>
+																			{prop =>
+																				<div style={{ margin: "8px" }}>
+																					<img
+																						style={prop}
+																						src={ele.src}
+																						alt={`${ele.id} product shot`}
+																					/>
+																				</div>
+																			}
+																		</Spring>
+																	</Slide>
+																)
+															})
+														}
+													</Slider>
+												</CarouselProvider>
+											</Grid>
+											<Grid item xs={10} style={{ position: "relative", maxHeight: "500px", overflow: "hidden" }}>
+												<CarouselProvider
+													naturalSlideWidth={100}
+													naturalSlideHeight={125}
+													totalSlides={product.images.length}
+													currentSlide={imgIndex}
+												>
+													<Slider>
+														{
+															product.images.map((ele, index) => {
+																return (
+																	<Slide key={`product-image-${index}`} index={index}>
+																		<ImageWithZoom
+																			style={{
+																				marginRight: "auto", marginLeft: "auto",
+																				padding: "0 20px", maxHeight: "60vh",
+																			}}
+																			className="mainImage"
+																			src={ele.src}
+																			alt={`${ele.id} product shot`}
+																		/>
+																	</Slide>
+																)
+															})
+														}
+													</Slider>
+													<IconButton disabled={imgIndex >= product.images.length - 1} onClick={() => handleImgArrow("next")}
+														style={{
+															background: "transparent", border: "none", position: "absolute",
+															top: "40%", right: "0"
+														}}><ArrowForwardIosIcon fontSize="large" /></IconButton>
+													<IconButton disabled={imgIndex === 0} onClick={() => handleImgArrow("back")}
+														style={{
+															background: "transparent", border: "none", position: "absolute",
+															top: "40%", left: "1.1vmax"
+														}}>
+														<ArrowBackIosIcon fontSize="large" />
+													</IconButton>
+												</CarouselProvider>
+											</Grid>
+										</Grid>
 								}
-							</Breadcrumbs>
-							<Typography variant="h3" style={{ fontWeight: "500", maxWidth: "80%" }}>
-								{product.title}
-							</Typography>
-							<Typography variant="h5" style={{ color: "#555454", margin: "16px 0 36px" }}>
-								{product.vendor}
-							</Typography>
-							<div style={{ display: "flex", margin: "3.3vmax 0" }}>
-								{isEmpty(product) ?
-									null
-									:
-									product.variants[variation].compareAtPrice !== null ?
-										<div style={{ display: "flex", alignItems: "center" }}>
-											<Typography variant="h5" style={{ color: "#2b2b2b", marginRight: "15px", textDecoration: "line-through" }}>
-												{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 1)[0]}
-											</Typography>
-											<Typography variant="h4" style={{ color: "#e13367" }}>
-												{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 1)[1]} | {getPercent(getCurrPrice(product.variants[variation], 1))}% OFF
-										</Typography>
-										</div>
-										:
-										<Typography style={{ fontSize: `${40 / 1920 * width}px`, color: "black" }}>
-											{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 0)[0]}
-										</Typography>
-								}
-							</div>
-							<div style={{ display: "flex" }}>
-								<CssFormControl variant="outlined" style={{ fontSize: "15px" }}>
-									<Select
-										value={variation}
-										onChange={handleChange}
-									>
-										{createList()}
-									</Select>
-								</CssFormControl>
-								<Spring
-									to={{ color: addCartHover ? "white" : "black", backgroundColor: addCartHover ? "black" : "white" }}
-									from={{
-										color: "black", backgroundColor: "white"
-									}}
-								>
-									{prop =>
-										<div style={{
-											border: "1px solid black", padding: "0 50px", ...prop,
-											marginLeft: "1.1vmax", cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center"
-										}}
-											onClick={() => addToCart(product.variants[variation].id.toString(), 1)}
-											onMouseEnter={() => setAddCartHover(true)} onMouseLeave={() => setAddCartHover(false)}
-										>
-											<LocalMallOutlinedIcon style={{ fontSize: "16px" }} />
-											<Typography style={{ fontSize: "16px", marginLeft: "1.1vmax" }}>Add To Cart</Typography>
-										</div>
-									}
-								</Spring>
-							</div>
-							<Divider style={{ marginTop: "3.3vmax", marginRight: "5.5vmax" }} />
-							<div style={{ marginTop: "3.3vmax" }}>
-								<div style={{ display: "flex" }}>
+							</Grid>
+							<Grid item xs={6} style={{ paddingLeft: "4.4vmax" }}>
+								<Breadcrumbs style={{ marginBottom: "3.3vmax" }}>
 									<Spring
-										to={{ width: descIndex ? "100%" : "0%" }}
+										to={{ width: breadHover === 1 ? "100%" : "0%" }}
 										from={{
-											width: "100%", height: "2px", backgroundColor: "black"
+											width: "0%", background: "grey", height: "1.5px"
 										}}
 									>
 										{prop =>
-											<div onClick={() => setDescIndex(true)}
-												style={{ marginLeft: "0.5vmax", pointerEvents: descIndex ? "none" : "", cursor: "pointer", width: "fit-content" }}>
-												<Typography style={{ fontSize: "16px", color: descIndex ? "black" : "grey" }}>
-													DESCRIPTION
-								</Typography>
+											<div onMouseEnter={() => setBreadHover(1)} onMouseLeave={() => setBreadHover(0)}>
+												{
+													isEmpty(shopDetails) ? <Skeleton animation="wave" width={50} height={10} /> :
+														<Link to="/" style={linkStyle}>
+															<Typography variant="h6">
+																{shopDetails.info.name}
+															</Typography>
+														</Link>
+												}
 												<div style={prop} />
 											</div>
 										}
 									</Spring>
+									{
+										!isEmpty(product) ?
+											<Spring
+												to={{ width: breadHover === 2 ? "100%" : "0%" }}
+												from={{
+													width: "0%", background: "grey", height: "1.5px"
+												}}
+											>
+												{prop =>
+													<div onMouseEnter={() => setBreadHover(2)} onMouseLeave={() => setBreadHover(0)}>
+														<Link to={`/${convertedLink(findFeatured())}`} style={linkStyle}>
+															<Typography variant="h6">
+																{convertedLink(findFeatured())}
+															</Typography>
+														</Link>
+														<div style={prop} />
+													</div>
+												}
+											</Spring>
+											: null
+									}
+								</Breadcrumbs>
+								<Typography variant="h3" style={{ fontWeight: "500", maxWidth: "80%" }}>
+									{product.title}
+								</Typography>
+								<Typography variant="h5" style={{ color: "#555454", margin: "16px 0 36px" }}>
+									{product.vendor}
+								</Typography>
+								<div style={{ display: "flex", margin: "3.3vmax 0" }}>
+									{isEmpty(product) ?
+										null
+										:
+										product.variants[variation].compareAtPrice !== null ?
+											<div style={{ display: "flex", alignItems: "center" }}>
+												<Typography variant="h5" style={{ color: "#2b2b2b", marginRight: "15px", textDecoration: "line-through" }}>
+													{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 1)[0]}
+												</Typography>
+												<Typography variant="h4" style={{ color: "#e13367" }}>
+													{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 1)[1]} | {getPercent(getCurrPrice(product.variants[variation], 1))}% OFF
+										</Typography>
+											</div>
+											:
+											<Typography style={{ fontSize: `${40 / 1920 * width}px`, color: "black" }}>
+												{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 0)[0]}
+											</Typography>
+									}
+								</div>
+								<div style={{ display: "flex" }}>
+									<CssFormControl variant="outlined" style={{ fontSize: "15px" }}>
+										<Select
+											value={variation}
+											onChange={handleChange}
+										>
+											{createList()}
+										</Select>
+									</CssFormControl>
 									<Spring
-										to={{ width: !descIndex ? "100%" : "0%" }}
+										to={{ color: addCartHover ? "white" : "black", backgroundColor: addCartHover ? "black" : "white" }}
 										from={{
-											width: "0%", height: "2px", backgroundColor: "black"
+											color: "black", backgroundColor: "white"
 										}}
 									>
 										{prop =>
-											<div onClick={() => setDescIndex(false)}
-												style={{
-													marginLeft: "3.3vmax",
-													pointerEvents: !descIndex ? "none" : "", cursor: "pointer", width: "fit-content"
-												}}>
-												<Typography style={{ fontSize: "16px", color: !descIndex ? "black" : "grey" }}>DELIVERY & RETURNS</Typography>
-												<div style={prop} />
+											<div style={{
+												border: "1px solid black", padding: "0 50px", ...prop,
+												marginLeft: "1.1vmax", cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center"
+											}}
+												onClick={() => addToCart(product.variants[variation].id.toString(), 1)}
+												onMouseEnter={() => setAddCartHover(true)} onMouseLeave={() => setAddCartHover(false)}
+											>
+												<LocalMallOutlinedIcon style={{ fontSize: "16px" }} />
+												<Typography style={{ fontSize: "16px", marginLeft: "1.1vmax" }}>Add To Cart</Typography>
 											</div>
 										}
 									</Spring>
 								</div>
-							</div>
-							<div style={{ marginTop: "2.2vmax" }}>
-								{
-									descIndex ?
-										<div style={{ maxWidth: "80%" }}>
-											{description === undefined ? <Skeleton animation="wave" width={100} height={10} />
-												: createDescription()
+								<Divider style={{ marginTop: "3.3vmax", marginRight: "5.5vmax" }} />
+								<div style={{ marginTop: "3.3vmax" }}>
+									<div style={{ display: "flex" }}>
+										<Spring
+											to={{ width: descIndex ? "100%" : "0%" }}
+											from={{
+												width: "100%", height: "2px", backgroundColor: "black"
+											}}
+										>
+											{prop =>
+												<div onClick={() => setDescIndex(true)}
+													style={{ marginLeft: "0.5vmax", pointerEvents: descIndex ? "none" : "", cursor: "pointer", width: "fit-content" }}>
+													<Typography style={{ fontSize: "16px", color: descIndex ? "black" : "grey" }}>
+														DESCRIPTION
+								</Typography>
+													<div style={prop} />
+												</div>
 											}
-										</div>
-										:
-										<div style={{ maxWidth: "80%" }}>
-											<Typography style={{ fontSize: "15px" }}>
-												{returnText}
-											</Typography>
-											<div style={{ width: "fit-content" }}>
-												<Link to='/refund-policy' style={{ textDecoration: "none", color: "inherit" }}>
-													<Typography onMouseEnter={() => setReadHover(true)} onMouseLeave={() => setReadHover(false)}
-														style={{ fontSize: "15px", marginTop: "2.2vmax", cursor: "pointer", fontWeight: "bold" }}>
-														Read More Here
-										</Typography>
-													<animated.div style={readSpring} />
-												</Link>
+										</Spring>
+										<Spring
+											to={{ width: !descIndex ? "100%" : "0%" }}
+											from={{
+												width: "0%", height: "2px", backgroundColor: "black"
+											}}
+										>
+											{prop =>
+												<div onClick={() => setDescIndex(false)}
+													style={{
+														marginLeft: "3.3vmax",
+														pointerEvents: !descIndex ? "none" : "", cursor: "pointer", width: "fit-content"
+													}}>
+													<Typography style={{ fontSize: "16px", color: !descIndex ? "black" : "grey" }}>DELIVERY & RETURNS</Typography>
+													<div style={prop} />
+												</div>
+											}
+										</Spring>
+									</div>
+								</div>
+								<div style={{ marginTop: "2.2vmax" }}>
+									{
+										descIndex ?
+											<div style={{ maxWidth: "80%" }}>
+												{description === undefined ? <Skeleton animation="wave" width={100} height={10} />
+													: createDescription()
+												}
 											</div>
-										</div>
-								}
-							</div>
+											:
+											<div style={{ maxWidth: "80%" }}>
+												<Typography style={{ fontSize: "15px" }}>
+													{returnText}
+												</Typography>
+												<div style={{ width: "fit-content" }}>
+													<Link to='/refund-policy' style={{ textDecoration: "none", color: "inherit" }}>
+														<Typography onMouseEnter={() => setReadHover(true)} onMouseLeave={() => setReadHover(false)}
+															style={{ fontSize: "15px", marginTop: "2.2vmax", cursor: "pointer", fontWeight: "bold" }}>
+															Read More Here
+										</Typography>
+														<animated.div style={readSpring} />
+													</Link>
+												</div>
+											</div>
+									}
+								</div>
+							</Grid>
 						</Grid>
-					</Grid>
+						{
+							getSameType().length !== 0 ?
+								<div>
+									<div style={{ display: "flex", justifyContent: 'center', alignItems: "center", overflow: "hidden" }}>
+										<Divider style={{ width: "100%" }} />
+										<Typography style={{
+											fontSize: `${(55 / 1920 * width)}px`,
+											fontFamily: `FirusasHeader, "Times New Roman", Times, Georgia, serif`,
+											fontWeight: "bold"
+										}}
+											className="homedeals_title">
+											You May Also Like
+                </Typography>
+										<Divider style={{ width: "100%" }} />
+									</div>
+									<HomeDeals width={width} history={props.history} scrollbar={props.scrollbar} content={getSameType()} />
+								</div>
+								: null
+						}
+					</Container>
+					<Snackbar
+						severity="info"
+						anchorOrigin={{
+							vertical: 'bottom',
+							horizontal: 'left',
+						}}
+						open={open}
+						autoHideDuration={3000}
+						onClose={handleClose}
+						message="Item added to cart"
+						action={
+							<React.Fragment>
+								<IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+									<CloseIcon fontSize="small" />
+								</IconButton>
+							</React.Fragment>
+						}
+					/>
+					<Snackbar
+						severity="info"
+						anchorOrigin={{
+							vertical: 'bottom',
+							horizontal: 'left',
+						}}
+						open={open}
+						autoHideDuration={3000}
+						onClose={handleClose}
+						message="Item added to cart"
+						action={
+							<React.Fragment>
+								<IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+									<CloseIcon fontSize="small" />
+								</IconButton>
+							</React.Fragment>
+						}
+					/>
+					<Contact width={width} />
+					<FooterMenu width={width} shopDetails={shopDetails} />
+				</div>
+				:
+				<div style={{ marginTop: "2.2vmax", overflow: "hidden" }}>
+					{
+						isEmpty(product) ? null :
+							<div >
+								<CarouselProvider
+									naturalSlideWidth={100}
+									naturalSlideHeight={125}
+									totalSlides={product.images.length}
+									currentSlide={imgIndex}
+								>
+									<Slider style={{ maxHeight: "60vh" }}>
+										{
+											product.images.map((ele, index) => {
+												return (
+													<Slide key={`product-image-${index}`} index={index}>
+														<img
+															style={{
+																marginRight: "auto", marginLeft: "auto",
+																padding: "0 20px", maxHeight: "60vh",
+															}}
+															src={ele.src}
+															alt={`${ele.id} product shot`}
+														/>
+													</Slide>
+												)
+											})
+										}
+									</Slider>
+									<div style={{ width: "fit-content", margin: "4px auto 20px auto" }}>
+										<DotGroup className="circleBtn" />
+									</div>
+									<IconButton disabled={imgIndex >= product.images.length - 1} onClick={() => handleImgArrow("next")}
+										style={{
+											background: "transparent", border: "none", position: "absolute",
+											top: "40%", right: "0"
+										}}><ArrowForwardIosIcon fontSize="large" /></IconButton>
+									<IconButton disabled={imgIndex === 0} onClick={() => handleImgArrow("back")}
+										style={{
+											background: "transparent", border: "none", position: "absolute",
+											top: "40%", left: "1.1vmax"
+										}}>
+										<ArrowBackIosIcon fontSize="large" />
+									</IconButton>
+								</CarouselProvider>
+							</div>
+					}
+					<div style={{ padding: "0 5.5vw" }}>
+						<Breadcrumbs style={{ marginBottom: "3.3vmax" }}>
+							<Spring
+								to={{ width: breadHover === 1 ? "100%" : "0%" }}
+								from={{
+									width: "0%", background: "grey", height: "1.5px"
+								}}
+							>
+								{prop =>
+									<div onMouseEnter={() => setBreadHover(1)} onMouseLeave={() => setBreadHover(0)}>
+										{
+											isEmpty(shopDetails) ? <Skeleton animation="wave" width={50} height={10} /> :
+												<Link to="/" style={linkStyle}>
+													<Typography variant="h6">
+														{shopDetails.info.name}
+													</Typography>
+												</Link>
+										}
+										<div style={prop} />
+									</div>
+								}
+							</Spring>
+							{
+								!isEmpty(product) ?
+									<Spring
+										to={{ width: breadHover === 2 ? "100%" : "0%" }}
+										from={{
+											width: "0%", background: "grey", height: "1.5px"
+										}}
+									>
+										{prop =>
+											<div onMouseEnter={() => setBreadHover(2)} onMouseLeave={() => setBreadHover(0)}>
+												<Link to={`/${convertedLink(findFeatured())}`} style={linkStyle}>
+													<Typography variant="h6">
+														{convertedLink(findFeatured())}
+													</Typography>
+												</Link>
+												<div style={prop} />
+											</div>
+										}
+									</Spring>
+									: null
+							}
+						</Breadcrumbs>
+						<Typography variant="h4" style={{ fontWeight: "500" }}>
+							{product.title}
+						</Typography>
+						<Typography variant="h5" style={{ color: "#555454", margin: "16px 0 26px" }}>
+							{product.vendor}
+						</Typography>
+						<div style={{ display: "flex", margin: "6.6vmax 0" }}>
+							{isEmpty(product) ?
+								null
+								:
+								product.variants[variation].compareAtPrice !== null ?
+									<div style={{ display: "flex", alignItems: "center" }}>
+										<Typography variant="h5" style={{ color: "#2b2b2b", marginRight: "15px", textDecoration: "line-through" }}>
+											{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 1)[0]}
+										</Typography>
+										<Typography variant="h4" style={{ color: "#e13367" }}>
+											{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 1)[1]} | {getPercent(getCurrPrice(product.variants[variation], 1))}% OFF
+									</Typography>
+									</div>
+									:
+									<Typography variant="h4" style={{ color: "black" }}>
+										{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 0)[0]}
+									</Typography>
+							}
+						</div>
+						<div style={{ display: "flex" }}>
+							<CssFormControl variant="outlined" style={{ fontSize: "15px" }}>
+								<Select
+									value={variation}
+									onChange={handleChange}
+								>
+									{createList()}
+								</Select>
+							</CssFormControl>
+							<Spring
+								to={{}}
+								from={{
+									color: "white", backgroundColor: "black"
+								}}
+							>
+								{prop =>
+									<div style={{
+										border: "1px solid black", padding: "0 20px", ...prop,
+										marginLeft: "1.1vmax", cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center"
+									}}
+										onClick={() => addToCart(product.variants[variation].id.toString(), 1)}
+										onMouseEnter={() => setAddCartHover(true)} onMouseLeave={() => setAddCartHover(false)}
+									>
+										<LocalMallOutlinedIcon style={{ fontSize: "16px" }} />
+										<Typography style={{ fontSize: "16px", marginLeft: "1.1vmax" }}>Add To Cart</Typography>
+									</div>
+								}
+							</Spring>
+						</div>
+						<Divider style={{ margin: "3.3vmax auto 0 auto", width: "100%" }} />
+						<div style={{ marginTop: "3.3vmax" }}>
+							<div style={{ display: "flex" }}>
+								<Spring
+									to={{ width: descIndex ? "100%" : "0%" }}
+									from={{
+										width: "100%", height: "2px", backgroundColor: "black"
+									}}
+								>
+									{prop =>
+										<div onClick={() => setDescIndex(true)}
+											style={{ marginLeft: "0.5vmax", pointerEvents: descIndex ? "none" : "", cursor: "pointer", width: "fit-content" }}>
+											<Typography style={{ fontSize: "16px", color: descIndex ? "black" : "grey" }}>
+												DESCRIPTION
+							</Typography>
+											<div style={prop} />
+										</div>
+									}
+								</Spring>
+								<Spring
+									to={{ width: !descIndex ? "100%" : "0%" }}
+									from={{
+										width: "0%", height: "2px", backgroundColor: "black"
+									}}
+								>
+									{prop =>
+										<div onClick={() => setDescIndex(false)}
+											style={{
+												marginLeft: "3.3vmax",
+												pointerEvents: !descIndex ? "none" : "", cursor: "pointer", width: "fit-content"
+											}}>
+											<Typography style={{ fontSize: "16px", color: !descIndex ? "black" : "grey" }}>DELIVERY & RETURNS</Typography>
+											<div style={prop} />
+										</div>
+									}
+								</Spring>
+							</div>
+						</div>
+						<div style={{ marginTop: "5.5vmax" }}>
+							{
+								descIndex ?
+									<div style={{ maxWidth: "100%" }}>
+										{description === undefined ? <Skeleton animation="wave" width={100} height={10} />
+											: createDescription()
+										}
+									</div>
+									:
+									<div style={{ maxWidth: "80%" }}>
+										<Typography style={{ fontSize: "15px" }}>
+											{returnText}
+										</Typography>
+										<div style={{ width: "fit-content" }}>
+											<Link to='/refund-policy' style={{ textDecoration: "none", color: "inherit" }}>
+												<Typography onMouseEnter={() => setReadHover(true)} onMouseLeave={() => setReadHover(false)}
+													style={{ fontSize: "15px", marginTop: "2.2vmax", cursor: "pointer", fontWeight: "bold" }}>
+													Read More Here
+									</Typography>
+												<animated.div style={readSpring} />
+											</Link>
+										</div>
+									</div>
+							}
+						</div>
+					</div>
 					{
 						getSameType().length !== 0 ?
 							<div>
-								<div style={{ display: "flex", justifyContent: 'center', alignItems: "center", overflow: "hidden" }}>
-									<Divider style={{ width: "100%" }} />
-									<Typography style={{
-										fontSize: `${(55 / 1920 * width)}px`,
+								<div style={{ display: "flex", justifyContent: 'center', alignItems: "center", overflow: "hidden", margin: "7.7vmax 5.5vw 0 5.5vw" }}>
+									<Divider style={{ width: "80%" }} />
+									<Typography variant="h4" style={{
 										fontFamily: `FirusasHeader, "Times New Roman", Times, Georgia, serif`,
-										fontWeight: "bold"
+										fontWeight: "bold", padding: "0 20px"
 									}}
 										className="homedeals_title">
 										You May Also Like
-                </Typography>
-									<Divider style={{ width: "100%" }} />
+			</Typography>
+									<Divider style={{ width: "80%" }} />
 								</div>
 								<HomeDeals width={width} history={props.history} scrollbar={props.scrollbar} content={getSameType()} />
 							</div>
 							: null
 					}
-				</Container>
-				<Snackbar
-					severity="info"
-					anchorOrigin={{
-						vertical: 'bottom',
-						horizontal: 'left',
-					}}
-					open={open}
-					autoHideDuration={3000}
-					onClose={handleClose}
-					message="Item added to cart"
-					action={
-						<React.Fragment>
-							<IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-								<CloseIcon fontSize="small" />
-							</IconButton>
-						</React.Fragment>
-					}
-				/>
-				<Snackbar
-					severity="info"
-					anchorOrigin={{
-						vertical: 'bottom',
-						horizontal: 'left',
-					}}
-					open={open}
-					autoHideDuration={3000}
-					onClose={handleClose}
-					message="Item added to cart"
-					action={
-						<React.Fragment>
-							<IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-								<CloseIcon fontSize="small" />
-							</IconButton>
-						</React.Fragment>
-					}
-				/>
-				<Contact width={width} />
-				<FooterMenu width={width} shopDetails={shopDetails} />
-			</div>
-			:
-			<div style={{ marginTop: "2.2vmax", overflow: "hidden" }}>
-				{
-					isEmpty(product) ? null :
-						<div >
-							<CarouselProvider
-								naturalSlideWidth={100}
-								naturalSlideHeight={125}
-								totalSlides={product.images.length}
-								currentSlide={imgIndex}
-							>
-								<Slider style={{ maxHeight: "60vh" }}>
-									{
-										product.images.map((ele, index) => {
-											return (
-												<Slide key={`product-image-${index}`} index={index}>
-													<img
-														style={{
-															marginRight: "auto", marginLeft: "auto",
-															padding: "0 20px", maxHeight: "60vh",
-														}}
-														src={ele.src}
-														alt={`${ele.id} product shot`}
-													/>
-												</Slide>
-											)
-										})
-									}
-								</Slider>
-								<div style={{ width: "fit-content", margin: "4px auto 20px auto" }}>
-									<DotGroup className="circleBtn" />
-								</div>
-								<IconButton disabled={imgIndex >= product.images.length - 1} onClick={() => handleImgArrow("next")}
-									style={{
-										background: "transparent", border: "none", position: "absolute",
-										top: "40%", right: "0"
-									}}><ArrowForwardIosIcon fontSize="large" /></IconButton>
-								<IconButton disabled={imgIndex === 0} onClick={() => handleImgArrow("back")}
-									style={{
-										background: "transparent", border: "none", position: "absolute",
-										top: "40%", left: "1.1vmax"
-									}}>
-									<ArrowBackIosIcon fontSize="large" />
-								</IconButton>
-							</CarouselProvider>
-						</div>
-				}
-				<div style={{ padding: "0 5.5vw" }}>
-					<Breadcrumbs style={{ marginBottom: "3.3vmax" }}>
-						<Spring
-							to={{ width: breadHover === 1 ? "100%" : "0%" }}
-							from={{
-								width: "0%", background: "grey", height: "1.5px"
-							}}
-						>
-							{prop =>
-								<div onMouseEnter={() => setBreadHover(1)} onMouseLeave={() => setBreadHover(0)}>
-									{
-										isEmpty(shopDetails) ? <Skeleton animation="wave" width={50} height={10} /> :
-											<Link to="/" style={linkStyle}>
-												<Typography variant="h6">
-													{shopDetails.info.name}
-												</Typography>
-											</Link>
-									}
-									<div style={prop} />
-								</div>
-							}
-						</Spring>
-						{
-							!isEmpty(product) ?
-								<Spring
-									to={{ width: breadHover === 2 ? "100%" : "0%" }}
-									from={{
-										width: "0%", background: "grey", height: "1.5px"
-									}}
-								>
-									{prop =>
-										<div onMouseEnter={() => setBreadHover(2)} onMouseLeave={() => setBreadHover(0)}>
-											<Link to={`/${convertedLink(findFeatured())}`} style={linkStyle}>
-												<Typography variant="h6">
-													{convertedLink(findFeatured())}
-												</Typography>
-											</Link>
-											<div style={prop} />
-										</div>
-									}
-								</Spring>
-								: null
-						}
-					</Breadcrumbs>
-					<Typography variant="h4" style={{ fontWeight: "500" }}>
-						{product.title}
-					</Typography>
-					<Typography variant="h5" style={{ color: "#555454", margin: "16px 0 26px" }}>
-						{product.vendor}
-					</Typography>
-					<div style={{ display: "flex", margin: "6.6vmax 0" }}>
-						{isEmpty(product) ?
-							null
-							:
-							product.variants[variation].compareAtPrice !== null ?
-								<div style={{ display: "flex", alignItems: "center" }}>
-									<Typography variant="h5" style={{ color: "#2b2b2b", marginRight: "15px", textDecoration: "line-through" }}>
-										{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 1)[0]}
-									</Typography>
-									<Typography variant="h4" style={{ color: "#e13367" }}>
-										{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 1)[1]} | {getPercent(getCurrPrice(product.variants[variation], 1))}% OFF
-									</Typography>
-								</div>
-								:
-								<Typography variant="h4" style={{ color: "black" }}>
-									{currencyDic[currency].symbol} {getCurrPrice(product.variants[variation], 0)[0]}
-								</Typography>
-						}
-					</div>
-					<div style={{ display: "flex" }}>
-						<CssFormControl variant="outlined" style={{ fontSize: "15px" }}>
-							<Select
-								value={variation}
-								onChange={handleChange}
-							>
-								{createList()}
-							</Select>
-						</CssFormControl>
-						<Spring
-							to={{}}
-							from={{
-								color: "white", backgroundColor: "black"
-							}}
-						>
-							{prop =>
-								<div style={{
-									border: "1px solid black", padding: "0 20px", ...prop,
-									marginLeft: "1.1vmax", cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center"
-								}}
-									onClick={() => addToCart(product.variants[variation].id.toString(), 1)}
-									onMouseEnter={() => setAddCartHover(true)} onMouseLeave={() => setAddCartHover(false)}
-								>
-									<LocalMallOutlinedIcon style={{ fontSize: "16px" }} />
-									<Typography style={{ fontSize: "16px", marginLeft: "1.1vmax" }}>Add To Cart</Typography>
-								</div>
-							}
-						</Spring>
-					</div>
-					<Divider style={{ margin: "3.3vmax auto 0 auto", width: "100%" }} />
-					<div style={{ marginTop: "3.3vmax" }}>
-						<div style={{ display: "flex" }}>
-							<Spring
-								to={{ width: descIndex ? "100%" : "0%" }}
-								from={{
-									width: "100%", height: "2px", backgroundColor: "black"
-								}}
-							>
-								{prop =>
-									<div onClick={() => setDescIndex(true)}
-										style={{ marginLeft: "0.5vmax", pointerEvents: descIndex ? "none" : "", cursor: "pointer", width: "fit-content" }}>
-										<Typography style={{ fontSize: "16px", color: descIndex ? "black" : "grey" }}>
-											DESCRIPTION
-							</Typography>
-										<div style={prop} />
-									</div>
-								}
-							</Spring>
-							<Spring
-								to={{ width: !descIndex ? "100%" : "0%" }}
-								from={{
-									width: "0%", height: "2px", backgroundColor: "black"
-								}}
-							>
-								{prop =>
-									<div onClick={() => setDescIndex(false)}
-										style={{
-											marginLeft: "3.3vmax",
-											pointerEvents: !descIndex ? "none" : "", cursor: "pointer", width: "fit-content"
-										}}>
-										<Typography style={{ fontSize: "16px", color: !descIndex ? "black" : "grey" }}>DELIVERY & RETURNS</Typography>
-										<div style={prop} />
-									</div>
-								}
-							</Spring>
-						</div>
-					</div>
-					<div style={{ marginTop: "5.5vmax" }}>
-						{
-							descIndex ?
-								<div style={{ maxWidth: "100%" }}>
-									{description === undefined ? <Skeleton animation="wave" width={100} height={10} />
-										: createDescription()
-									}
-								</div>
-								:
-								<div style={{ maxWidth: "80%" }}>
-									<Typography style={{ fontSize: "15px" }}>
-										{returnText}
-									</Typography>
-									<div style={{ width: "fit-content" }}>
-										<Link to='/refund-policy' style={{ textDecoration: "none", color: "inherit" }}>
-											<Typography onMouseEnter={() => setReadHover(true)} onMouseLeave={() => setReadHover(false)}
-												style={{ fontSize: "15px", marginTop: "2.2vmax", cursor: "pointer", fontWeight: "bold" }}>
-												Read More Here
-									</Typography>
-											<animated.div style={readSpring} />
-										</Link>
-									</div>
-								</div>
-						}
-					</div>
+					<Contact width={width} />
+					<FooterMenu width={width} shopDetails={shopDetails} />
 				</div>
-				{
-					getSameType().length !== 0 ?
-						<div>
-							<div style={{ display: "flex", justifyContent: 'center', alignItems: "center", overflow: "hidden", margin: "7.7vmax 5.5vw 0 5.5vw" }}>
-								<Divider style={{ width: "80%" }} />
-								<Typography variant="h4" style={{
-									fontFamily: `FirusasHeader, "Times New Roman", Times, Georgia, serif`,
-									fontWeight: "bold", padding: "0 20px"
-								}}
-									className="homedeals_title">
-									You May Also Like
-			</Typography>
-								<Divider style={{ width: "80%" }} />
-							</div>
-							<HomeDeals width={width} history={props.history} scrollbar={props.scrollbar} content={getSameType()} />
-						</div>
-						: null
-				}
-				<Contact width={width} />
-				<FooterMenu width={width} shopDetails={shopDetails} />
-			</div>
 	)
 }
 

@@ -119,7 +119,7 @@ function handleGetTags(types) {
 function getProduct(id) {
 	return async (dispatch) => {
 		const resp = await client.product.fetch(id);
-
+		console.log(resp)
 		dispatch({
 			type: PRODUCT_FOUND,
 			payload: resp,
