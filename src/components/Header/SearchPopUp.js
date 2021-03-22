@@ -247,7 +247,7 @@ const SearchPopUp = (props) => {
                 {prop =>
                     <div style={{ width: "fit-content", cursor: "pointer", position: "absolute", bottom: "0px" }} onClick={handleClickLink}
                         onMouseEnter={() => setAllHover(true)} onMouseLeave={() => setAllHover(false)}>
-                        <Link to="/best-sellers" style={{ textDecoration: "none", color: "inherit" }}>
+                        <Link to="/all" style={{ textDecoration: "none", color: "inherit" }}>
                             <Typography className="headerDrop_item" style={{ fontSize: "15px", fontWeight: "500" }}>
                                 View All →
                                 </Typography>

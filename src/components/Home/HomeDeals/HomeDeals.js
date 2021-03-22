@@ -19,8 +19,10 @@ import { useSpring, animated } from 'react-spring';
 import { Link } from 'react-router-dom';
 
 import { Skeleton } from '@material-ui/lab';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const HomeDeals = (props) => {
+    const matches = useMediaQuery('(min-width:1024px)', { noSsr: true });
 
     const { fetchProduct } = useShopify();
     const slider = React.useRef();
@@ -34,7 +36,7 @@ const HomeDeals = (props) => {
         infinite: false,
         speed: 500,
         slidesToScroll: 4,
-        slidesToShow: 4,
+        slidesToShow: props.content.length >= 4 ? 4 : props.content.length,
         beforeChange: (current, next) => setActiveSlide(next),
     };
 
@@ -43,7 +45,7 @@ const HomeDeals = (props) => {
         infinite: false,
         speed: 500,
         slidesToScroll: 2,
-        slidesToShow: 2,
+        slidesToShow: props.content.length >= 2 ? 2 : props.content.length,
         beforeChange: (current, next) => setActiveSlide(next),
     };
 
@@ -112,23 +114,27 @@ const HomeDeals = (props) => {
         }
     }
 
+    const singleSlide = (len) => { return { width: `${340 * len}px`, margin: "0 auto" } }
+
     return (
-        props.matches ?
+        matches ?
             <Container maxWidth="lg">
-                <Slider ref={slider} {...settings}>
-                    {
-                        best.length === 0 ?
-                            <ProductSekelton />
-                            :
-                            props.content.map((ele, index) => {
-                                return (
-                                    <div key={`product-${ele.id}`} onClick={(e) => handleItemClick(e, ele.id)}>
-                                        <HomeDealsProduct key={`home-deals-${index}`} content={ele} />
-                                    </div>
-                                )
-                            })
-                    }
-                </Slider>
+                <div style={props.content.length >= 4 ? null : singleSlide(props.content.length)}>
+                    <Slider ref={slider} {...settings} >
+                        {
+                            best.length === 0 ?
+                                <ProductSekelton />
+                                :
+                                props.content.map((ele, index) => {
+                                    return (
+                                        <div key={`product-${ele.id}`} onClick={(e) => handleItemClick(e, ele.id)}>
+                                            <HomeDealsProduct key={`home-deals-${index}`} content={ele} />
+                                        </div>
+                                    )
+                                })
+                        }
+                    </Slider>
+                </div>
                 <Divider style={{ width: "100%" }} />
                 <div className="homedeals_footer" style={{ display: "flex", justifyContent: "center", alignItems: "center", position: "relative" }}>
                     <IconButton disabled={activeSlide === 0} onClick={() => handleClick(0)}>
@@ -150,7 +156,7 @@ const HomeDeals = (props) => {
                 </div>
             </Container>
             :
-            <div style={{ maxWidth: "96vw", margin: "0 auto", overflow: "hidden", marginBottom: "5.5vmax"}}>
+            <div style={{ maxWidth: "96vw", margin: "0 auto", overflow: "hidden", marginBottom: "5.5vmax" }}>
                 <Slider ref={slider} {...settingsM}>
                     {
                         best.length === 0 ?

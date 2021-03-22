@@ -44,7 +44,7 @@ const HomeDealsProduct = (props) => {
             boxShadow: hover ? "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px" : "rgba(99, 99, 99, 0.0) 0px 2px 8px 0px", transform: hover ? "scale(1.1)" : "scale(1)"
         },
         from: {
-            boxShadow: "rgba(99, 99, 99, 0.0) 0px 2px 8px 0px", transform: "scale(1)", margin: "25px 15px 25px 15px"
+            boxShadow: "rgba(99, 99, 99, 0.0) 0px 2px 8px 0px", transform: "scale(1)", margin: "25px 15px 25px 15px", maxWidth: "300px"
         },
         config: { config: config.stiff }
     })
@@ -99,29 +99,22 @@ const HomeDealsProduct = (props) => {
                 </div>
             </animated.div>
             :
-            <animated.div style={{ ...hoverSpring }} className="homedetailproduct_container" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+            <div style={{ overflow: "hidden", position: "relative" }} className="homedetailproduct_container" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
                 {
                     props.content.variants[0].compareAtPrice !== null ?
-                        <Badge className="saleBadge" color="secondary" badgeContent={`${getPercent()}% OFF`} />
+                        <Badge color="secondary" className="saleBadgeM" badgeContent={`${getPercent()}% OFF`} />
                         : null
                 }
-                {hover ?
-                    <div style={{
-                        backgroundImage: `url(${props.content.images[1].src})`,
-                        cursor: "pointer", padding: "4px", height: "200px",
-                        backgroundSize: "contain", backgroundRepeat: "no-repeat", backgroundPosition: "center"
-                    }} />
-                    : <div style={{
-                        backgroundImage: `url(${props.content.images[0].src})`,
-                        cursor: "pointer", height: "200px",
-                        backgroundSize: "contain", backgroundRepeat: "no-repeat", backgroundPosition: "center"
-                    }} />
-                }
-                <div style={{ padding: "29px 0 10px 0", maxWidth: "80%", marginRight: "auto", marginLeft: "auto", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <div style={{
+                    backgroundImage: `url(${props.content.images[0].src})`,
+                    cursor: "pointer", height: "200px",
+                    backgroundSize: "contain", backgroundRepeat: "no-repeat", backgroundPosition: "center"
+                }} />
+                <div style={{ padding: "29px 0 10px 0", width: "100%", marginRight: "auto", marginLeft: "auto", display: "flex", flexDirection: "column", alignItems: "center" }}>
                     <Typography variant="h6" className="homedetailproduct_text" align="center" style={{ fontWeight: "bold", marginBottom: "13px" }}>
                         {props.content.title}
                     </Typography>
-                    <Typography variant="h6" align="center" style={{ marginBottom: "13px" }}>
+                    <Typography variant="h6" align="center" style={{ marginBottom: "13px", color: "rgba(0,0,0,0.6)" }}>
                         {props.content.vendor}
                     </Typography>
                     {
@@ -140,7 +133,7 @@ const HomeDealsProduct = (props) => {
                             </Typography>
                     }
                 </div>
-            </animated.div>
+            </div>
     )
 }
 

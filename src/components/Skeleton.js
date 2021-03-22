@@ -62,7 +62,7 @@ export default (props) => {
                 </Typography>
 					<Divider style={{ width: "100%" }} />
 				</div>
-				<HomeDeals matches={matches} width={width} history={props.history} scrollbar={props.scrollbar} content={getBestSeller()} />
+				<HomeDeals width={width} history={props.history} scrollbar={props.scrollbar} content={getBestSeller()} />
 				<HomeContent matches={matches} shopDetails={shopDetails} width={width} scrollbar={props.scrollbar} />
 				<Contact width={width} scrollbar={props.scrollbar} />
 				<FooterMenu width={width} shopDetails={shopDetails} scrollbar={props.scrollbar} />

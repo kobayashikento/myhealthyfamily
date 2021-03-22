@@ -1,4 +1,4 @@
-import { Breadcrumbs, Button, Container, Grid, IconButton, Typography } from '@material-ui/core';
+import { Breadcrumbs, Button, Container, Grid, Menu, Typography, MenuItem } from '@material-ui/core';
 import React from 'react';
 import { Spring } from 'react-spring/renderprops-universal';
 import HomeDealsProduct from '../Home/HomeDeals/HomeDealsProduct';
@@ -22,13 +22,13 @@ const linkStyle = { fontSize: "14px", textDecoration: "none", color: "inherit" }
 const Catalog = (props) => {
 
     //takes in props collection
-    const { fetchProduct, getTags, tags } = useShopify();
+    const { fetchProduct } = useShopify();
     const matches = useMediaQuery('(min-width:1024px)', { noSsr: true });
 
     const [navIndex, setNavIndex] = React.useState(0);
     //0: Alphabet up, 1: Alphabet down, 2: Price low, 3: Price high, 4: newest, 5: oldest
     const [sortBy, setSortBy] = React.useState(0);
-    const [products, setProducts] = React.useState([]);
+    const [productsList, setProducts] = React.useState([]);
     const [category, setCategory] = React.useState("default");
     const [catHover, setCatHover] = React.useState(false);
     const [breadHover, setBreadHover] = React.useState(0);
@@ -39,11 +39,51 @@ const Catalog = (props) => {
         setProducts(temp);
     }, [])
 
-    // make the side nav for produdct types
-    const ProductList = React.memo(() => {
+    const getTypes = () => {
+        let tempTypes = [];
+        props.collection.products.forEach(product => {
+            if (!(tempTypes.includes(product.productType.toLowerCase()))) {
+                tempTypes.push(product.productType.toLowerCase())
+            }
+        })
+        return tempTypes;
+    }
+
+    const sortProducts = (productArr, type) => {
+        switch (type) {
+            case 0:
+                return (productArr.sort((a, b) => a.title.localeCompare(b.title)));
+            case 1:
+                return (productArr.sort((a, b) => b.title.localeCompare(a.title)));
+            case 2:
+                return (productArr.sort(function (a, b) {
+                    if (parseInt(a.variants[0].compareAtPrice === null ?
+                        a.variants[0].price : a.variants[0].compareAtPrice)
+                        < parseInt(b.variants[0].compareAtPrice === null ? b.variants[0].price : b.variants[0].compareAtPrice)) { return -1; }
+                    if (parseInt(a.variants[0].compareAtPrice === null ? a.variants[0].price : a.variants[0].compareAtPrice) >
+                        parseInt(b.variants[0].compareAtPrice === null ? b.variants[0].price : b.variants[0].compareAtPrice)) { return 1; }
+                    return 0;
+                }))
+            case 3:
+                return (productArr.sort(function (a, b) {
+                    if (parseInt(a.variants[0].compareAtPrice === null ?
+                        a.variants[0].price : a.variants[0].compareAtPrice)
+                        > parseInt(b.variants[0].compareAtPrice === null ? b.variants[0].price : b.variants[0].compareAtPrice)) { return -1; }
+                    if (parseInt(a.variants[0].compareAtPrice === null ? a.variants[0].price : a.variants[0].compareAtPrice) <
+                        parseInt(b.variants[0].compareAtPrice === null ? b.variants[0].price : b.variants[0].compareAtPrice)) { return 1; }
+                    return 0;
+                }))
+            case 4:
+                return (productArr.sort((a, b) => a.createdAt.localeCompare(b.createdAt)));
+            case 5:
+                return (productArr.sort((a, b) => b.createdAt.localeCompare(a.createdAt)));
+            default:
+        }
+    }
+
+    const ProductList = () => {
         let tempTypes = {};
         let content = [];
-
         props.collection.products.forEach(product => {
             if (!(product.productType in tempTypes)) {
                 tempTypes[product.productType] = 1;
@@ -52,7 +92,6 @@ const Catalog = (props) => {
                 tempTypes[product.productType] = tempCount + 1;
             }
         })
-
         let index = 0;
         for (const type in tempTypes) {
             const newIndex = index += 1;
@@ -97,38 +136,6 @@ const Catalog = (props) => {
             )
         }
         return (content);
-    })
-
-    const sortProducts = (productArr, type) => {
-        switch (type) {
-            case 0:
-                return (productArr.sort((a, b) => a.title.localeCompare(b.title)));
-            case 1:
-                return (productArr.sort((a, b) => b.title.localeCompare(a.title)));
-            case 2:
-                return (productArr.sort(function (a, b) {
-                    if ((a.variants[0].compareAtPrice === null ?
-                        a.variants[0].price : a.variants[0].compareAtPrice)
-                        < (b.variants[0].compareAtPrice === null ? b.variants[0].price : b.variants[0].compareAtPrice)) { return -1; }
-                    if ((a.variants[0].compareAtPrice === null ? a.variants[0].price : a.variants[0].compareAtPrice) >
-                        (b.variants[0].compareAtPrice === null ? b.variants[0].price : b.variants[0].compareAtPrice)) { return 1; }
-                    return 0;
-                }))
-            case 3:
-                return (productArr.sort(function (a, b) {
-                    if ((a.variants[0].compareAtPrice === null ?
-                        a.variants[0].price : a.variants[0].compareAtPrice)
-                        > (b.variants[0].compareAtPrice === null ? b.variants[0].price : b.variants[0].compareAtPrice)) { return -1; }
-                    if ((a.variants[0].compareAtPrice === null ? a.variants[0].price : a.variants[0].compareAtPrice) <
-                        (b.variants[0].compareAtPrice === null ? b.variants[0].price : b.variants[0].compareAtPrice)) { return 1; }
-                    return 0;
-                }))
-            case 4:
-                return (productArr.sort((a, b) => a.createdAt.localeCompare(b.createdAt)));
-            case 5:
-                return (productArr.sort((a, b) => b.createdAt.localeCompare(a.createdAt)));
-            default:
-        }
     }
 
     // Change the category based on types
@@ -149,8 +156,8 @@ const Catalog = (props) => {
 
     // Handle Sorting Options 
     React.useEffect(() => {
-        if (products.length !== 0) {
-            let sortedArr = sortProducts(products, sortBy);
+        if (productsList.length !== 0) {
+            let sortedArr = sortProducts(productsList, sortBy);
             setProducts([...sortedArr]);
         }
     }, [sortBy])
@@ -168,6 +175,17 @@ const Catalog = (props) => {
         to: { width: catHover ? "100%" : "0%" },
         from: { width: "0%", height: "1.5px", background: "black", marginBottom: `20px`, }
     })
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = (e) => {
+        setAnchorEl(null);
+        setCategory(e);
+    };
 
     return (
         matches ?
@@ -237,9 +255,10 @@ const Catalog = (props) => {
                                     {props.collection.title.toLowerCase()}
                                     <animated.div style={catSpring} />
                                 </Typography>
-                                <ProductList />
-                            </div>
-                            <div style={{ marginTop: "3.3vmax" }}>
+                                {
+                                    isEmpty(props.collection) ? undefined :
+                                        <ProductList />
+                                }
                             </div>
                         </Grid>
                         <Grid item xs={10}>
@@ -248,12 +267,12 @@ const Catalog = (props) => {
                                 alignItems: "center"
                             }}>
                                 <Typography variant="h5" style={{ color: "#2b2b2b", width: "fit-content" }}>
-                                    {products.length} items
+                                    {productsList.length} items
                     </Typography>
                                 <SortByDropdown sortBy={sortBy} setSortBy={(index) => setSortBy(index)} />
                             </div>
                             <Grid container>
-                                {products.map((ele, index) => {
+                                {productsList.map((ele, index) => {
                                     return (
                                         <Grid key={`item-${index}`} item xs={4} onClick={(e) => handleItemClick(e, ele.id)}>
                                             <HomeDealsProduct content={ele} scrollbar={props.scrollbar} />
@@ -325,15 +344,35 @@ const Catalog = (props) => {
                     {props.collection.title.toLowerCase()}
                 </Typography>
                 <Typography variant="h5" style={{ color: "#2b2b2b", width: "fit-content", margin: "0 auto" }}>
-                    {products.length} items
+                    {productsList.length} items
                 </Typography>
                 <div style={{ display: "flex", width: "90vw", margin: "2.2vmax auto 0 auto", justifyContent: "center" }}>
                     <div style={{ marginRight: "5px" }}>
-                        <Button style={{ border: "1px solid #CDCDCD", display: "flex", alignItems: "center", borderRadius: "0px", minHeight: "50px", padding: "0 20px" }}>
+                        <Button onClick={handleClick} style={{ border: "1px solid #CDCDCD", display: "flex", alignItems: "center", borderRadius: "0px", minHeight: "50px", padding: "0 20px" }}>
                             <TuneIcon fontSize="large" style={{ color: "black" }} />
                             <Typography variant="h6" >Filter</Typography>
                         </Button>
                     </div>
+                    <Menu
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={() => handleClose(category)}
+                    >
+                        {
+                            getTypes().map((ele, index) => {
+                                return (
+                                    <MenuItem onClick={() => handleClose(ele)}>
+                                        <Typography variant="h5" key={`type-${ele.title}`}
+                                            style={{ textTransform: "capitalize", fontWeight: "bold", width: "fit-content", }}
+                                        >
+                                            {ele}
+                                        </Typography>
+                                    </MenuItem>
+                                )
+                            })
+                        }
+                    </Menu>
                     <div style={{ marginLeft: "5px" }}>
                         <Button style={{ border: "1px solid #CDCDCD", display: "flex", alignItems: "center", borderRadius: "0px", minHeight: "50px" }}>
                             <SortByDropdown sortBy={sortBy} setSortBy={(index) => setSortBy(index)} />
@@ -341,11 +380,11 @@ const Catalog = (props) => {
                     </div>
                 </div>
                 <div style={{
-                    margin: "0 25px 10px 20px", display: "flex", justifyContent: "space-between",
+                    margin: "15px 10px 10px 10px", display: "flex", justifyContent: "space-between",
                     alignItems: "center"
                 }}>
-                    <Grid container>
-                        {products.map((ele, index) => {
+                    <Grid container spacing={2}>
+                        {productsList.map((ele, index) => {
                             return (
                                 <Grid key={`item-${index}`} item xs={6} onClick={(e) => handleItemClick(e, ele.id)}>
                                     <HomeDealsProduct content={ele} scrollbar={props.scrollbar} />

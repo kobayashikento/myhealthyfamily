@@ -1,13 +1,27 @@
-.mainImage > div {
+.mainImage>div {
     background-size: contain !important;
     background-repeat: no-repeat !important;
     background-position: center !important;
 }
 
-.mainImage:hover > :first-child  {
+.mainImage:hover> :first-child {
     opacity: 0;
 }
 
-.mainImage:hover > :nth-child(2)  {
+.mainImage:hover> :nth-child(2) {
     transform: scale(1.3) !important;
+}
+
+.circleBtn > button {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background-color: #e4e4e4;
+    border: none;
+    transform: scale(0.4);
+    display: inline-block;
+}
+
+.circleBtn > button[class*="selected"] {
+    background-color: black;
 }
