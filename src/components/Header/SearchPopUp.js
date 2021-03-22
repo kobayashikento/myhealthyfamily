@@ -1,4 +1,4 @@
-import { Divider, Typography } from '@material-ui/core';
+import { Divider, Grid, Typography } from '@material-ui/core';
 import React from 'react';
 
 import CloseIcon from '@material-ui/icons/Close';
@@ -15,10 +15,13 @@ import { convertedLink } from '../../assests/functions';
 import { currencyDic } from '../../assests/constants';
 
 import { Link } from 'react-router-dom';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const categoryTitle = { fontSize: "14px", fontWeight: "bold", paddingBottom: "18px" }
 
 const SearchPopUp = (props) => {
+    const matches = useMediaQuery('(min-width:1024px)', { noSsr: true });
+
     let popupRef = React.useRef();
 
     const { products, fetchProduct, currency, featured } = useShopify();
@@ -34,7 +37,11 @@ const SearchPopUp = (props) => {
             if (props.scrollbar !== undefined) {
                 props.scrollbar.current.scrollToTop()
             }
-            props.setSearchHover(false);
+            if (matches) {
+                props.setSearchHover(false);
+            } else {
+                props.setOpenSearchDialog(false);
+            }
         })
     }
 
@@ -75,29 +82,54 @@ const SearchPopUp = (props) => {
 
     const makeCategory = () => {
         return (
-            categories.map((category, index) => {
-                if (index < 9) {
-                    return (
-                        <Spring
-                            to={{ width: hover === index + 1 ? "100%" : "0%" }}
-                            from={{ width: "0%", opacity: 1, background: "black", height: "1px", marginBottom: "10px" }}
-                            key={`category-${index}`}
-                        >
-                            {prop =>
-                                <div style={{ cursor: "pointer", width: "fit-content" }} onMouseEnter={() => setHover(index + 1)} onMouseLeave={() => setHover(0)} onClick={handleClickLink}>
-                                    <Link to={`/${convertedLink(getCollectionFromCategory(category).title)}`} style={{ color: "black", textDecoration: "none" }}>
-                                        <Typography style={{ fontSize: "15px", fontWeight: "500", width: "fit-content" }}>
-                                            {category}
-                                        </Typography>
-                                    </Link>
-                                    <animated.div style={prop} />
-                                </div>
-                            }
-                        </Spring>
-                    )
-                }
-                return false;
-            })
+            matches ?
+                categories.map((category, index) => {
+                    if (index < 9) {
+                        return (
+                            <Spring
+                                to={{ width: hover === index + 1 ? "100%" : "0%" }}
+                                from={{ width: "0%", opacity: 1, background: "black", height: "1px", marginBottom: "10px" }}
+                                key={`category-${index}`}
+                            >
+                                {prop =>
+                                    <div style={{ cursor: "pointer", width: "fit-content" }} onMouseEnter={() => setHover(index + 1)} onMouseLeave={() => setHover(0)} onClick={handleClickLink}>
+                                        <Link to={`/${convertedLink(getCollectionFromCategory(category).title)}`} style={{ color: "black", textDecoration: "none" }}>
+                                            <Typography style={{ fontSize: "15px", fontWeight: "500", width: "fit-content" }}>
+                                                {category}
+                                            </Typography>
+                                        </Link>
+                                        <animated.div style={prop} />
+                                    </div>
+                                }
+                            </Spring>
+                        )
+                    }
+                    return false;
+                })
+                :
+                categories.map((category, index) => {
+                    if (index < 9) {
+                        return (
+                            <Spring
+                                to={{ width: hover === index + 1 ? "100%" : "0%" }}
+                                from={{ width: "0%", opacity: 1, background: "black", height: "1px", marginBottom: "10px" }}
+                                key={`category-${index}`}
+                            >
+                                {prop =>
+                                    <Grid item xs={6} style={{ cursor: "pointer", width: "fit-content" }} onClick={handleClickLink}>
+                                        <Link to={`/${convertedLink(getCollectionFromCategory(category).title)}`} style={{ color: "black", textDecoration: "none" }}>
+                                            <Typography style={{ fontSize: "15px", fontWeight: "500", width: "fit-content" }}>
+                                                {category}
+                                            </Typography>
+                                        </Link>
+                                        <animated.div style={prop} />
+                                    </Grid>
+                                }
+                            </Spring>
+                        )
+                    }
+                    return false;
+                })
         )
     }
 
@@ -200,63 +232,112 @@ const SearchPopUp = (props) => {
         if (props.scrollbar !== undefined) {
             props.scrollbar.current.scrollToTop();
         }
-        props.setSearchHover(false);
+        if (matches) {
+            props.setSearchHover(false);
+
+        } else {
+            props.setOpenSearchDialog(false);
+        }
     }
 
     return (
-        <animated.div style={openPopup} ref={popupRef} className="search_popup">
-            <CloseIcon style={{ position: "absolute", right: "20px", cursor: "pointer" }} onClick={() => props.setSearchHover(false)} />
-            <div style={{ width: "240px" }}>
-                <Typography style={categoryTitle}>
-                    CATEGORIES
+        matches ?
+            <animated.div style={openPopup} ref={popupRef} className="search_popup">
+                <CloseIcon style={{ position: "absolute", right: "20px", cursor: "pointer" }} onClick={() => props.setSearchHover(false)} />
+                <div style={{ width: "240px" }}>
+                    <Typography style={categoryTitle}>
+                        CATEGORIES
                 </Typography>
-                <Divider />
-                {
-                    categories.length === 0 ?
-                        <Typography style={{ ...categoryTitle, fontWeight: "400", margin: "20px 20px 40px 0" }}>
-                            Unfortunately we could not find any results for your search
+                    <Divider />
+                    {
+                        categories.length === 0 ?
+                            <Typography style={{ ...categoryTitle, fontWeight: "400", margin: "20px 20px 40px 0" }}>
+                                Unfortunately we could not find any results for your search
                 </Typography>
-                        :
-                        <div style={{ marginTop: "20px", marginLeft: "10px" }}>
-                            {makeCategory()}
-                        </div>
-                }
-            </div>
-            <Divider orientation="vertical" style={{ height: "auto", marginTop: "40px" }} />
-            <div style={{ width: "311px" }}>
-                <Typography style={{ ...categoryTitle, marginLeft: "1rem" }}>
-                    PRODUCTS
+                            :
+                            <div style={{ marginTop: "20px", marginLeft: "10px" }}>
+                                {makeCategory()}
+                            </div>
+                    }
+                </div>
+                <Divider orientation="vertical" style={{ height: "auto", marginTop: "40px" }} />
+                <div style={{ width: "311px" }}>
+                    <Typography style={{ ...categoryTitle, marginLeft: "1rem" }}>
+                        PRODUCTS
                 </Typography>
-                <Divider />
-                {
-                    Object.keys(display).length === 0 ?
-                        <Typography style={{ ...categoryTitle, fontWeight: "400", margin: "20px 20px 40px 20px" }}>
-                            Unfortunately we could not find any results for your search
+                    <Divider />
+                    {
+                        Object.keys(display).length === 0 ?
+                            <Typography style={{ ...categoryTitle, fontWeight: "400", margin: "20px 20px 40px 20px" }}>
+                                Unfortunately we could not find any results for your search
                 </Typography>
-                        :
-                        <div>
-                            {makeDisplay()}
-                        </div>
-                }
-            </div>
-            <Spring
-                to={{ width: allHover ? "100%" : "0%" }}
-                from={{ width: "0%", opacity: 1, background: "black", height: "1px", marginBottom: "18px" }}
-                key={`category-view-all`}
-            >
-                {prop =>
-                    <div style={{ width: "fit-content", cursor: "pointer", position: "absolute", bottom: "0px" }} onClick={handleClickLink}
-                        onMouseEnter={() => setAllHover(true)} onMouseLeave={() => setAllHover(false)}>
-                        <Link to="/all" style={{ textDecoration: "none", color: "inherit" }}>
-                            <Typography className="headerDrop_item" style={{ fontSize: "15px", fontWeight: "500" }}>
-                                View All →
+                            :
+                            <div>
+                                {makeDisplay()}
+                            </div>
+                    }
+                </div>
+                <Spring
+                    to={{ width: allHover ? "100%" : "0%" }}
+                    from={{ width: "0%", opacity: 1, background: "black", height: "1px", marginBottom: "18px" }}
+                    key={`category-view-all`}
+                >
+                    {prop =>
+                        <div style={{ width: "fit-content", cursor: "pointer", position: "absolute", bottom: "0px" }} onClick={handleClickLink}
+                            onMouseEnter={() => setAllHover(true)} onMouseLeave={() => setAllHover(false)}>
+                            <Link to="/all" style={{ textDecoration: "none", color: "inherit" }}>
+                                <Typography className="headerDrop_item" style={{ fontSize: "15px", fontWeight: "500" }}>
+                                    View All →
                                 </Typography>
-                            <animated.div style={prop} />
-                        </Link>
-                    </div>
-                }
-            </Spring>
-        </animated.div>
+                                <animated.div style={prop} />
+                            </Link>
+                        </div>
+                    }
+                </Spring>
+            </animated.div>
+            :
+            <animated.div ref={popupRef}>
+                <div style={{ padding: "8vw 8vw" }}>
+                    <Typography style={categoryTitle}>
+                        CATEGORIES
+            </Typography>
+                    <Divider />
+                    {
+                        categories.length === 0 ?
+                            <Typography style={{ ...categoryTitle, fontWeight: "400", margin: "20px 20px 40px 0" }}>
+                                Unfortunately we could not find any results for your search
+            </Typography>
+                            :
+                            <Grid container style={{ marginTop: "20px", marginLeft: "10px" }}>
+                                {makeCategory()}
+                            </Grid>
+                    }
+                </div>
+                <div style={{ padding: "4vw 8vw" }}>
+                    <Typography style={{ ...categoryTitle }}>
+                        PRODUCTS
+             </Typography>
+                    <Divider />
+                    {
+                        Object.keys(display).length === 0 ?
+                            <Typography style={{ ...categoryTitle, fontWeight: "400", margin: "20px 20px 40px 20px" }}>
+                                Unfortunately we could not find any results for your search
+             </Typography>
+                            :
+                            <div>
+                                {makeDisplay()}
+                            </div>
+                    }
+                </div>
+                <div style={{ width: "fit-content", cursor: "pointer", padding: "4vw 8vw", marginLeft: "auto" }} onClick={handleClickLink}
+                    onMouseEnter={() => setAllHover(true)} onMouseLeave={() => setAllHover(false)}>
+                    <Link to="/all" style={{ textDecoration: "none", color: "inherit" }}>
+                        <Typography className="headerDrop_item" style={{ fontSize: "15px", fontWeight: "500" }}>
+                            View All →
+                            </Typography>
+                    </Link>
+                </div>
+            </animated.div>
     )
 }
 

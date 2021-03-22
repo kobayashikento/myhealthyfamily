@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Link } from 'react-router-dom';
-import { Typography, Container, IconButton, InputAdornment, useMediaQuery, Badge, Drawer, Divider } from '@material-ui/core';
+import { Typography, Container, IconButton, InputAdornment, useMediaQuery, Badge, Drawer, Modal } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { animated, useSpring } from 'react-spring';
 import { Spring } from 'react-spring/renderprops';
@@ -92,6 +92,9 @@ const Header = (props) => {
             props.scrollbar.current.scrollToTop();
         }
     }
+
+    const [openSearchDialog, setOpenSearchDialog] = React.useState(false);
+
     return (
         matches ?
             <div className="header">
@@ -171,7 +174,7 @@ const Header = (props) => {
                         <IconButton style={{ padding: "5px" }} onClick={() => setOpenDrawer(true)}>
                             <MenuIcon fontSize="large" style={{ color: "black" }} />
                         </IconButton>
-                        <IconButton style={{ padding: "5px" }}>
+                        <IconButton style={{ padding: "5px" }} onClick={() => setOpenSearchDialog(true)}>
                             <SearchIcon fontSize="large" style={{ color: "black" }} />
                         </IconButton>
                     </div>
@@ -234,6 +237,22 @@ const Header = (props) => {
                         </div>
                     </div>
                 </Drawer>
+                <Modal open={openSearchDialog} onClose={() => setOpenSearchDialog(false)} style={{ overflow: "scroll" }}>
+                    <div style={{ width: "100vw", background: "white" }}>
+                        <IconButton onClick={() => setOpenSearchDialog(false)} style={{ float: "right", padding: "7vw" }}>
+                            <CloseIcon fontSize="large" />
+                        </IconButton>
+                        <Typography variant="h4" style={{ padding: "16vw 8vw 3vw 8vw" }}>Search</Typography>
+                        <animated.div style={{ ...searchSpring, padding: "4.4vw 8vw 3vw 8vw" }} onClick={() => setSearchHover(true)} >
+                            <StyledTextFieldHeader style={{ width: "210px" }} value={input} onChange={handleChange}
+                                InputProps={{
+                                    startAdornment: endAdornment()
+                                }}
+                            />
+                        </animated.div>
+                        <SearchPopUp history={props.history} input={input} searchHover={searchHover} setSearchHover={(bool) => setSearchHover(bool)} scrollbar={props.scrollbar} setOpenSearchDialog={() => setOpenSearchDialog()} />
+                    </div>
+                </Modal>
             </div >
     )
 }
